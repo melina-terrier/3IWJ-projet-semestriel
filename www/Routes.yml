@@ -1,0 +1,37 @@
+/:
+  Controller: "Main"
+  Action: "home"
+
+
+/login:
+  Controller: "Security"
+  Action: "login"
+
+/register:
+  Controller: "Security"
+  Action: "register"
+
+/logout:
+  Controller: "Security"
+  Action: "logout"
+
+
+/ajout-utilisateur:
+  Controller: "User"
+  Action: "add"
+
+/del-utilisateur:
+  Controller: "User"
+  Action: "delete"
+
+/show-utilisateur:
+  Controller: "User"
+  Action: "show"
+
+/list-utilisateurs:
+  Controller: "User"
+  Action: "list"
+
+/maj-utilisateurs:
+  Controller: "User"
+  Action: "edit"
