@@ -16,6 +16,9 @@ function myAutoloader($class){
     if(file_exists("../Models/".$class.".php")){
         include "../Models/".$class.".php";
     }
+    if(file_exists("../Controllers/".$class.".php")){
+        include "../Controllers/".$class.".php";
+    }
 }
 
 //http://localhost/login
@@ -35,7 +38,8 @@ if(file_exists("../Routes.yml")) {
 
 if(empty($listOfRoutes[$uri])) {
     header("Status 404 Not Found", true, 404);
-    die("Page 404");
+    $object = new Controllers\Error();
+    $object->page404();
 }
 
 if(empty($listOfRoutes[$uri]["Controller"]) || empty($listOfRoutes[$uri]["Action"]) ) {
@@ -48,9 +52,6 @@ $action = $listOfRoutes[$uri]["Action"];
 $security = $listOfRoutes[$uri]["Security"];
 $role = $listOfRoutes[$uri]["Role"];
 $auth = new Core\Security();
-
-
-
 
 
 print_r($auth);
