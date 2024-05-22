@@ -18,7 +18,7 @@ class SQL
         }
 
         $classChild = get_called_class();
-        $this->table = "esgi_".strtolower(str_replace("App\\Models\\","",$classChild));
+        $this->table = "pro_".strtolower(str_replace("App\\Models\\","",$classChild));
     }
 
     public function save()
