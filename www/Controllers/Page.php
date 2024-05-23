@@ -1,29 +1,27 @@
 <?php
 namespace App\Controller;
 use App\Core\Form;
-use App\Core\Comment as Auth;
+use App\Core\Page as Auth;
 use App\Core\View;
 use App\Models\User;
 
-class Comment{
+class Page{
 
 
 
-    public function comment(): void
+    public function page(): void
     {
 
-        $form = new Form("Comment");
+        $form = new Form("Page");
 
         if( $form->isSubmitted() && $form->isValid() )
         {
             $user = new User();
-            $user->setPseudo($_POST["pseudo"]);
-            $user->setemail($_POST["email"]);
-            $user->setcomment($_POST["comment"]);
+            $user->setTitle($_POST["title"]);
             $user->save();
         }
 
-        $view = new View("Comment/comment");
+        $view = new View("Page/page");
         $view->assign("form", $form->build());
         $view->render();
     }
