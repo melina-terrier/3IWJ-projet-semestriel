@@ -6,24 +6,25 @@
   Role: ""
 
 # Ajout de page dynamique pour le front ?
-/page-title:
-  Controller: "Main"
-  Action: "show"
-  Security: false
-  Role: ""
+# /page-title:
+#   Controller: "Main"
+#   Action: "show"
+#   Security: false
+#   Role: ""
 
-/project:
-  Controller: "Main"
-  Action: "show"
-  Security: false
-  Role: ""
+# /project-name:
+#   Controller: "Main"
+#   Action: "show"
+#   Security: false
+#   Role: ""
 
-/user:
-  Controller: "Main"
-  Action: "show"
-  Security: false
-  Role: ""
+# /user-name:
+#   Controller: "Main"
+#   Action: "show"
+#   Security: false
+#   Role: ""
 
+# Utile ? -> étant donné que ça va être en bas de page ??
 /add-comment:
   Controller: "Page"
   Action: "add"
@@ -33,7 +34,7 @@
 /update-commanent:
   Controller: "Comment"
   Action: "edit"
-  Security: true,
+  Security: true
   Role: "user"
 
 
@@ -82,7 +83,7 @@
 /update-user:
   Controller: "User"
   Action: "edit"
-  Security: true,
+  Security: true
   Role: "user, admin"
 
 # PROJECT
@@ -110,12 +111,6 @@
   Security: true
   Role: "admin, user"
 
-/show-user:
-  Controller: "User"
-  Action: "show"
-  Security: true
-  Role: "user"
-
 /list-user:
   Controller: "User"
   Action: "list"
@@ -125,7 +120,7 @@
 /update-user:
   Controller: "User"
   Action: "edit"
-  Security: true,
+  Security: true
   Role: "user, admin"
 
 # PAGE
@@ -140,7 +135,7 @@
 /update-page:
   Controller: "Page"
   Action: "edit"
-  Security: true,
+  Security: true
   Role: "user, admin"
 
 /delete-page:
@@ -178,7 +173,7 @@
 /update-category:
   Controller: "Category"
   Action: "edit"
-  Security: true,
+  Security: true
   Role: "admin"
 
 /delete-category:
@@ -203,7 +198,7 @@
 /update-media:
   Controller: "Media"
   Action: "edit"
-  Security: true,
+  Security: true
   Role: "admin"
 
 /delete-media:

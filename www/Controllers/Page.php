@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 namespace App\Controller;
 use App\Core\Form;
@@ -46,3 +47,30 @@ class Page{
 
 
 
+=======
+<?php
+namespace App\Controller;
+class Page
+{
+
+    
+    public function show(): void
+    {
+        echo "Affichage d'une category";
+    }
+    public function edit(): void
+    {
+    
+    }
+    public function add(): void
+    {
+
+    }
+    public function delete(): void
+    {
+
+    }
+   
+
+}
+>>>>>>> bbdc864 (mise en place de la vérification du statut de l'user)

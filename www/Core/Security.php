@@ -5,7 +5,8 @@ class Security
 
     public function isLogged(): bool
     {
-        return false;
+        // Faire une verification pour voir si l'utilisateur est connecté
+        return true;
     }
 
 

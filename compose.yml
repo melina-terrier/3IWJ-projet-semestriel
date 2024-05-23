@@ -11,6 +11,10 @@ services:
       - ./server/php.ini:/usr/local/etc/php/php.ini
     depends_on:
       - postgres
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 2b6e607 (mise en place de la vérification du statut de l'user)
   postgres:
     image: postgres
     environment:
@@ -19,8 +23,12 @@ services:
       POSTGRES_PASSWORD: esgipwd
     ports:
       - '5433:5432'
+<<<<<<< HEAD
     volumes:
       - ./Script.sql:/docker-entrypoint-initdb.d/Script.sql
+=======
+
+>>>>>>> 2b6e607 (mise en place de la vérification du statut de l'user)
   pgadmin:
     image: dpage/pgadmin4
     environment:
