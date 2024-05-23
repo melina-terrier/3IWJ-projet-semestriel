@@ -95,16 +95,11 @@ class Form
                 $this->errors[] = $this->config["inputs"][$name]["error"] ;
             }else{
                 //Est ce que le format email est OK
-<<<<<<< HEAD
+
                 if ($this->config["inputs"][$name]["type"]=="email" && !filter_var($dataSent, FILTER_VALIDATE_EMAIL)){
                     $this->errors[] = "Le format de l'email est incorrect";
                 } 
-=======
-                if ($this->config["inputs"][$name]["type"]=="email" &&
-                !filter_var($dataSent, FILTER_VALIDATE_EMAIL)){
-                    $this->errors[] = "Le format de l'email est incorrect" ;
-                }
->>>>>>> 2b6e607 (mise en place de la vérification du statut de l'user)
+
                 //Est ce que le format password est OK
                 if($this->config["inputs"][$name]["type"]=="password" &&
                     (!preg_match("#[a-z]#",$dataSent)||
