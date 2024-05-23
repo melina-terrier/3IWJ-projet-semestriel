@@ -1,15 +1,14 @@
 <?php
 
 namespace App;
-session_start();
 
-//Notre Autoloader
+//Autoloader
 spl_autoload_register("App\myAutoloader");
 
 function myAutoloader($class){
     $classExploded = explode("\\", $class);
     $class = end($classExploded);
-    //echo "L'autoloader se lance pour ".$class;
+
     if(file_exists("../Core/".$class.".php")){
         include "../Core/".$class.".php";
     }
@@ -21,7 +20,6 @@ function myAutoloader($class){
     }
 }
 
-//http://localhost/login
 $uri = $_SERVER["REQUEST_URI"];
 if(strlen($uri) > 1)
     $uri = rtrim($uri, "/");
@@ -38,7 +36,7 @@ if(file_exists("../Routes.yml")) {
 
 if(empty($listOfRoutes[$uri])) {
     header("Status 404 Not Found", true, 404);
-    $object = new Controllers\Error();
+    $object = new Controller\Error();
     $object->page404();
 }
 
@@ -49,22 +47,23 @@ if(empty($listOfRoutes[$uri]["Controller"]) || empty($listOfRoutes[$uri]["Action
 
 $controller = $listOfRoutes[$uri]["Controller"];
 $action = $listOfRoutes[$uri]["Action"];
-$security = $listOfRoutes[$uri]["Security"];
-$role = $listOfRoutes[$uri]["Role"];
-$auth = new Core\Security();
 
+if (isset($listOfRoutes[$uri]['Security']) && $listOfRoutes[$uri]['Security'] === true) {
+    session_start();
+    if (!isset($_SESSION['user'])) { 
+        $error = new Controller\Error();
+        $error->page403();
+        die();
+    }
+}
 
-print_r($auth);
-print_r($security);
-print_r($role);
+if (!empty($listOfRoutes[$uri]['Role'])) {
+    $user = unserialize($_SESSION['user']); 
 
-print_r($_SESSION);
-$user_mail = ($_SESSION["email"]);
-
-if ($security && $auth) {
-    if ($userStatus !== $role) {
-        header("Location: /");
-        exit(); // Assure que le script se termine ici pour éviter toute exécution supplémentaire
+    if (!in_array($user->getRoles(), $listOfRoutes[$uri]['Role'])) {
+        $error = new Controller\Error();
+        $error->page403();
+        die();
     }
 }
 
