@@ -58,9 +58,11 @@ if(empty($listOfRoutes[$uri]["Controller"]) || empty($listOfRoutes[$uri]["Action
 
 $controller = $listOfRoutes[$uri]["Controller"];
 $action = $listOfRoutes[$uri]["Action"];
+$security = $listOfRoutes[$uri]["Security"];
+$role = $listOfRoutes[$uri]["Role"];
 
-
-
+print_r($role);
+print_r($security);
 
 //include "../Controllers/".$controller.".php";
 if(!file_exists("../Controllers/".$controller.".php")){
