@@ -12,14 +12,6 @@ class Register
                 "submit"=>"S'inscrire"
                 ],
             "inputs"=>[
-                "firstname"=>[
-                    "type"=>"text",
-                    "min"=>2,
-                    "max"=>50,
-                    "placeholder"=>"Votre prénom",
-                    "required"=>true,
-                    "error"=>"Votre prénom doit faire entre 2 et 50 caractères"
-                ],
                 "lastname"=>[
                     "type"=>"text",
                     "min"=>2,
@@ -27,6 +19,14 @@ class Register
                     "placeholder"=>"Votre nom",
                     "required"=>true,
                     "error"=>"Votre nom doit faire entre 2 et 50 caractères"
+                ],
+                "firstname"=>[
+                    "type"=>"text",
+                    "min"=>2,
+                    "max"=>50,
+                    "placeholder"=>"Votre prénom",
+                    "required"=>true,
+                    "error"=>"Votre prénom doit faire entre 2 et 50 caractères"
                 ],
                 "email"=>[
                     "type"=>"email",

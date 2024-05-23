@@ -15,6 +15,21 @@
   Controller: "Security"
   Action: "logout"
 
+/update:
+  Controller: "Security"
+  Action: "update"
+
+/comment:
+  Controller: "Security"
+  Action: "comment"
+
+/newsletter:
+  Controller: "Security"
+  Action: "newsletter"
+
+/reinitialization:
+  Controller: "Security"
+  Action: "reinitialization"
 
 /ajout-utilisateur:
   Controller: "User"
