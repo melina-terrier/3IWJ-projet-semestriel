@@ -8,7 +8,7 @@
   Action: "login"
 
 /register:
-  Controller: "Security"
+  Controller: "Register"
   Action: "register"
 
 /logout:
@@ -16,19 +16,40 @@
   Action: "logout"
 
 /update:
-  Controller: "Security"
+  Controller: "Update"
   Action: "update"
 
 /comment:
-  Controller: "Security"
+  Controller: "Comment"
   Action: "comment"
 
-/newsletter:
-  Controller: "Security"
-  Action: "newsletter"
+
+/category:
+  Controller: "Category"
+  Action: "category"
+
+/media:
+  Controller: "Media"
+  Action: "media"
+
+/project:
+  Controller: "Project"
+  Action: "project"
+
+/setting:
+  Controller: "Setting"
+  Action: "setting"  
+
+/page:
+  Controller: "Page"
+  Action: "page" 
+
+/theme:
+  Controller: "Theme"
+  Action: "theme"
 
 /reinitialization:
-  Controller: "Security"
+  Controller: "Reinitialization"
   Action: "reinitialization"
 
 /ajout-utilisateur:

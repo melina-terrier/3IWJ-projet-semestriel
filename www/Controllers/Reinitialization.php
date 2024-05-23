@@ -1,33 +1,32 @@
 <?php
 namespace App\Controller;
 use App\Core\Form;
-use App\Core\Comment as Auth;
+use App\Core\Reinitialization as Auth;
 use App\Core\View;
 use App\Models\User;
 
-class Comment{
+class Reinitialization{
 
+   
 
-
-    public function comment(): void
+    public function reinitialization(): void
     {
 
-        $form = new Form("Comment");
+        $form = new Form("Reinitialization");
 
         if( $form->isSubmitted() && $form->isValid() )
         {
             $user = new User();
-            $user->setPseudo($_POST["pseudo"]);
             $user->setemail($_POST["email"]);
-            $user->setcomment($_POST["comment"]);
             $user->save();
         }
 
-        $view = new View("Comment/comment");
+        $view = new View("Reinitialization/reinitialization");
         $view->assign("form", $form->build());
         $view->render();
     }
 
+  
 }
 
 
