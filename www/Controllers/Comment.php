@@ -1,28 +1,29 @@
 <?php
 namespace App\Controller;
 use App\Core\Form;
-use App\Core\Media as Auth;
+use App\Core\Comment as Auth;
 use App\Core\View;
 use App\Models\User;
 
-class Media{
+class Comment{
 
 
 
-    public function media(): void
+    public function comment(): void
     {
 
-        $form = new Form("Media");
+        $form = new Form("Comment");
 
         if( $form->isSubmitted() && $form->isValid() )
         {
             $user = new User();
-            $user->setUrl($_POST["url"]);
-            $user->setTitle($_POST["title"]);
+            $user->setPseudo($_POST["pseudo"]);
+            $user->setemail($_POST["email"]);
+            $user->setcomment($_POST["comment"]);
             $user->save();
         }
 
-        $view = new View("Media/media");
+        $view = new View("Comment/comment");
         $view->assign("form", $form->build());
         $view->render();
     }

@@ -88,9 +88,28 @@ class Form
                 $this->errors[] = $this->config["inputs"][$name]["error"];
             }
 
+<<<<<<< HEAD
             // Est-ce que la confirmation correspond
             if (isset($this->config["inputs"][$name]["confirm"]) && $dataSent != $_POST[$this->config["inputs"][$name]["confirm"]]) {
                 $this->errors[] = $this->config["inputs"][$name]["error"];
+=======
+            //Est ce que la confirmation correspond
+            if(isset($this->config["inputs"][$name]["confirm"]) && $dataSent != $_POST[$this->config["inputs"][$name]["confirm"]]){
+                $this->errors[] = $this->config["inputs"][$name]["error"] ;
+            }else{
+                //Est ce que le format email est OK
+                if ($this->config["inputs"][$name]["type"]=="email" && !filter_var($dataSent, FILTER_VALIDATE_EMAIL)){
+                    $this->errors[] = "Le format de l'email est incorrect";
+                } 
+                //Est ce que le format password est OK
+                if($this->config["inputs"][$name]["type"]=="password" &&
+                    (!preg_match("#[a-z]#",$dataSent)||
+                    !preg_match("#[A-Z]#",$dataSent)||
+                    !preg_match("#[0-9]#",$dataSent))
+                ){
+                    $this->errors[] = $this->config["inputs"][$name]["error"] ;
+                }
+>>>>>>> 6c501f1db55d62bf1e1edcc546dfce12f25dc3b4
             }
 
             // Est-ce que le format email est OK

@@ -1,28 +1,27 @@
 <?php
 namespace App\Controller;
 use App\Core\Form;
-use App\Core\Media as Auth;
+use App\Core\Category as Auth;
 use App\Core\View;
 use App\Models\User;
 
-class Media{
+class Category{
 
 
 
-    public function media(): void
+    public function category(): void
     {
 
-        $form = new Form("Media");
+        $form = new Form("Category");
 
         if( $form->isSubmitted() && $form->isValid() )
         {
             $user = new User();
-            $user->setUrl($_POST["url"]);
             $user->setTitle($_POST["title"]);
             $user->save();
         }
 
-        $view = new View("Media/media");
+        $view = new View("Category/category");
         $view->assign("form", $form->build());
         $view->render();
     }
