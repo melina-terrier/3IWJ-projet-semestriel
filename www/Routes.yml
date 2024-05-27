@@ -15,6 +15,25 @@
   Controller: "Security"
   Action: "logout"
 
+/update:
+  Controller: "Update"
+  Action: "update"
+
+/comment:
+  Controller: "CommentController"
+  Action: "comment"
+
+/project:
+  Controller: "ProjectController"
+  Action: "project"
+
+/category:
+  Controller: "CategoryController"
+  Action: "category"
+
+
+
+
 
 /ajout-utilisateur:
   Controller: "User"
