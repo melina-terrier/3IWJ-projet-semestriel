@@ -88,11 +88,6 @@ class Form
                 $this->errors[] = $this->config["inputs"][$name]["error"];
             }
 
-<<<<<<< HEAD
-            // Est-ce que la confirmation correspond
-            if (isset($this->config["inputs"][$name]["confirm"]) && $dataSent != $_POST[$this->config["inputs"][$name]["confirm"]]) {
-                $this->errors[] = $this->config["inputs"][$name]["error"];
-=======
             //Est ce que la confirmation correspond
             if(isset($this->config["inputs"][$name]["confirm"]) && $dataSent != $_POST[$this->config["inputs"][$name]["confirm"]]){
                 $this->errors[] = $this->config["inputs"][$name]["error"] ;
@@ -109,7 +104,7 @@ class Form
                 ){
                     $this->errors[] = $this->config["inputs"][$name]["error"] ;
                 }
->>>>>>> 6c501f1db55d62bf1e1edcc546dfce12f25dc3b4
+
             }
 
             // Est-ce que le format email est OK
