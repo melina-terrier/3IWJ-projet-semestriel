@@ -12,11 +12,12 @@ class Comment
                 "submit"=>"Ecrire un commentaire"
             ],
             "inputs"=>[
-                "title"=>[
+                "Title"=>[
                     "type"=>"text",
                     "min"=>2,
                     "max"=>64,
-                    "placeholder"=>"Votre pseudo",
+                    "placeholder"=>"Votre titre",
+
                     "required"=>true,
                     "error"=>"Votre pseudo doit faire entre 2 et 64 caractères"
                 ],
@@ -24,6 +25,7 @@ class Comment
                     "type"=>"text",
                     "min"=>2,
                     "max"=>255,
+                    "placeholder"=>"Votre contenu",
                     "placeholder"=>"Votre email",
                     "required"=>true,
                     "error"=>"Votre email doit faire entre 2 et 255 caractères"

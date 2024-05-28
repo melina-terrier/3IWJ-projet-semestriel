@@ -20,60 +20,41 @@ class Update
                     "required"=>true,
                     "error"=>"Votre adresse doit faire entre 2 et 50 caractères"
                 ],
-                "study"=>[
+
+                "Photo"=>[
                     "type"=>"text",
                     "min"=>2,
                     "max"=>255,
-                    "placeholder"=>"Votre parcours académique",
+                    "placeholder"=>"Modifer votre photo",
                     "required"=>true,
                     "error"=>"ce champ doit faire entre 2 et 255 caractères"
                 ],
-                "experience"=>[
-                    "type"=>"text",
+                "telephone"=>[
+                    "type"=>"int",
                     "min"=>2,
                     "max"=>255,
-                    "placeholder"=>"Votre expérience professionnelle",
+                    "placeholder"=>"Votre télephone",
                     "required"=>true,
                     "error"=>"ce champ doit faire entre 2 et 255 caractères"
                 ],
-                "interest"=>[
-                    "type"=>"text",
-                    "min"=>2,
-                    "max"=>255,
-                    "placeholder"=>"Vos intérets",
-                    "required"=>true,
-                    "error"=>"ce champ doit faire entre 2 et 255 caractères"
-                ],
-                "competence"=>[
-                    "type"=>"text",
-                    "min"=>2,
-                    "max"=>255,
-                    "placeholder"=>"Vos compétences",
-                    "required"=>true,
-                    "error"=>"ce champ doit faire entre 2 et 255 caractères"
-                ],
-                "birthday"=>[
+                "date"=>[
                     "type"=>"date",
+                    "min"=>2,
+                    "max"=>255,
                     "placeholder"=>"Votre date de naissance",
                     "required"=>true,
-                    "error"=>"Ce champ ne doit pas etre vide"
-                ],
-                "contact"=>[
-                    "type"=>"text",
-                    "min"=>2,
-                    "max"=>50,
-                    "placeholder"=>"Votre contact",
-                    "required"=>true,
-                    "error"=>"Votre prénom doit faire entre 2 et 50 caractères"
+                    "error"=>"ce champ doit faire entre 2 et 255 caractères"
+
                 ],
                 "description"=>[
                     "type"=>"text",
                     "min"=>2,
                     "max"=>255,
-                    "placeholder"=>"Votre description",
+                    "placeholder"=>"Votre déscription de profil",
                     "required"=>true,
-                    "error"=>"Ce champ doit faire entre 2 et 255 caractères"
-                ]
+                    "error"=>"ce champ doit faire entre 2 et 255 caractères"
+                ],
+            
             ]
 
         ];

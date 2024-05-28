@@ -4,19 +4,20 @@ use App\Core\SQL;
 
 class User extends SQL
 {
-
-
     private ?int $id = null;
     protected string $firstname;
     protected string $lastname;
     protected string $email;
     protected string $password;
+    protected string $address; // Corrigé "adress" en "address"
+    protected string $photo;
+    protected string $telephone;
+    protected string $date;
+    protected string $description;
     protected int $status = 0;
 
-
-
     /**
-     * @return int
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -24,9 +25,9 @@ class User extends SQL
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      */
-    public function setId(int $id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
@@ -111,6 +112,83 @@ class User extends SQL
         $this->status = $status;
     }
 
+    /**
+     * @return string
+     */
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
 
+    /**
+     * @param string $address
+     */
+    public function setAddress(string $address): void
+    {
+        $this->address = $address;
+    }
 
+    /**
+     * @return string
+     */
+    public function getPhoto(): string
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param string $photo
+     */
+    public function setPhoto(string $photo): void
+    {
+        $this->photo = $photo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTelephone(): string
+    {
+        return $this->telephone;
+    }
+
+    /**
+     * @param string $telephone
+     */
+    public function setTelephone(string $telephone): void
+    {
+        $this->telephone = $telephone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDate(): string
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param string $date
+     */
+    public function setDate(string $date): void
+    {
+        $this->date = $date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
 }

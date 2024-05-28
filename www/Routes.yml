@@ -12,7 +12,6 @@
   Action: "register"
 
 /logout:
-  Controller: "Security"
   Action: "logout"
 
 /update:
@@ -20,37 +19,16 @@
   Action: "update"
 
 /comment:
-  Controller: "Comment"
+  Controller: "CommentController"
   Action: "comment"
 
-
-/category:
-  Controller: "Category"
-  Action: "category"
-
-/media:
-  Controller: "Media"
-  Action: "media"
-
 /project:
-  Controller: "Project"
+  Controller: "ProjectController"
   Action: "project"
 
-/setting:
-  Controller: "Setting"
-  Action: "setting"  
-
-/page:
-  Controller: "Page"
-  Action: "page" 
-
-/theme:
-  Controller: "Theme"
-  Action: "theme"
-
-/reinitialization:
-  Controller: "Reinitialization"
-  Action: "reinitialization"
+/category:
+  Controller: "CategoryController"
+  Action: "category"
 
 /ajout-utilisateur:
   Controller: "User"
