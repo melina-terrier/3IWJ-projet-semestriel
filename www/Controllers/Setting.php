@@ -1,48 +1,21 @@
 <?php
-namespace App\Controller;
+
+namespace App\Controllers;
+
 use App\Core\Form;
-use App\Core\Setting as Auth;
 use App\Core\View;
-use App\Models\User;
 
 class Setting{
 
-
-
-    public function setting(): void
-    {
-
+    public function setSetting() {
         $form = new Form("Setting");
-
         if( $form->isSubmitted() && $form->isValid() )
         {
-            $user = new User();
-            $user->setTitle($_POST["title"]);
-            $user->save();
         }
-
-        $view = new View("Setting/setting");
+        $view = new View("Setting/setting", "back");
         $view->assign("form", $form->build());
         $view->render();
     }
 
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

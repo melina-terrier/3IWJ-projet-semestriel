@@ -16,7 +16,7 @@ class Register
                     "type"=>"text",
                     "min"=>2,
                     "max"=>50,
-                    "placeholder"=>"Votre nom",
+                    "label"=>"Nom",
                     "required"=>true,
                     "error"=>"Votre nom doit faire entre 2 et 50 caractères"
                 ],
@@ -24,7 +24,7 @@ class Register
                     "type"=>"text",
                     "min"=>2,
                     "max"=>50,
-                    "placeholder"=>"Votre prénom",
+                    "label"=>"Prénom",
                     "required"=>true,
                     "error"=>"Votre prénom doit faire entre 2 et 50 caractères"
                 ],
@@ -32,22 +32,22 @@ class Register
                     "type"=>"email",
                     "min"=>8,
                     "max"=>320,
-                    "placeholder"=>"Votre email",
+                    "label"=>"Email",
                     "required"=>true,
-                    "error"=>"Votre email doit faire entre 8 et 320 caractères"
+                    "error"=>"Le format de l'email est incorrect"
                 ],
                 "password"=>[
                     "type"=>"password",
-                    "placeholder"=>"Votre mot de passe",
+                    "label"=>"Mot de passe",
                     "required"=>true,
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères avec des lettres minscules, majuscules et des chiffres"
                 ],
                 "passwordConfirm"=>[
                     "type"=>"password",
-                    "placeholder"=>"Confirmation",
+                    "label"=>"Confirmation du mot de passe",
                     "required"=>true,
                     "confirm"=>"password",
-                    "error"=>"La confirmation ne correspond pas"
+                    "error"=>"Le mot de passe ne correspond pas"
                 ],
             ]
 

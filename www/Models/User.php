@@ -4,113 +4,170 @@ use App\Core\SQL;
 
 class User extends SQL
 {
-
-
-    private ?int $id = null;
+    protected ?int $id = null;
     protected string $firstname;
     protected string $lastname;
     protected string $email;
     protected string $password;
-    protected int $status = 0;
+    protected ?string $role = 'user';
+    protected int $status;
+    protected ?string $reset_token = null;
+    protected ?string $reset_expires = null;
+    protected ?string $activation_Token = null;
+    protected ?string $photo = null;
+    protected $creation_date;
+    protected $modification_date;
 
+    public function getUserName()
+    {
+        return $this->getFirstname()." ".$this->getLastname();
+    }
 
-
-    /**
-     * @return int
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     public function getFirstname(): string
     {
         return $this->firstname;
     }
 
-    /**
-     * @param string $firstname
-     */
     public function setFirstname(string $firstname): void
     {
-        $this->firstname = ucwords(strtolower(trim($firstname)));
+        $firstname = ucwords(strtolower(trim($firstname)));
+        $this->firstname = $firstname;
     }
 
-    /**
-     * @return string
-     */
     public function getLastname(): string
     {
         return $this->lastname;
     }
 
-    /**
-     * @param string $lastname
-     */
     public function setLastname(string $lastname): void
     {
-        $this->lastname = strtoupper(trim($lastname));
+        $lastname = strtoupper(trim($lastname));
+        $this->lastname = $lastname;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     */
     public function setEmail(string $email): void
     {
-        $this->email = strtolower(trim($email));
+        $email = strtolower(trim($email));
+        $this->email = $email;
     }
 
-    /**
-     * @return string
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
-    /**
-     * @param string $password
-     */
     public function setPassword(string $password): void
     {
-        $this->password = password_hash($password, PASSWORD_DEFAULT);
+        $password = password_hash($password, PASSWORD_DEFAULT);
+        $this->password = $password;
     }
 
-    /**
-     * @return int
-     */
+    public function getRole(): int
+    {
+        return $this->role;
+    }
+
+    public function setRole($role): void
+    {
+        $this->role = $role;
+    }
+
     public function getStatus(): int
     {
         return $this->status;
     }
 
-    /**
-     * @param int $status
-     */
     public function setStatus(int $status): void
     {
         $this->status = $status;
     }
 
+    public function getResetToken(): string
+    {
+        return $this->reset_token;
+    }
 
+    public function setResetToken(?string $reset_token): void
+    {
+        $this->reset_token = $reset_token;
+    }
 
+    public function getResetExpires(): string
+    {
+        return $this->reset_expires;
+    }
+
+    public function setResetExpires(?string $reset_expires): void {
+        $this->reset_expires = $reset_expires;
+    }
+
+    public function getActivationToken(): string
+    {
+        return $this->activation_Token;
+    }
+
+    public function setActivationToken(?string $activationToken): void
+    {
+        $this->activation_Token = $activationToken;
+    }
+
+    public function getPhoto(): string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): void
+    {
+        $this->photo = $photo;
+    }
+
+    public function getCreationDate()
+    {
+        return $this->creation_date;
+    }
+
+    public function setCreationDate($creation_date): void
+    {
+        $this->creation_date = $creation_date;
+    }
+
+    public function getModificationDate()
+    {
+        return $this->modification_date;
+    }
+
+    public function setModificationDate($modification_date): void
+    {
+        $this->modification_date = $modification_date;
+    }
+
+    
+    public function getUsers()
+    {
+        return $this->getAllData(); 
+
+    }
+
+    public function getNbElements() {
+        return $this->countElements();
+    }
+
+    public function __sleep() {
+        return array_diff(array_keys(get_object_vars($this)), array('pdo'));
+    }
 }
