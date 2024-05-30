@@ -2,7 +2,6 @@
   Controller: "Main"
   Action: "home"
 
-
 /login:
   Controller: "Security"
   Action: "login"
@@ -10,6 +9,7 @@
 /register:
   Controller: "Register"
   Action: "register"
+
 
 /logout:
   Action: "logout"
@@ -34,18 +34,172 @@
   Controller: "User"
   Action: "add"
 
-/del-utilisateur:
-  Controller: "User"
-  Action: "delete"
+# BACK
+/dashboard:
+  Controller: "Dashboard"
+  Action: "Dashboard"
+  Security: true
+  Role: "admin"
 
-/show-utilisateur:
-  Controller: "User"
-  Action: "show"
-
-/list-utilisateurs:
+# USER
+/dashboard/users:
   Controller: "User"
   Action: "list"
 
-/maj-utilisateurs:
+/dashboard/add-user:
+  Controller: "User"
+  Action: "add"
+  Security: true
+  Role: "admin"
+
+/dashboard/edit-user:
   Controller: "User"
   Action: "edit"
+  Security: true
+  Role: "user, admin"
+
+/dashboard/profile:
+  Controller: "User"
+  Action: "show"
+  Security: true
+  Role: "admin"
+
+
+# PROJECT
+/dashboard/add-project:
+  Controller: "Project"
+  Action: "add"
+  Security: true
+  Role: "admin"
+
+/dashboard/delete-project:
+  Controller: "Project"
+  Action: "delete"
+  Security: true
+  Role: "admin, user"
+
+/dashboard/projects:
+  Controller: "Project"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+/dashboard/update-project:
+  Controller: "Project"
+  Action: "edit"
+  Security: true
+  Role: "user, admin"
+
+
+# PAGE
+/dashboard/add-page:
+  Controller: "Page"
+  Action: "add"
+  Security: true
+  Role: "admin"
+
+/dashboard/update-page:
+  Controller: "Page"
+  Action: "edit"
+  Security: true
+  Role: "user, admin"
+
+/dashboard/delete-page:
+  Controller: "Page"
+  Action: "delete"
+  Security: true
+  Role: "admin"
+
+/dashboard/pages:
+  Controller: "Page"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+
+# COMMENTAIRES
+/dashboard/delete-comment:
+  Controller: "Comment"
+  Action: "delete"
+  Security: true
+  Role: "admin"
+
+/dashboard/comments:
+  Controller: "Comment"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+/dashboard/update-comment:
+  Controller: "Comment"
+  Action: "edit"
+  Security: true
+  Role: "user"
+
+
+# CATEGORIES
+/dashboard/add-tag:
+  Controller: "Category"
+  Action: "add"
+  Security: true
+  Role: "admin"
+
+/dashboard/update-tag:
+  Controller: "Category"
+  Action: "edit"
+  Security: true
+  Role: "admin"
+
+/dashboard/delete-tag:
+  Controller: "Category"
+  Action: "delete"
+  Security: true
+  Role: "admin"
+
+/dashboard/tags:
+  Controller: "Category"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+
+# MEDIAS
+/dashboard/add-media:
+  Controller: "Media"
+  Action: "add"
+  Security: true
+  Role: "admin"
+
+/dashboard/update-media:
+  Controller: "Media"
+  Action: "edit"
+  Security: true
+  Role: "admin"
+
+/dashboard/delete-media:
+  Controller: "Media"
+  Action: "delete"
+  Security: true
+  Role: "admin"
+
+/dashboard/medias:
+  Controller: "Media"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+
+# SETTING
+/dashboard/settings:
+  Controller: "Settings"
+  Action: "Add"
+  Security: true
+  Role: "admin"
+
+
+# INSTALLER
+/install:
+  Controller: "Installer"
+  Action: "Install"
+  Security: false
+  Role: ""
