@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Ceci est mon front</title>
+        <titlez>Ceci est mon front</title>
         <meta name="description" content="Super site avec une magnifique intégration">
     </head>
     <body>

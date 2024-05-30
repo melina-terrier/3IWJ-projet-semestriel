@@ -21,7 +21,7 @@
                     <li><a href="#">Projets</a>
                         <ul>
                             <li><a href="/dashboard/projects">Tous les projets </a></li>
-                            <li><a href="/dashboard/add-preoject">Ajouter un projet</a></li>
+                            <li><a href="/dashboard/add-project">Ajouter un projet</a></li>
                             <li><a href="/dashboard/tags">Catégorie du projet</a></li>
                         </ul>
                     </li>
