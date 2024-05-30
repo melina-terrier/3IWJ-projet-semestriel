@@ -15,6 +15,9 @@ function myAutoloader($class){
     if(file_exists("../Models/".$class.".php")){
         include "../Models/".$class.".php";
     }
+    if(file_exists("../Controllers/".$class.".php")){
+        include "../Controllers/".$class.".php";
+    }
 }
 
 
@@ -48,7 +51,8 @@ if(file_exists("../Routes.yml")) {
 
 if(empty($listOfRoutes[$uri])) {
     header("Status 404 Not Found", true, 404);
-    die("Page 404");
+    $object = new Controllers\Error();
+    $object->page404();
 }
 
 if(empty($listOfRoutes[$uri]["Controller"]) || empty($listOfRoutes[$uri]["Action"]) ) {
@@ -58,8 +62,6 @@ if(empty($listOfRoutes[$uri]["Controller"]) || empty($listOfRoutes[$uri]["Action
 
 $controller = $listOfRoutes[$uri]["Controller"];
 $action = $listOfRoutes[$uri]["Action"];
-
-
 
 
 //include "../Controllers/".$controller.".php";
