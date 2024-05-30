@@ -18,9 +18,11 @@ CREATE TABLE msnu_category (
 	PRIMARY KEY (id_categorie)
 );
 
+DROP SEQUENCE IF EXISTS msnu_user_id_seq;
+CREATE SEQUENCE msnu_user_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 -- Define the msnu_user table
 CREATE TABLE msnu_user (
-	id_user                   SERIAL,
+	id		                  INTEGER DEFAULT nextval('{prefix}_user_id_seq') NOT NULL,
 	firstname                 VARCHAR(50) NOT NULL,
 	lastname                  VARCHAR(50) NOT NULL,
 	email                     VARCHAR(155),
@@ -29,12 +31,19 @@ CREATE TABLE msnu_user (
 	last_modification_date    DATE,
 	status                    INTEGER,
 	Photo                     VARCHAR(155),
-	role                      INTEGER,
+	img_path 					VARCHAR(255),
+	role                      VARCHAR(50),
 	adress                    VARCHAR(50),
 	telephone                 INTEGER,
 	date                      DATE,
 	description               TEXT,
-	PRIMARY KEY (id_user)
+	reset_token 			VARCHAR(255),
+    reset_expires 			TIMESTAMP,
+	activation_token 		VARCHAR(255),
+	createdat 				TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updatedat 				TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	is_active 				BOOLEAN DEFAULT false,
+	PRIMARY KEY (id)
 );
 
 -- Define the msnu_status table
@@ -66,7 +75,7 @@ CREATE TABLE msnu_project (
 	id_status      INTEGER,
 	PRIMARY KEY (id_project),
 	FOREIGN KEY (id_categorie) REFERENCES msnu_category(id_categorie),
-	FOREIGN KEY (id_user) REFERENCES msnu_user(id_user),
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id),
 	FOREIGN KEY (id_media) REFERENCES msnu_media(id_media),
 	FOREIGN KEY (id_status) REFERENCES msnu_status(id_status)
 );
@@ -101,7 +110,7 @@ CREATE TABLE msnu_comment (
 	id_user    INTEGER,
 	id_project INTEGER,
 	PRIMARY KEY (id_comment),
-	FOREIGN KEY (id_user) REFERENCES msnu_user(id_user),
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id),
 	FOREIGN KEY (id_project) REFERENCES msnu_project(id_project)
 );
 
@@ -113,7 +122,7 @@ CREATE TABLE msnu_notification (
 	id_user              INTEGER,
 	id_type_notification INTEGER,
 	PRIMARY KEY (id_notification),
-	FOREIGN KEY (id_user) REFERENCES msnu_user(id_user),
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id),
 	FOREIGN KEY (id_type_notification) REFERENCES msnu_type_notification(id_type_notification)
 );
 
@@ -129,7 +138,7 @@ CREATE TABLE msnu_formation (
 	Description_formation TEXT,
 	id_user             INTEGER,
 	PRIMARY KEY (id_formation),
-	FOREIGN KEY (id_user) REFERENCES msnu_user(id_user)
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
 );
 
 -- Define the msnu_professional_experience table
@@ -144,7 +153,7 @@ CREATE TABLE msnu_professional_experience (
 	Description_experience TEXT,
 	id_user               INTEGER,
 	PRIMARY KEY (id_experience),
-	FOREIGN KEY (id_user) REFERENCES msnu_user(id_user)
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
 );
 
 -- Define the msnu_skills table
@@ -155,7 +164,7 @@ CREATE TABLE msnu_skills (
 	description_skills   TEXT,
 	id_user              INTEGER,
 	PRIMARY KEY (id_skills),
-	FOREIGN KEY (id_user) REFERENCES msnu_user(id_user)
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
 );
 
 -- Define the msnu_interests table
@@ -166,5 +175,5 @@ CREATE TABLE msnu_interests (
 	description_interests TEXT,
 	id_user               INTEGER,
 	PRIMARY KEY (id_interests),
-	FOREIGN KEY (id_user) REFERENCES msnu_user(id_user)
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
 );

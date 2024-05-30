@@ -2,9 +2,6 @@
 
 namespace App\Core;
 
-use App\Forms\Register;
-use App\Forms\Project;
-
 class Form
 {
     private $config;
@@ -20,32 +17,48 @@ class Form
         $this->config = $name::getConfig();
     }
 
-    public function build(): string
-    {
+    public function build(): string{
         $html = "";
-
-        if (!empty($this->errors)) {
-            foreach ($this->errors as $error) {
-                $html .= "<li>" . $error . "</li>";
+        if(!empty($this->errors)){
+            foreach ($this->errors as $error){
+                $html .= "<li>".$error."</li>";
             }
         }
+        $html .= "<form action='".$this->config["config"]["action"]."' method='".$this->config["config"]["method"]."'>";
+        foreach ($this->config["inputs"] as $name=>$input){
 
-        $html .= "<form action='" . $this->config["config"]["action"] . "' method='" . $this->config["config"]["method"] . "'>";
-
-        foreach ($this->config["inputs"] as $name => $input) {
-            $html .= "
+            if ($input["type"] === "select") {
+                $html .= "<select name='" . $name . "'";
+                if (isset($input["option"])) {
+                  foreach ($input["option"] as $value) {
+                    $html .= "<option value='" . $value . "'>" . $value . "</option>";
+                  }
+                }
+                $html .= "</select>";
+              } else if ($input["type"] === "textarea") {
+                $html .= "
+                <label for='".$name."' > ".$input["label"]."
+                <textarea
+                  name='" . $name . "' 
+                  " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
+                  " . (($input["required"]) ? "required" : "") . "
+                ></textarea></label>";
+              } else {
+                $html .= "
+                <label for='".$name."' > ".$input["label"]."
                 <input 
-                    type='" . $input["type"] . "' 
-                    name='" . $name . "' 
-                    placeholder='" . $input["placeholder"] . "'
-                    " . (($input["required"]) ? "required" : "") . "
-                    ><br>
-            ";
+                  type='" . $input["type"] . "' 
+                  name='" . $name . "' 
+                  " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
+                  " . (($input["required"]) ? "required" : "") . "
+                ></label>";
+              }
+            
+              $html .= "<br>";
+
         }
-
-        $html .= "<input type='submit' value='" . htmlentities($this->config["config"]["submit"]) . "'>";
+        $html .= "<input type='submit' value='".htmlentities($this->config["config"]["submit"])."'>";
         $html .= "</form>";
-
         return $html;
     }
 
@@ -97,7 +110,7 @@ class Form
                     $this->errors[] = "Le format de l'email est incorrect";
                 } 
                 //Est ce que le format password est OK
-                if($this->config["inputs"][$name]["type"]=="password" &&
+                if($this->config["inputs"][$name]["type"]=="password" && strlen($dataSent) >= 8 &&
                     (!preg_match("#[a-z]#",$dataSent)||
                     !preg_match("#[A-Z]#",$dataSent)||
                     !preg_match("#[0-9]#",$dataSent))
@@ -106,6 +119,7 @@ class Form
                 }
 
             }
+
 
             // Est-ce que le format email est OK
             if ($this->config["inputs"][$name]["type"] == "email" && !filter_var($dataSent, FILTER_VALIDATE_EMAIL)) {
@@ -118,7 +132,8 @@ class Form
             }
         }
 
-        if (empty($this->errors)) {
+        if(empty($this->errors))
+        {
             return true;
         } else {
             return false;

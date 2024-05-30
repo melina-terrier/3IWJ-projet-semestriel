@@ -1,69 +1,106 @@
 <?php
-
 namespace App\Models;
-
 use App\Core\SQL;
 
 class Comment extends SQL
 {
-    private ?int $id = null; // Ajoutez cette propriété
-    private ?int $id_content = null;
-    protected string $Title;
-    protected string $content;
-    protected \DateTime $date;
 
-    public function getId(): ?int
+    protected ?int $id = null;
+    protected $comment;
+    // protected $user_name;
+    // protected $project_id;
+    protected $status;
+    protected $isReported = 0;
+    protected $creation_date;
+    protected $modification_date;
+
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getid_content(): ?int
+    public function setId($id): void
     {
-        return $this->id_content;
+        $this->id = $id;
     }
 
-    public function setid_content(?int $id_content): void
+    // public function getUserName()
+    // {
+    //     return $this->user_name;
+    // }
+
+    // public function setUserName($user_name): void
+    // {
+    //     $this->user_name = $user_name;
+    // }
+
+    public function getComment()
     {
-        $this->id_content = $id_content;
+        return $this->comment;
     }
 
-    public function getTitle(): string
+    public function setComment($comment): void
     {
-        return $this->Title;
+        $this->comment = $comment;
     }
 
-    public function setTitle(string $Title): void
+    // public function getProjectId()
+    // {
+    //     return $this->project_id;
+    // }
+
+    // public function setProjectId($project_id): void
+    // {
+    //     $this->project_id = $project_id;
+    // }
+
+    public function getStatus()
     {
-        $this->Title = $Title;
+        return $this->status;
     }
 
-    public function getContent(): string
+    public function setStatus($status): void
     {
-        return $this->content;
+        $this->status = $status;
     }
 
-    public function setContent(string $content): void
+    public function getIsReported()
     {
-        $this->content = $content;
+        return $this->isReported;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDate(): \DateTime
+    public function setIsReported($isReported): void
     {
-        return $this->date;
+        $this->isReported = $isReported;
     }
 
-    /**
-     * @param \DateTime|string $date
-     * @throws \Exception
-     */
-    public function setDate($date): void
+    public function getCreationDate()
     {
-        if (is_string($date)) {
-            $date = new \DateTime($date);
-        }
-        $this->date = $date;
+        return $this->creation_date;
     }
+
+    public function setCreationDate($creation_date): void
+    {
+        $this->creation_date = $creation_date;
+    }
+
+    public function getModificationDate()
+    {
+        return $this->modification_date;
+    }
+
+    public function setModificationDate($modification_date): void
+    {
+        $this->modification_date = $modification_date;
+    }
+    
+    public function getNbElements() {
+        return $this->countElements();
+    }
+
+    public function getElementsByType($column, $value) {
+        return $this->countElements($column, $value);
+    }
+
 }
+>>>>>>> 439b247 (Mise en place du CRUD)

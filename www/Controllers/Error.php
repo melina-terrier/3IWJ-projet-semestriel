@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controllers;
 use App\Core\View;
 
 class Error
 {
     public function page404(): void
     {
-        $myView = new View("Error/page404");
+        $view = new View("Error/page404", "front");
+        $view->render();
     }
 
     public function page403(): void
     {
-        $myView = new View("Error/page403");
+        $view = new View("Error/page403", "front");
+        $view->render();
     }
 
 
