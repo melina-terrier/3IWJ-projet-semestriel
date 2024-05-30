@@ -79,9 +79,3 @@ if( !method_exists($controller, $action) ){
     die("Le methode ".$action." n'existe pas dans le controller ".$controller);
 }
 $objetController->$action();
-
-
-
-
-
-
