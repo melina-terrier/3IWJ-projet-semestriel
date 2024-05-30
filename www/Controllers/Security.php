@@ -90,8 +90,6 @@ class Security{
         $view->render();
     }
 
-
-
     public function requestPassword(): void {
         $form = new Form("RequestPassword");
         $errors = [];
@@ -131,7 +129,6 @@ class Security{
         $view->assign("successForm", $success);
         $view->render();
     }
-
 
     private function sendResetEmail($email, $resetToken) {
         $mail = new PHPMailer(true); 

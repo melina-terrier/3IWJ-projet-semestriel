@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Core;
 use PDO;
 
@@ -23,7 +22,7 @@ class SQL
 
     public function save()
     {
-        //Vous ne devez ecrire en dure le nom de la table ou des colonnes à inserer en bdd
+        // Vous ne devez pas écrire en dur le nom de la table ou des colonnes à insérer en BDD
         $columnsAll = get_object_vars($this);
         $columnsToDelete = get_class_vars(get_class());
         $columns = array_diff_key($columnsAll, $columnsToDelete);
@@ -39,7 +38,7 @@ class SQL
                 $sqlUpdate[] = $column."=:".$column;
             }
 
-            $sql = "UPDATE ".$this->table. " SET ".implode(',', $sqlUpdate). " WHERE id=".$this->getId();
+            $sql = "UPDATE " . $this->table . " SET " . implode(', ', $sqlUpdate) . " WHERE id=" . $this->getId();
         }
         $queryPrepared = $this->pdo->prepare($sql);
         foreach ($columns as $key => $value) {

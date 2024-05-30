@@ -81,10 +81,39 @@ class Page
                 $errorSlug = "Slug déjà existant, veuillez en choisir un autre";
             }
         }
+
+        
+        // if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //     $page = new PageModel();
+        //     $pageSlug = strtolower(str_replace(' ', '-', $_POST['title']));
+            
+        //     $page->setTitle($_POST['title']);
+        //     $page->setContent(strip_tags(stripslashes($_POST['content']), $allowedTags));
+        //     $page->setCreationDate($formattedDate);
+        //     $page->setModificationDate($formattedDate);
+        //     $page->setSlug($pageSlug);
+        //     $page->setStatus('Publié');
+        //     $page->save();
+        //     $success[] = "Votre catgégorie a été créée";
+        // }
         $view = new View("Page/add-page", "back");
         $view->assign("mediasList", $mediasList ?? []);
         $view->assign("page", $page);
         $view->render();
     }
-  
+
+    // public function addPage(): void
+    // {
+    //     $form = new Form("AddPage");
+
+    //     if( $form->isSubmitted() && $form->isValid() )
+    //     {
+            
+    //     }
+
+    //     $view = new View("Page/add-page", "back");
+    //     $view->assign("form", $form->build());
+    //     $view->render();
+    // }
+
 }

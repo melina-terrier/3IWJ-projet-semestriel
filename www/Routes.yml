@@ -2,14 +2,12 @@
   Controller: "Main"
   Action: "home"
 
-
 # BACK-OFFICE
 /dashboard:
   Controller: "Main"
   Action: "dashboard"
   Security: true
   # Role: [admin]
-
 
 # USER
 /dashboard/users:
@@ -36,7 +34,6 @@
   Security: true
   # Role: [user, admin]
 
-
 # PROJECT
 /dashboard/add-project:
   Controller: "Project"
@@ -49,7 +46,6 @@
   Action: "allProjects"
   Security: true
   # Role: [admin]
-
 
 # PAGE
 /dashboard/add-page:
@@ -64,8 +60,6 @@
   Security: true
   # Role: [admin]
 
-
-# COMMENTS
 /dashboard/comments:
   Controller: "Comment"
   Action: "allComments"
@@ -77,7 +71,6 @@
   Action: "addComment"
   Security: true
   # Role: "admin"
-
 
 # TAGS
 /dashboard/add-tag:
@@ -91,7 +84,6 @@
   Action: "allTags"
   Security: true
   # Role: [admin]
-
 
 # MEDIAS
 /dashboard/medias:
@@ -121,6 +113,7 @@
   Action: "Install"
 
 
+
 # USER
 /login:
   Controller: "Security"
@@ -134,10 +127,15 @@
   Controller: "Security"
   Action: "activateAccount"
 
-# /logout:
-#   Controller: "Security"
-#   Action: "logout"
+
+/logout:
+  Action: "logout"
+
+/reset-password:
+  Controller: "Security"
+  Action: "resetPassword"
 
 /request-password:
   Controller: "Security"
   Action: "requestPassword"
+

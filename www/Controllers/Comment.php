@@ -44,5 +44,5 @@ class Comment{
         $view->assign("comments", $comments);
         $view->render();
     }
-
 }
+

@@ -108,5 +108,4 @@ class Tag{
         $view->render();
     
     }
-
 }

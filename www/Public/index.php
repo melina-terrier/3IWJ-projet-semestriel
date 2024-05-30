@@ -34,6 +34,17 @@ function myAutoloader($class){
     }
 }
 
+
+
+
+// if (!file_exists('./config.php')) {
+//     $controller = new App\Controller\Install();
+//     $controller->run();
+//     die();
+// }
+
+
+
 $uri = $_SERVER["REQUEST_URI"];
 if(strlen($uri) > 1)
     $uri = rtrim($uri, "/");
@@ -62,6 +73,7 @@ if( !empty($listOfRoutes[$uri]) ) {
 
     if (!empty($listOfRoutes[$uri]['Role'])) {
         $user = unserialize($_SESSION['user']);
+
         if (!in_array($user->getRoles(), $listOfRoutes[$uri]['Role'])) {
             $error = new Error();
             $error->page403();
@@ -90,13 +102,15 @@ if( !empty($listOfRoutes[$uri]) ) {
         }
     } else {
         header("Internal Server Error", true, 500);
-        die("Le fichier routes.yml ne contient pas de controller ou d'action pour l'uri :".$uri);
+    die("Le fichier routes.yml ne contient pas de controller ou d'action pour l'uri :".$uri);
     }
-} else if($uri){
+}
+else if($uri){
     session_start();
     $pageBuilder = new PageBuilder();
     $pageBuilder->build($uri);
-} else {
+}
+else{
     header("Status 404 Not Found", true, 404);
     $error = new Error();
     $error->page404();

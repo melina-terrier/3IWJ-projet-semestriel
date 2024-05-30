@@ -9,13 +9,12 @@ class Form
 
     public function __construct(String $name)
     {
-        if(!file_exists("../Forms/".$name.".php")){
-            die("Le form ".$name.".php n'existe pas dans le dossier ../Forms");
+        if (!file_exists("../Forms/" . $name . ".php")) {
+            die("Le form " . $name . ".php n'existe pas dans le dossier ../Forms");
         }
-        include "../Forms/".$name.".php";
-        $name = "App\\Forms\\".$name;
+        include "../Forms/" . $name . ".php";
+        $name = "App\\Forms\\" . $name;
         $this->config = $name::getConfig();
-
     }
 
     public function build(): string{
@@ -65,43 +64,41 @@ class Form
 
     public function isSubmitted(): bool
     {
-        if($this->config["config"]["method"] =="POST" && !empty($_POST)){
+        if ($this->config["config"]["method"] == "POST" && !empty($_POST)) {
             return true;
-        }else if($this->config["config"]["method"] =="GET" && !empty($_GET)){
+        } else if ($this->config["config"]["method"] == "GET" && !empty($_GET)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     public function isValid(): bool
     {
-        //Est-ce que j'ai exactement le meme nb de champs
-        if( count($this->config["inputs"]) != count($_POST) ){
+        // Est-ce que j'ai exactement le même nombre de champs
+        if (count($this->config["inputs"]) != count($_POST)) {
             $this->errors[] = "Tentative de Hack";
         }
 
-        foreach ($_POST as  $name=>$dataSent){
-            //Est-ce qu'il s'agit d'un champ que je lui ai donné ?
-            if(!isset($this->config["inputs"][$name])){
-                $this->errors[] = "Tentative de Hack, le champs ".$name." n'est pas autorisé";
+        foreach ($_POST as $name => $dataSent) {
+            // Est-ce qu'il s'agit d'un champ que je lui ai donné ?
+            if (!isset($this->config["inputs"][$name])) {
+                $this->errors[] = "Tentative de Hack, le champ " . $name . " n'est pas autorisé";
             }
 
-            //Est ce que ce n'est pas vide si required
-            if(isset($this->config["inputs"][$name]["required"]) && empty($dataSent) ){
-                $this->errors[] = "Le champs ".$name." ne doit pas être vide";
+            // Est-ce que ce n'est pas vide si required
+            if (isset($this->config["inputs"][$name]["required"]) && empty($dataSent)) {
+                $this->errors[] = "Le champ " . $name . " ne doit pas être vide";
             }
 
-            //Est ce que le min correspond
-            if(isset($this->config["inputs"][$name]["min"])
-                && strlen($dataSent)<$this->config["inputs"][$name]["min"] ){
-                $this->errors[] = $this->config["inputs"][$name]["error"] ;
+            // Est-ce que le min correspond
+            if (isset($this->config["inputs"][$name]["min"]) && strlen($dataSent) < $this->config["inputs"][$name]["min"]) {
+                $this->errors[] = $this->config["inputs"][$name]["error"];
             }
 
-            //Est ce que le max correspond
-            if(isset($this->config["inputs"][$name]["max"])
-                && strlen($dataSent)>$this->config["inputs"][$name]["max"] ){
-                $this->errors[] = $this->config["inputs"][$name]["error"] ;
+            // Est-ce que le max correspond
+            if (isset($this->config["inputs"][$name]["max"]) && strlen($dataSent) > $this->config["inputs"][$name]["max"]) {
+                $this->errors[] = $this->config["inputs"][$name]["error"];
             }
 
             //Est ce que la confirmation correspond
@@ -123,13 +120,12 @@ class Form
                     $this->errors[] = $this->config["inputs"][$name]["error"] ;
                 }
             }
-        }
+
         if(empty($this->errors))
         {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-
 }

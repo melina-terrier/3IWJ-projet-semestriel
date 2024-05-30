@@ -96,7 +96,6 @@ class User extends SQL
     {
         $this->status = $status;
     }
-
     public function getResetToken(): string
     {
         return $this->reset_token;
@@ -125,7 +124,7 @@ class User extends SQL
     {
         $this->activation_Token = $activationToken;
     }
-
+    
     public function getPhoto(): string
     {
         return $this->photo;

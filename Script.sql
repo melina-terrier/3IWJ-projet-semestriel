@@ -121,6 +121,7 @@ CREATE TABLE msnu_media_project (
 	FOREIGN KEY (id_media) REFERENCES msnu_media(id_media)
 );
 
+
 CREATE SEQUENCE msnu_comment_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 -- Define the msnu_comment table
 CREATE TABLE msnu_comment (

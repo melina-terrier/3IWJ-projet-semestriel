@@ -16,7 +16,6 @@ class User
         $user = new UserModel();
         if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
             $userId = $_POST['id'];
-
             if ($user->delete(['id' => $userId])) {
                 $success[] = "L'utilisateur a été supprimé avec succès.";
             } else {
