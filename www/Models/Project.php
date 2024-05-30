@@ -1,87 +1,122 @@
 <?php
+
 namespace App\Models;
+
 use App\Core\SQL;
 
 class Project extends SQL
 {
-    private ?int $id_project = null;
-    protected string $title;
-    protected string $content;
-    protected \DateTime $date_to_create;
+    protected ?int $id = null;
+    protected $title;
+    protected $content;
+    // protected $slug;
+    protected $status;
+    protected $creation_date;
+    protected $modification_date;
+    // protected $user_name;
 
-    /**
-     * @return int|null
-     */
-    public function getId_project(): ?int
-    {
-        return $this->id_project;
-    }
-
-    /**
-     * @param int|null $id_project
-     */
-    public function setId_project(?int $id_project): void
-    {
-        $this->id_project = $id_project;
-    }
-
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
-        return $this->getId_project();
+        return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle(): string
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getTitle()
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
-    public function setTitle(string $title): void
+    public function setTitle($title): void
     {
-        $this->title = ucwords(strtolower(trim($title)));
+        $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
-    public function getContent(): string
+    public function getContent()
     {
         return $this->content;
     }
 
-    /**
-     * @param string $content
-     */
-    public function setContent(string $content): void
+    public function setContent($content): void
     {
-        $this->content = strtoupper(trim($content));
+        $this->content = $content;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDate_to_create(): \DateTime
+    public function getStatus()
     {
-        return $this->date_to_create;
+        return $this->status;
     }
 
-    /**
-     * @param \DateTime|string $date_to_create
-     * @throws \Exception
-     */
-    public function setDate_to_create($date_to_create): void
+    public function setStatus($status): void
     {
-        if (is_string($date_to_create)) {
-            $date_to_create = new \DateTime($date_to_create);
-        }
-        $this->date_to_create = $date_to_create;
+        $this->status = $status;
+    }
+
+    // public function getSlug()
+    // {
+    //     return $this->slug;
+    // }
+
+    // public function setSlug($slug): void
+    // {
+    //     $this->slug = $slug;
+    // }
+
+    public function getCreationDate()
+    {
+        return $this->creation_date;
+    }
+
+    public function setCreationDate($creation_date): void
+    {
+        $this->creation_date = $creation_date;
+    }
+
+    public function getModificationDate()
+    {
+        return $this->modification_date;
+    }
+
+    public function setModificationDate($modification_date): void
+    {
+        $this->modification_date = $modification_date;
+    }
+
+    // public function getUserName()
+    // {
+    //     return $this->user_name;
+    // }
+
+    // public function setUserName($user_name): void
+    // {
+    //     $this->user_name = $user_name;
+    // }
+
+
+    public function getNbElements() {
+        return $this->countElements();
+    }
+
+    public function getElementsByType($column, $value) {
+        return $this->countElements($column, $value);
+    }
+
+    public function getAllProjects() {
+        return $this->getProjects("Publié");
+    }
+
+    public function getPublishedProjects() {
+        return $this->getPublishedProject("project");
+    }
+
+    public function getDeletedProjects() {
+        return $this->getDleletedProjects("project");
+    }
+
+    public function getDraftProjects() {
+        return $this->getDraftProjects("project");
     }
 }

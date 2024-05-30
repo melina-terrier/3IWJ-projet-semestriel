@@ -1,1 +1,1 @@
-<h2>Welcome</h2>
+<h1>Ceci est la page d'accueil défini par l'utilisateur</h1>

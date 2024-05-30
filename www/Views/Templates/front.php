@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Ceci est mon front</title>
-        <meta name="description" content="Super site avec une magnifique intégration">
-    </head>
-    <body>
-        <h1>Template Front</h1>
-        <!-- intégration de la vue -->
-        <?php include "../Views/".$this->view.".php";?>
-    </body>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/Views/styles/dist/css/mainFront.css">
+</head>
+<body>
+<h3>FRONT</h3>
+<main>
+<?php include "../Views/".$this->view.".php";?>
+</main>
+</body>
 </html>

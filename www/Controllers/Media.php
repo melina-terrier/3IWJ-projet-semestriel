@@ -1,49 +1,50 @@
 <?php
-namespace App\Controller;
+namespace App\Controllers;
 use App\Core\Form;
-use App\Core\Media as Auth;
 use App\Core\View;
+use App\Models\Media as MediaModel;
+use App\Models\Page;
 use App\Models\User;
+use App\Controllers\Security;
+
 
 class Media{
 
-
-
-    public function media(): void
+    public function addMedia(): void
     {
+        $form = new Form("AddMedia");
+        $errors = [];
+        $success = [];
+        
+        $formattedDate = date('Y-m-d H:i:s');
 
-        $form = new Form("Media");
-
-        if( $form->isSubmitted() && $form->isValid() )
-        {
-            $user = new User();
-            $user->setUrl($_POST["url"]);
-            $user->setTitle($_POST["title"]);
-            $user->save();
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $media = new MediaModel();
+            $media->setTitle($_POST['title']);
+            $media->setDescription($_POST['description']);
+            $media->setUrl($_POST['url']);
+            $media->setCreationDate($formattedDate);
+            $media->setModificationDate($formattedDate);
+            $media->setStatus('Publié');
+            $media->save();
+            $success[] = "Votre média a été créé";
         }
 
-        $view = new View("Media/media");
+        $view = new View("Media/add-media", "back");
         $view->assign("form", $form->build());
+        $view->assign("errorsForm", $errors);
+        $view->assign("successForm", $success);
+        $view->render();
+    }
+
+    public function allMedias(): void
+    {
+        $media = new MediaModel();
+        $medias = $media->getAllData("object");
+
+        $view = new View("Media/medias-list", "back");
+        $view->assign("medias", $medias);
         $view->render();
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

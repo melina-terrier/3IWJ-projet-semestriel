@@ -38,29 +38,6 @@ class View
     public function render(): void
     {
         extract($this->data);
-        //echo "Le template c'est ".$this->template." et la vue ".$this->view;
         include "../Views/Templates/".$this->template.".php";
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
