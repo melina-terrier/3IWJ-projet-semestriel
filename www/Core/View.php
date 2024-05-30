@@ -41,24 +41,3 @@ class View
         include "../Views/Templates/".$this->template.".php";
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

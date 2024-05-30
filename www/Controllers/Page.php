@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 namespace App\Controllers;
@@ -82,89 +81,10 @@ class Page
                 $errorSlug = "Slug déjà existant, veuillez en choisir un autre";
             }
         }
-
-        
-        // if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        //     $page = new PageModel();
-        //     $pageSlug = strtolower(str_replace(' ', '-', $_POST['title']));
-            
-        //     $page->setTitle($_POST['title']);
-        //     $page->setContent(strip_tags(stripslashes($_POST['content']), $allowedTags));
-        //     $page->setCreationDate($formattedDate);
-        //     $page->setModificationDate($formattedDate);
-        //     $page->setSlug($pageSlug);
-        //     $page->setStatus('Publié');
-        //     $page->save();
-        //     $success[] = "Votre catgégorie a été créée";
-        // }
         $view = new View("Page/add-page", "back");
         $view->assign("mediasList", $mediasList ?? []);
         $view->assign("page", $page);
         $view->render();
     }
-
-    // public function addPage(): void
-    // {
-    //     $form = new Form("AddPage");
-
-    //     if( $form->isSubmitted() && $form->isValid() )
-    //     {
-            
-    //     }
-
-    //     $view = new View("Page/add-page", "back");
-    //     $view->assign("form", $form->build());
-    //     $view->render();
-    // }
-
-   
+  
 }
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
-<?php
-namespace App\Controller;
-class Page
-{
-
-    
-    public function show(): void
-    {
-        echo "Affichage d'une category";
-    }
-    public function edit(): void
-    {
-    
-    }
-    public function add(): void
-    {
-
-    }
-    public function delete(): void
-    {
-
-    }
-   
-
-}
->>>>>>> bbdc864 (mise en place de la vérification du statut de l'user)
->>>>>>> 831169c (mise en place des formulaires)

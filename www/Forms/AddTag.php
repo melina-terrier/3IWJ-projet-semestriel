@@ -37,9 +37,6 @@ class AddTag
                     "error"=>"Votre description doit faire entre 2 et 1000 caractères."
                 ]
             ]
-
         ];
     }
-
-
 }

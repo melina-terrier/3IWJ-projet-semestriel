@@ -12,11 +12,7 @@ class SQL
     public function __construct()
     {
         try{
-<<<<<<< HEAD
             $this->pdo = new PDO("pgsql:host=postgres;dbname=esgi;port=5432","esgi","esgipwd");
-=======
-            $this->pdo = new PDO("mysql:host=postgres;dbname=esgi;port=5432","esgi","esgipwd");
->>>>>>> 831169c (mise en place des formulaires)
         }catch (\Exception $e){
             die("Erreur SQL : ".$e->getMessage());
         }
@@ -57,8 +53,6 @@ class SQL
         return $this->pdo->lastInsertId($this->table."_id_seq");
 
     }
-
-<<<<<<< HEAD
 
     public function emailExists($email): bool {
         $sql = "SELECT COUNT(*) FROM " . $this->table . " WHERE email = :email";
@@ -230,7 +224,6 @@ class SQL
         }
     }
 
-
     public function saveInpage()
     {
         $data = $this->getDataObject();
@@ -297,19 +290,4 @@ class SQL
 
         return $queryPrepared->fetchColumn();
     }
-
-    
-=======
-    public function search() {
-        $sql = "SELECT id, name, first_name FROM pro_user WHERE email = ':email'";
-        $queryPrepared = $this->pdo->prepare($sql);
-        $stmt->bind_param(':email', $user_mail);
-        $queryPrepared->execute();
-        $queryPrepared->bind_result($userId, $userName, $userFirstName);
-        $_SESSION["user_id"] = $userId;
-        $_SESSION["user_name"] = $userName;
-        $_SESSION["user_firstname"] = $userFirstName;
-    }
-
->>>>>>> 831169c (mise en place des formulaires)
 }

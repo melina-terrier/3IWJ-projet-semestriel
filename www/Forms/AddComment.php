@@ -30,9 +30,6 @@ class AddComment
                     "error"=>"Le format de l'email est incorrect"
                 ],
             ]
-
         ];
     }
-
-
 }

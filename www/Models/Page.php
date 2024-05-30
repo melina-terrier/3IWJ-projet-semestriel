@@ -129,5 +129,4 @@ class Page extends SQL
     public function getNbElements() {
         return $this->countElements();
     }
-
 }

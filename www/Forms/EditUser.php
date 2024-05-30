@@ -129,9 +129,6 @@ class EditUser
                     "value" => $this->userData['description'] ?? '',
                 ],
             ]
-
         ];
     }
-
-
 }

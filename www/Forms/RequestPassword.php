@@ -21,7 +21,6 @@ class RequestPassword
                     "error"=>"Le format de l'email est incorrect"
                 ]
             ]
-            
         ];
     }
 }

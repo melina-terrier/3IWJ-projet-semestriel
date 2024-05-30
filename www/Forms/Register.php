@@ -50,9 +50,6 @@ class Register
                     "error"=>"Le mot de passe ne correspond pas"
                 ],
             ]
-
         ];
     }
-
-
 }

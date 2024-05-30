@@ -27,9 +27,6 @@ class Login
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères avec des lettres et des chiffres"
                 ]
             ]
-
         ];
     }
-
-
 }

@@ -70,9 +70,6 @@ class Setting
                     "error"=>""
                 ]
             ]
-
         ];
     }
-
-
 }

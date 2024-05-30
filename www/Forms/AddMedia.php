@@ -37,9 +37,6 @@ class AddMedia
                     "error"=>"Votre description doit faire entre 2 et 500 caractères"
                 ]
             ]
-
         ];
     }
-
-
 }

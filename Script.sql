@@ -1,8 +1,8 @@
--- CREATE TABLE msnu_type_media (
--- 	id_type_media        SERIAL,
--- 	label_type_media     VARCHAR(50),
--- 	PRIMARY KEY (id_type_media)
--- );
+CREATE TABLE msnu_type_media (
+	id_type_media        SERIAL,
+	label_type_media     VARCHAR(50),
+	PRIMARY KEY (id_type_media)
+);
 
 -- Define the msnu_status table
 CREATE TABLE msnu_status (
@@ -39,11 +39,11 @@ CREATE TABLE msnu_user (
 );
 
 -- Define the msnu_type_notification table
--- CREATE TABLE msnu_type_notification (
--- 	id_type_notification SERIAL,
--- 	libelle              VARCHAR(50),
--- 	PRIMARY KEY (id_type_notification)
--- );
+CREATE TABLE msnu_type_notification (
+	id_type_notification SERIAL,
+	libelle              VARCHAR(50),
+	PRIMARY KEY (id_type_notification)
+);
 
 
 CREATE SEQUENCE msnu_tag_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
@@ -102,24 +102,24 @@ CREATE TABLE msnu_project (
 );
 
 -- Define the msnu_category_project table
--- CREATE TABLE msnu_category_project (
--- 	id_category_project SERIAL,
--- 	id_project          INTEGER,
--- 	id_media            INTEGER,
--- 	PRIMARY KEY (id_category_project),
--- 	FOREIGN KEY (id_project) REFERENCES msnu_project(id_project),
--- 	FOREIGN KEY (id_media) REFERENCES msnu_media(id_media)
--- );
+CREATE TABLE msnu_category_project (
+	id_category_project SERIAL,
+	id_project          INTEGER,
+	id_media            INTEGER,
+	PRIMARY KEY (id_category_project),
+	FOREIGN KEY (id_project) REFERENCES msnu_project(id_project),
+	FOREIGN KEY (id_media) REFERENCES msnu_media(id_media)
+);
 
 -- Define the msnu_media_project table
--- CREATE TABLE msnu_media_project (
--- 	id_media_project SERIAL,
--- 	id_project       INTEGER,
--- 	id_media         INTEGER,
--- 	PRIMARY KEY (id_media_project),
--- 	FOREIGN KEY (id_project) REFERENCES msnu_project(id_project),
--- 	FOREIGN KEY (id_media) REFERENCES msnu_media(id_media)
--- );
+CREATE TABLE msnu_media_project (
+	id_media_project SERIAL,
+	id_project       INTEGER,
+	id_media         INTEGER,
+	PRIMARY KEY (id_media_project),
+	FOREIGN KEY (id_project) REFERENCES msnu_project(id_project),
+	FOREIGN KEY (id_media) REFERENCES msnu_media(id_media)
+);
 
 CREATE SEQUENCE msnu_comment_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 -- Define the msnu_comment table
@@ -138,68 +138,68 @@ CREATE TABLE msnu_comment (
 );
 
 -- Define the msnu_notification table
--- CREATE TABLE msnu_notification (
--- 	id_notification      SERIAL,
--- 	content              VARCHAR(50),
--- 	date_notification    DATE,
--- 	id_user              INTEGER,
--- 	id_type_notification INTEGER,
--- 	PRIMARY KEY (id_notification),
--- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id),
--- 	FOREIGN KEY (id_type_notification) REFERENCES msnu_type_notification(id_type_notification)
--- );
+CREATE TABLE msnu_notification (
+	id_notification      SERIAL,
+	content              VARCHAR(50),
+	date_notification    DATE,
+	id_user              INTEGER,
+	id_type_notification INTEGER,
+	PRIMARY KEY (id_notification),
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id),
+	FOREIGN KEY (id_type_notification) REFERENCES msnu_type_notification(id_type_notification)
+);
 
 -- Define the msnu_formation table
--- CREATE TABLE msnu_formation (
--- 	id_formation        SERIAL,
--- 	title               VARCHAR(50),
--- 	start_date          DATE,
--- 	Diploma_date        DATE,
--- 	mention             VARCHAR(155),
--- 	domain_formation    VARCHAR(50),
--- 	Training_center     VARCHAR(50),
--- 	Description_formation TEXT,
--- 	id_user             INTEGER,
--- 	PRIMARY KEY (id_formation),
--- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
--- );
+CREATE TABLE msnu_formation (
+	id_formation        SERIAL,
+	title               VARCHAR(50),
+	start_date          DATE,
+	Diploma_date        DATE,
+	mention             VARCHAR(155),
+	domain_formation    VARCHAR(50),
+	Training_center     VARCHAR(50),
+	Description_formation TEXT,
+	id_user             INTEGER,
+	PRIMARY KEY (id_formation),
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
+);
 
 -- Define the msnu_professional_experience table
--- CREATE TABLE msnu_professional_experience (
--- 	id_experience         SERIAL,
--- 	libelle               VARCHAR(50),
--- 	start_date            DATE,
--- 	finish_date           DATE,
--- 	mention               VARCHAR(155),
--- 	domain_formation      VARCHAR(50),
--- 	business              VARCHAR(50),
--- 	Description_experience TEXT,
--- 	id_user               INTEGER,
--- 	PRIMARY KEY (id_experience),
--- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
--- );
+CREATE TABLE msnu_professional_experience (
+	id_experience         SERIAL,
+	libelle               VARCHAR(50),
+	start_date            DATE,
+	finish_date           DATE,
+	mention               VARCHAR(155),
+	domain_formation      VARCHAR(50),
+	business              VARCHAR(50),
+	Description_experience TEXT,
+	id_user               INTEGER,
+	PRIMARY KEY (id_experience),
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
+);
 
 -- Define the msnu_skills table
--- CREATE TABLE msnu_skills (
--- 	id_skills            SERIAL,
--- 	title                VARCHAR(50),
--- 	level_skills         DATE,
--- 	description_skills   TEXT,
--- 	id_user              INTEGER,
--- 	PRIMARY KEY (id_skills),
--- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
--- );
+CREATE TABLE msnu_skills (
+	id_skills            SERIAL,
+	title                VARCHAR(50),
+	level_skills         DATE,
+	description_skills   TEXT,
+	id_user              INTEGER,
+	PRIMARY KEY (id_skills),
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
+);
 
 -- Define the msnu_interests table
--- CREATE TABLE msnu_interests (
--- 	id_interests          SERIAL,
--- 	title                 VARCHAR(50),
--- 	level_skills          VARCHAR(50),
--- 	description_interests TEXT,
--- 	id_user               INTEGER,
--- 	PRIMARY KEY (id_interests),
--- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
--- );
+CREATE TABLE msnu_interests (
+	id_interests          SERIAL,
+	title                 VARCHAR(50),
+	level_skills          VARCHAR(50),
+	description_interests TEXT,
+	id_user               INTEGER,
+	PRIMARY KEY (id_interests),
+	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
+);
 
 CREATE SEQUENCE msnu_page_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE msnu_page (

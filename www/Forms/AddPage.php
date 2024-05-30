@@ -28,9 +28,6 @@ class AddPage
                     "error"=>"",
                 ]
             ]
-
         ];
     }
-
-
 }

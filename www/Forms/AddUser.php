@@ -37,9 +37,6 @@ class AddUser
                     "error"=>"Votre email doit faire entre 8 et 320 caractères"
                 ],
             ]
-
         ];
     }
-
-
 }

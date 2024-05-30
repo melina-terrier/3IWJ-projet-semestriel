@@ -1,7 +1,6 @@
 <?php
 
 namespace App;
-session_start();
 
 use App\Controllers\Error;
 use App\Controllers\Main;
@@ -35,18 +34,6 @@ function myAutoloader($class){
     }
 }
 
-<<<<<<< HEAD
-
-// if (!file_exists('./config.php')) {
-//     $controller = new App\Controller\Install();
-//     $controller->run();
-//     die();
-// }
-
-
-=======
-//http://localhost/login
->>>>>>> 831169c (mise en place des formulaires)
 $uri = $_SERVER["REQUEST_URI"];
 if(strlen($uri) > 1)
     $uri = rtrim($uri, "/");
@@ -75,13 +62,13 @@ if( !empty($listOfRoutes[$uri]) ) {
 
     if (!empty($listOfRoutes[$uri]['Role'])) {
         $user = unserialize($_SESSION['user']);
-
         if (!in_array($user->getRoles(), $listOfRoutes[$uri]['Role'])) {
             $error = new Error();
             $error->page403();
             die();
         }
     }
+
     if (!empty($listOfRoutes[$uri]['Controller']) && !empty($listOfRoutes[$uri]['Action'])) {
         $controller = $listOfRoutes[$uri]['Controller'];
         $action = $listOfRoutes[$uri]['Action'];
@@ -103,46 +90,13 @@ if( !empty($listOfRoutes[$uri]) ) {
         }
     } else {
         header("Internal Server Error", true, 500);
-    die("Le fichier routes.yml ne contient pas de controller ou d'action pour l'uri :".$uri);
+        die("Le fichier routes.yml ne contient pas de controller ou d'action pour l'uri :".$uri);
     }
-}
-<<<<<<< HEAD
-else if($uri){
+} else if($uri){
     session_start();
     $pageBuilder = new PageBuilder();
     $pageBuilder->build($uri);
-=======
-
-$controller = $listOfRoutes[$uri]["Controller"];
-$action = $listOfRoutes[$uri]["Action"];
-$security = $listOfRoutes[$uri]["Security"];
-$role = $listOfRoutes[$uri]["Role"];
-$auth = new Core\Security();
-
-
-
-
-
-print_r($auth);
-print_r($security);
-print_r($role);
-
-print_r($_SESSION);
-$user_mail = ($_SESSION["email"]);
-
-if ($security && $auth) {
-    if ($userStatus !== $role) {
-        header("Location: /");
-        exit(); // Assure que le script se termine ici pour éviter toute exécution supplémentaire
-    }
-}
-
-//include "../Controllers/".$controller.".php";
-if(!file_exists("../Controllers/".$controller.".php")){
-    die("Le fichier controller ../Controllers/".$controller.".php n'existe pas");
->>>>>>> 831169c (mise en place des formulaires)
-}
-else{
+} else {
     header("Status 404 Not Found", true, 404);
     $error = new Error();
     $error->page404();

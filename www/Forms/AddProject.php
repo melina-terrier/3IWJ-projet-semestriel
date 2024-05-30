@@ -5,9 +5,6 @@ use App\Models\Tag as  TagModel;
 
 class AddProject
 {
-
-   
-
     public static function getConfig(): array
     {
         $tag = new TagModel();
@@ -44,6 +41,4 @@ class AddProject
             ]
         ];
     }
-
-
 }

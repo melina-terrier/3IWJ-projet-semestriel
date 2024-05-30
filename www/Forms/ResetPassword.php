@@ -29,8 +29,7 @@ class ResetPassword
                 "required"=>true,
                 "confirm"=>"password",
                 "error"=>"Votre mot de passe ne correspond pas"
-            ],
-            
+            ], 
         ];
     }
 }

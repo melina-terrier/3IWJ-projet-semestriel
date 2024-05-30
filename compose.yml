@@ -11,14 +11,7 @@ services:
       - ./server/php.ini:/usr/local/etc/php/php.ini
     depends_on:
       - postgres
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
-=======
-    
->>>>>>> 2b6e607 (mise en place de la vérification du statut de l'user)
->>>>>>> 831169c (mise en place des formulaires)
   postgres:
     image: postgres
     environment:
@@ -26,20 +19,10 @@ services:
       POSTGRES_USER: esgi
       POSTGRES_PASSWORD: esgipwd
     ports:
-<<<<<<< HEAD
       - '5432:5432'
     # volumes:
     #   - ./Script.sql:/docker-entrypoint-initdb.d/Script.sql
 
-=======
-      - '5433:5432'
-<<<<<<< HEAD
-    volumes:
-      - ./Script.sql:/docker-entrypoint-initdb.d/Script.sql
-=======
-
->>>>>>> 2b6e607 (mise en place de la vérification du statut de l'user)
->>>>>>> 831169c (mise en place des formulaires)
   pgadmin:
     image: dpage/pgadmin4
     environment:
