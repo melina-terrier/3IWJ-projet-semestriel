@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+session_start();
 
 use App\Controllers\Error;
 use App\Controllers\Main;
@@ -34,6 +35,7 @@ function myAutoloader($class){
     }
 }
 
+<<<<<<< HEAD
 
 // if (!file_exists('./config.php')) {
 //     $controller = new App\Controller\Install();
@@ -42,6 +44,9 @@ function myAutoloader($class){
 // }
 
 
+=======
+//http://localhost/login
+>>>>>>> 831169c (mise en place des formulaires)
 $uri = $_SERVER["REQUEST_URI"];
 if(strlen($uri) > 1)
     $uri = rtrim($uri, "/");
@@ -101,10 +106,41 @@ if( !empty($listOfRoutes[$uri]) ) {
     die("Le fichier routes.yml ne contient pas de controller ou d'action pour l'uri :".$uri);
     }
 }
+<<<<<<< HEAD
 else if($uri){
     session_start();
     $pageBuilder = new PageBuilder();
     $pageBuilder->build($uri);
+=======
+
+$controller = $listOfRoutes[$uri]["Controller"];
+$action = $listOfRoutes[$uri]["Action"];
+$security = $listOfRoutes[$uri]["Security"];
+$role = $listOfRoutes[$uri]["Role"];
+$auth = new Core\Security();
+
+
+
+
+
+print_r($auth);
+print_r($security);
+print_r($role);
+
+print_r($_SESSION);
+$user_mail = ($_SESSION["email"]);
+
+if ($security && $auth) {
+    if ($userStatus !== $role) {
+        header("Location: /");
+        exit(); // Assure que le script se termine ici pour éviter toute exécution supplémentaire
+    }
+}
+
+//include "../Controllers/".$controller.".php";
+if(!file_exists("../Controllers/".$controller.".php")){
+    die("Le fichier controller ../Controllers/".$controller.".php n'existe pas");
+>>>>>>> 831169c (mise en place des formulaires)
 }
 else{
     header("Status 404 Not Found", true, 404);

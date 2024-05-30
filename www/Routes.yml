@@ -211,6 +211,22 @@
 #   Action: "show"
 #   Security: false
 #   Role: ""
+<<<<<<< HEAD
+=======
+
+# Utile ? -> étant donné que ça va être en bas de page ??
+/add-comment:
+  Controller: "Page"
+  Action: "add"
+  Security: true
+  Role: "user"
+
+/update-commanent:
+  Controller: "Comment"
+  Action: "edit"
+  Security: true
+  Role: "user"
+>>>>>>> 831169c (mise en place des formulaires)
 
 
 # USER
@@ -230,10 +246,180 @@
   Controller: "Security"
   Action: "logout"
 
+<<<<<<< HEAD
 /reset-password:
+=======
+
+
+/reinitialization:
+  Controller: "Reinitialization"
+  Action: "reinitialization"
+
+/add-user:
+  Controller: "User"
+  Action: "add"
+  Security: true
+  Role: "admin"
+
+# Utilité de la suppression de l'utilisateur
+/delete-user:
+  Controller: "User"
+  Action: "delete"
+  Security: true
+  Role: "admin, user"
+
+/list-user:
+  Controller: "User"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+/update-user:
+  Controller: "User"
+  Action: "edit"
+  Security: true
+  Role: "user, admin"
+
+# PROJECT
+/login:
+>>>>>>> 831169c (mise en place des formulaires)
   Controller: "Security"
   Action: "resetPassword"
 
 /request-password:
   Controller: "Security"
+<<<<<<< HEAD
   Action: "requestPassword"
+=======
+  Action: "register"
+  Security: false
+  Role: ""
+
+/add-user:
+  Controller: "User"
+  Action: "add"
+  Security: true
+  Role: "admin"
+
+/delete-user:
+  Controller: "User"
+  Action: "delete"
+  Security: true
+  Role: "admin, user"
+
+/list-user:
+  Controller: "User"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+/update-user:
+  Controller: "User"
+  Action: "edit"
+  Security: true
+  Role: "user, admin"
+
+# PAGE
+
+#Même chose ??
+/add-page:
+  Controller: "Page"
+  Action: "add"
+  Security: true
+  Role: "admin"
+ 
+/update-page:
+  Controller: "Page"
+  Action: "edit"
+  Security: true
+  Role: "user, admin"
+
+/delete-page:
+  Controller: "Page"
+  Action: "delete"
+  Security: true
+  Role: "admin"
+
+/list-page:
+  Controller: "Page"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+# COMMENTAIRES
+/delete-comment:
+  Controller: "Comment"
+  Action: "delete"
+  Security: true
+  Role: "admin"
+
+/list-comment:
+  Controller: "Comment"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+# CATEGORIES
+/add-category:
+  Controller: "Category"
+  Action: "add"
+  Security: true
+  Role: "admin"
+ 
+/update-category:
+  Controller: "Category"
+  Action: "edit"
+  Security: true
+  Role: "admin"
+
+/delete-category:
+  Controller: "Category"
+  Action: "delete"
+  Security: true
+  Role: "admin"
+
+/list-category:
+  Controller: "Category"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+# MEDIAS
+/add-media:
+  Controller: "Media"
+  Action: "add"
+  Security: true
+  Role: "admin"
+ 
+/update-media:
+  Controller: "Media"
+  Action: "edit"
+  Security: true
+  Role: "admin"
+
+/delete-media:
+  Controller: "Media"
+  Action: "delete"
+  Security: true
+  Role: "admin"
+
+/list-media:
+  Controller: "Media"
+  Action: "list"
+  Security: true
+  Role: "admin"
+
+# SETTING
+/settings:
+  Controller: "Settings"
+  Action: "Add"
+  Security: true
+  Role: "admin"
+
+# INSTALLER
+/install:
+  Controller: "Installer"
+  Action: "Install"
+  Security: false
+  Role: ""
+>>>>>>> 831169c (mise en place des formulaires)

@@ -58,6 +58,10 @@ class Form
               $html .= "<br>";
 
         }
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 831169c (mise en place des formulaires)
         $html .= "<input type='submit' value='".htmlentities($this->config["config"]["submit"])."'>";
         $html .= "</form>";
         return $html;
@@ -109,10 +113,20 @@ class Form
                 $this->errors[] = $this->config["inputs"][$name]["error"] ;
             }else{
                 //Est ce que le format email est OK
+<<<<<<< HEAD
                 if ($this->config["inputs"][$name]["type"]=="email" && !filter_var($dataSent, FILTER_VALIDATE_EMAIL)){
                     $this->errors[] = "Le format de l'email est incorrect";
                 } 
+<<<<<<< HEAD
 
+=======
+=======
+                if ($this->config["inputs"][$name]["type"]=="email" &&
+                !filter_var($dataSent, FILTER_VALIDATE_EMAIL)){
+                    $this->errors[] = "Le format de l'email est incorrect" ;
+                }
+>>>>>>> 2b6e607 (mise en place de la vérification du statut de l'user)
+>>>>>>> 831169c (mise en place des formulaires)
                 //Est ce que le format password est OK
                 if($this->config["inputs"][$name]["type"]=="password" && strlen($dataSent) >= 8 &&
                     (!preg_match("#[a-z]#",$dataSent)||
@@ -123,7 +137,10 @@ class Form
                 }
             }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 831169c (mise en place des formulaires)
         }
 
         if(empty($this->errors))
