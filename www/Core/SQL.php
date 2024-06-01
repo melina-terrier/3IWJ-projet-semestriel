@@ -88,7 +88,7 @@ class SQL
         return null;
     }
 
-    public function getAllData(string $return = "array") //pour récupérer tous les enregistrements de la bdd
+    public function getAllData(string $return = "array")
 
     {
         $sql = "SELECT * FROM " . $this->table;
@@ -106,65 +106,65 @@ class SQL
         return $queryPrepared->fetchAll();
     }
 
-    public function getProjects($status, $id = null)
-    {
-        $sql = "SELECT * FROM msnu_project WHERE status = :status";
-        $params = [':status' => $status];
+    // public function getProjects($status, $id = null)
+    // {
+    //     $sql = "SELECT * FROM msnu_project WHERE status = :status";
+    //     $params = [':status' => $status];
 
-        if ($id !== null) {
-            $sql .= " AND id = :id";
-            $params[':id'] = $id;
-        }
+    //     if ($id !== null) {
+    //         $sql .= " AND id = :id";
+    //         $params[':id'] = $id;
+    //     }
 
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute($params);
+    //     $queryPrepared = $this->pdo->prepare($sql);
+    //     $queryPrepared->execute($params);
 
-        return $queryPrepared->fetchAll();
-    }
+    //     return $queryPrepared->fetchAll();
+    // }
 
-    public function getPublishedProject($status, $id = null)
-    {
-        $sql = "SELECT * FROM msnu_project WHERE status = :status";
-        $params = [':status' => $status];
+    // public function getPublishedProject($status, $id = null)
+    // {
+    //     $sql = "SELECT * FROM msnu_project WHERE status = :status";
+    //     $params = [':status' => $status];
 
-        if ($id !== null) {
-            $sql .= " AND id = :id";
-            $params[':id'] = $id;
-        }
+    //     if ($id !== null) {
+    //         $sql .= " AND id = :id";
+    //         $params[':id'] = $id;
+    //     }
 
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute($params);
+    //     $queryPrepared = $this->pdo->prepare($sql);
+    //     $queryPrepared->execute($params);
 
-        return $queryPrepared->fetchAll();
-    }
+    //     return $queryPrepared->fetchAll();
+    // }
 
-    public function getDleletedProjects($type, $id = null)
-    {
-        $sql = "SELECT * FROM msnu_project WHERE type = :type and isdeleted = 1";
-        $params = [':type' => $type];
+    // public function getDleletedProjects($type, $id = null)
+    // {
+    //     $sql = "SELECT * FROM msnu_project WHERE type = :type and isdeleted = 1";
+    //     $params = [':type' => $type];
 
-        if ($id !== null) {
-            $sql .= " AND id = :id";
-            $params[':id'] = $id;
-        }
+    //     if ($id !== null) {
+    //         $sql .= " AND id = :id";
+    //         $params[':id'] = $id;
+    //     }
 
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute($params);
+    //     $queryPrepared = $this->pdo->prepare($sql);
+    //     $queryPrepared->execute($params);
 
-        return $queryPrepared->fetchAll();
-    }
+    //     return $queryPrepared->fetchAll();
+    // }
 
-    public function getDataId($value) {
-        $sql = "SELECT id FROM msnu_status WHERE status= :status LIMIT 1";
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->bindValue(':status', $value, PDO::PARAM_STR);
-        $queryPrepared->execute();
-        $result = $queryPrepared->fetch(PDO::FETCH_ASSOC);
-        if ($result) {
-            return $result['id'];
-        }
-        return null;
-    }
+    // public function getDataId($value) {
+    //     $sql = "SELECT id FROM msnu_status WHERE status= :status LIMIT 1";
+    //     $queryPrepared = $this->pdo->prepare($sql);
+    //     $queryPrepared->bindValue(':status', $value, PDO::PARAM_STR);
+    //     $queryPrepared->execute();
+    //     $result = $queryPrepared->fetch(PDO::FETCH_ASSOC);
+    //     if ($result) {
+    //         return $result['id'];
+    //     }
+    //     return null;
+    // }
     
     // public function getDraftProjects($status, $id = null)
     // {
@@ -183,31 +183,31 @@ class SQL
     // }
 
 
-    public function deleteProjects($id)
-    {
-        $sql = "DELETE FROM msnu_page WHERE id = '" . $id . "'";
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute();
+    // public function deleteProjects($id)
+    // {
+    //     $sql = "DELETE FROM msnu_page WHERE id = '" . $id . "'";
+    //     $queryPrepared = $this->pdo->prepare($sql);
+    //     $queryPrepared->execute();
 
-        return $queryPrepared->rowCount() > 0;
-    }
+    //     return $queryPrepared->rowCount() > 0;
+    // }
 
-    public function draftProjects($id)
-    {
-        $sql = "UPDATE msnu_page SET isdeleted = 0, published = 0 WHERE id = '" . $id . "'";
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute();
+    // public function draftProjects($id)
+    // {
+    //     $sql = "UPDATE msnu_page SET isdeleted = 0, published = 0 WHERE id = '" . $id . "'";
+    //     $queryPrepared = $this->pdo->prepare($sql);
+    //     $queryPrepared->execute();
 
-        return $queryPrepared->rowCount() > 0;
-    }
-    public function publishProjects($id)
-    {
-        $sql = "UPDATE msnu_page SET status = 'publié' WHERE id = '" . $id . "'";
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute();
+    //     return $queryPrepared->rowCount() > 0;
+    // }
+    // public function publishProjects($id)
+    // {
+    //     $sql = "UPDATE msnu_page SET status = 'publié' WHERE id = '" . $id . "'";
+    //     $queryPrepared = $this->pdo->prepare($sql);
+    //     $queryPrepared->execute();
 
-        return $queryPrepared->rowCount() > 0;
-    }
+    //     return $queryPrepared->rowCount() > 0;
+    // }
 
     public function getDataObject(): array //pour récupérer les données de l'objet
     {
@@ -223,42 +223,42 @@ class SQL
         }
     }
 
-    public function saveInpage()
-    {
-        $data = $this->getDataObject();
-        if(empty($this->getId())){ 
-            unset($data['id']);
-            $sql = "INSERT INTO msnu_page (" . implode(",", array_keys($data)) . ")
-            VALUES (:" . implode(",:", array_keys($data)) . ")";
-        } else { 
-            $isUpdate = true;
-            $sql = "UPDATE msnu_page SET ";
-            foreach ($data as $column => $value){
-                $sql.= $column. "=:".$column. ",";
-            }
-            $sql = substr($sql, 0, -1);
-            $sql.= " WHERE id = ".$this->getId();
-        }
-        $queryPrepared = $this->pdo->prepare($sql);
-        foreach ($data as $key => $value) {
-            $type = is_bool($value) ? \PDO::PARAM_BOOL : (is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
-            $queryPrepared->bindValue(":$key", $value, $type);
-        }
-        $queryPrepared->execute($data);
-        if (isset($isUpdate)) {
-            return $this->getId();
-        }
-        $pageTable = "msnu_page";
-        return $this->pdo->lastInsertId($pageTable . "_id_seq");
-    }
+    // public function saveInpage()
+    // {
+    //     $data = $this->getDataObject();
+    //     if(empty($this->getId())){ 
+    //         unset($data['id']);
+    //         $sql = "INSERT INTO msnu_page (" . implode(",", array_keys($data)) . ")
+    //         VALUES (:" . implode(",:", array_keys($data)) . ")";
+    //     } else { 
+    //         $isUpdate = true;
+    //         $sql = "UPDATE msnu_page SET ";
+    //         foreach ($data as $column => $value){
+    //             $sql.= $column. "=:".$column. ",";
+    //         }
+    //         $sql = substr($sql, 0, -1);
+    //         $sql.= " WHERE id = ".$this->getId();
+    //     }
+    //     $queryPrepared = $this->pdo->prepare($sql);
+    //     foreach ($data as $key => $value) {
+    //         $type = is_bool($value) ? \PDO::PARAM_BOOL : (is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
+    //         $queryPrepared->bindValue(":$key", $value, $type);
+    //     }
+    //     $queryPrepared->execute($data);
+    //     if (isset($isUpdate)) {
+    //         return $this->getId();
+    //     }
+    //     $pageTable = "msnu_page";
+    //     return $this->pdo->lastInsertId($pageTable . "_id_seq");
+    // }
 
 
-    public static function populate(int $id): object
-    {
-        $class = get_called_class();
-        $object = new $class();
-        return $object->getOneBy(["id"=>$id], "object");
-    }
+    // public static function populate(int $id): object
+    // {
+    //     $class = get_called_class();
+    //     $object = new $class();
+    //     return $object->getOneBy(["id"=>$id], "object");
+    // }
 
     public function delete(array $data)
     {
@@ -275,6 +275,7 @@ class SQL
         $queryPrepared->execute($data);
         return $queryPrepared->rowCount() > 0;
     }
+
 
     public function countElements($typeColumn = null, $typeValue = null): int {
         if ($typeColumn && $typeValue) {

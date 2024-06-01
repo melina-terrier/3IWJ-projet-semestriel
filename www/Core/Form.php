@@ -28,20 +28,27 @@ class Form
         foreach ($this->config["inputs"] as $name=>$input){
 
             if ($input["type"] === "select") {
-                $html .= "<select name='" . $name . "'";
-                if (isset($input["option"])) {
+                $html .= "<select name='$name' " . (isset($input["required"]) ? "required" : "") . ">"; // Use single quotes
+              
+                // Add a disabled and selected option to prevent default selection
+                $html .= "<option value='' disabled selected>Sélectionnez</option>";
+              
+                if (isset($input["option"]) && is_array($input["option"])) {
                   foreach ($input["option"] as $value) {
-                    $html .= "<option value='" . $value . "'>" . $value . "</option>";
+                    $html .= "<option value='$value'>$value</option>";
                   }
                 }
+              
                 $html .= "</select>";
-              } else if ($input["type"] === "textarea") {
+              }
+              
+               else if ($input["type"] === "textarea") {
                 $html .= "
                 <label for='".$name."' > ".$input["label"]."
                 <textarea
                   name='" . $name . "' 
                   " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
-                  " . (($input["required"]) ? "required" : "") . "
+                  " . (isset($input["required"])) ? "required" : "" . "
                 ></textarea></label>";
               } else {
                 $html .= "
@@ -121,11 +128,12 @@ class Form
                 }
             }
 
-        if(empty($this->errors))
-        {
-            return true;
-        } else {
-            return false;
+            if(empty($this->errors))
+            {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

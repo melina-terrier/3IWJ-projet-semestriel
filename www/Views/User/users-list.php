@@ -1,6 +1,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <h3>Tous les utilisateurs</h3>
-    <?php if (!empty($errors)): ?>
+
+    <?php 
+    echo $_GET['success'];
+    
+    if (!empty($errors)): ?>
         <div class="error">
             <?php foreach ($errors as $error): ?>
                 <p class="text"><?php echo htmlspecialchars($error); ?></p>

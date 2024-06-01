@@ -8,6 +8,7 @@ class User extends SQL
     protected string $firstname;
     protected string $lastname;
     protected string $email;
+    
     protected string $password;
     protected ?string $role = 'user';
     protected int $status;
