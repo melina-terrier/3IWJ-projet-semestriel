@@ -69,7 +69,8 @@ class Security{
                 $user->setEmail($_POST["email"]);
                 $user->setCreationDate($formattedDate);
                 $user->setModificationDate($formattedDate);  
-                $user->setPassword($_POST["password"]);
+                $user->setModificationDate($formattedDate); 
+                $user->setStatus(0);
                 $activationToken = bin2hex(random_bytes(16));
                 $user->setActivationToken($activationToken);
                 $user->save();
@@ -81,6 +82,10 @@ class Security{
                 } elseif (isset($emailResult['error'])) {
                     $errors[] = $emailResult['error'];
                 }
+
+                header("Location: /register?message=checkmail");
+                exit; 
+
             }
         }
         $view = new View("Security/register", "front");

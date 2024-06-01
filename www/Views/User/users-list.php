@@ -2,7 +2,10 @@
 <h3>Tous les utilisateurs</h3>
 
     <?php 
-    echo $_GET['success'];
+    $successMessage = isset($_GET['message']) && $_GET['message'] === 'success';
+    if ($successMessage) {
+      echo "<p>Le nouveau compte a été créé.</p>";
+    }
     
     if (!empty($errors)): ?>
         <div class="error">
