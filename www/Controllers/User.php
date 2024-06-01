@@ -71,7 +71,6 @@ class User
     public function addUser(): void {
         $form = new Form("AddUser");
         $errors = [];
-        $success = [];
 
         if( $form->isSubmitted() && $form->isValid() )
         {
@@ -87,16 +86,14 @@ class User
                 $user->setRole($_POST["role"]);
                 $user->setCreationDate($formattedDate);
                 $user->setModificationDate($formattedDate);
-                $user->setStatus('0');
+                $user->setStatus(0);
 
                 $activationToken = bin2hex(random_bytes(16));
                 $user->setActivationToken($activationToken);
                 $user->save();
 
-                $success[] = "Le compte a bien été créé";
-
                 // Redirect after successful creation (optional success message)
-                header("Location: /dashboard/users?success=" . urlencode("Le nouveau compte a été créé."));
+                header("Location: /dashboard/users?message=success");
                 exit; 
 
                 // Voir pour envoyer un mail de création de mot de passe
@@ -112,7 +109,6 @@ class User
         $view = new View("User/add-user", "back");
         $view->assign("form", $form->build());
         $view->assign("errorsForm", $errors);
-        $view->assign("successForm", $success);
         $view->render();
     }
 
