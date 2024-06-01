@@ -72,22 +72,34 @@ class User
         $form = new Form("AddUser");
         $errors = [];
         $success = [];
+
         if( $form->isSubmitted() && $form->isValid() )
         {
             $user = new UserModel();
-            $formattedDate = date('Y-m-d H:i:s');
+            $formattedDate = date('d/m/Y H:i:s');
+
             if ($user->emailExists($_POST["email"])) {
                 $errors[] = "L'email est déjà utilisé par un autre compte.";
             } else {
                 $user->setLastname($_POST["lastname"]);
                 $user->setFirstname($_POST["firstname"]);
                 $user->setEmail($_POST["email"]);
+                $user->setRole($_POST["role"]);
                 $user->setCreationDate($formattedDate);
                 $user->setModificationDate($formattedDate);
+                $user->setStatus('0');
+
                 $activationToken = bin2hex(random_bytes(16));
                 $user->setActivationToken($activationToken);
                 $user->save();
+
                 $success[] = "Le compte a bien été créé";
+
+                // Redirect after successful creation (optional success message)
+                header("Location: /dashboard/users?success=" . urlencode("Le nouveau compte a été créé."));
+                exit; 
+
+                // Voir pour envoyer un mail de création de mot de passe
                 // $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
 
                 // if (isset($emailResult['success'])) {

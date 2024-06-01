@@ -27,7 +27,7 @@ CREATE TABLE msnu_user (
     modification_date         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	status                    INTEGER DEFAULT 0,
 	photo                     VARCHAR(155),
-	role                      VARCHAR(15),
+	id_role                   INTEGER NOT NULL,
 	-- adress                    VARCHAR(50),
 	-- telephone                 INTEGER,
     reset_token               VARCHAR(255),
@@ -35,8 +35,21 @@ CREATE TABLE msnu_user (
     activation_token          VARCHAR(255),
 	-- date                      DATE,
 	-- description               TEXT,
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+	CONSTRAINT fk_user_role FOREIGN KEY (id_role) REFERENCES msnu_role(id)
 );
+
+
+CREATE SEQUENCE msnu_role_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
+CREATE TABLE msnu_role (
+	id                       INTEGER DEFAULT nextval('msnu_role_id_seq') NOT NULL,
+	role                	 VARCHAR(50) NOT NULL,
+	PRIMARY KEY (id),
+);
+
+INSERT INTO msnu_role (role) VALUES
+  ('admin'),
+  ('user');
 
 -- Define the msnu_type_notification table
 CREATE TABLE msnu_type_notification (
@@ -133,7 +146,7 @@ CREATE TABLE msnu_comment (
 	-- id_project INTEGER,
 	creation_date     		TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modification_date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
 	-- FOREIGN KEY (id_user) REFERENCES msnu_user(id),
 	-- FOREIGN KEY (id_project) REFERENCES msnu_project(id_project)
 );
