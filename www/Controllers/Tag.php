@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Core\View;
 use App\Core\Form;
+use App\Core\SQL;
 use App\Models\User;
 use App\Models\Tag as  TagModel;
 
@@ -76,29 +77,32 @@ class Tag{
 
         $formattedDate = date('Y-m-d H:i:s');
 
-        if (isset($_GET['id'])) {
-            $existingTag = $tag->getOneBy(['id' => $_GET['id']], 'object');
-            if ($existingTag) {
-                $name = $tag->getName();
-                print_r($tag->getName());
-                // $form->setValue('name', $existingTag->getName());
-                // $form->setValue('slug', $existingTag->getSlug());
-                // $form->setValue('description', $existingTag->getDescription());
-            }
-        }
-
         if( $form->isSubmitted() && $form->isValid() )
         {
-            // $status = getDataId("published");
+            $sql = new SQL();
+            $status = $sql->getDataId("published");
+
+            $slug = $_POST['slug'];
+            if (empty($slug)) {
+                $slug = strtolower(preg_replace('/\s+/', '-', $_POST['name']));
+                $tag->setSlug($slug);
+            } else {
+                $tag->setSlug($_POST['slug']);
+            }
+
             $tag->setName($_POST['name']);
-            $tag->setSlug($_POST['slug']);
+           
             $tag->setDescription($_POST['description']);
             $tag->setCreationDate($formattedDate);
             $tag->setModificationDate($formattedDate);
             $tag->setUserId($userId);
-            $tag->setStatus(1);
+            $tag->setStatus($status);
             $tag->save();
+
             $success[] = "La catégorie".$_POST['name']."a été créée";
+
+            header("Location: /dashboard/tags?message=success");
+            exit; 
         }
           
         $view = new View("Tag/tag", "back");

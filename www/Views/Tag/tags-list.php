@@ -17,6 +17,12 @@
 
     <h3>Toutes les catégories</h3>
 
+    <?php $successMessage = isset($_GET['message']) && $_GET['message'] === 'success';
+    if ($successMessage) {
+      echo "<p>La catégorie a été ajoutée.</p>";
+    }
+    ?>
+
     <a href="/dashboard/tags/tag">Ajouter une catégorie</a>
 
     <section>
