@@ -7,10 +7,11 @@ class Comment extends SQL
 
     protected ?int $id = null;
     protected $comment;
-    // protected $user_name;
-    // protected $project_id;
-    protected $status;
-    protected $isReported = 0;
+    protected $user_id;
+    protected $mail;
+    protected $name;
+    protected int $is_reported;
+    protected int $project_id;
     protected $creation_date;
     protected $modification_date;
 
@@ -24,16 +25,6 @@ class Comment extends SQL
         $this->id = $id;
     }
 
-    // public function getUserName()
-    // {
-    //     return $this->user_name;
-    // }
-
-    // public function setUserName($user_name): void
-    // {
-    //     $this->user_name = $user_name;
-    // }
-
     public function getComment()
     {
         return $this->comment;
@@ -44,34 +35,54 @@ class Comment extends SQL
         $this->comment = $comment;
     }
 
-    // public function getProjectId()
-    // {
-    //     return $this->project_id;
-    // }
-
-    // public function setProjectId($project_id): void
-    // {
-    //     $this->project_id = $project_id;
-    // }
-
-    public function getStatus()
+    public function getUserId()
     {
-        return $this->status;
+        return $this->user_id;
     }
 
-    public function setStatus($status): void
+    public function setUserId($user_id): void
     {
-        $this->status = $status;
+        $this->user_id = $user_id;
     }
 
-    public function getIsReported()
+    public function getMail()
     {
-        return $this->isReported;
+        return $this->mail;
     }
 
-    public function setIsReported($isReported): void
+    public function setMail($mail): void
     {
-        $this->isReported = $isReported;
+        $this->mail = $mail;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getReport()
+    {
+        return $this->is_reported;
+    }
+
+    public function setReport($is_reported): void
+    {
+        $this->is_reported = $is_reported;
+    }
+
+     public function getProject()
+    {
+        return $this->project_id;
+    }
+
+    public function setProject($project_id): void
+    {
+        $this->project_id = $project_id;
     }
 
     public function getCreationDate()
@@ -94,6 +105,7 @@ class Comment extends SQL
         $this->modification_date = $modification_date;
     }
     
+
     public function getNbElements() {
         return $this->countElements();
     }

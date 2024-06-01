@@ -21,8 +21,8 @@ CREATE TABLE msnu_user (
 	id                        INTEGER DEFAULT nextval('msnu_user_id_seq') NOT NULL,
 	firstname                 VARCHAR(50) NOT NULL,
 	lastname                  VARCHAR(50) NOT NULL,
-	email                     VARCHAR(155),
-	password                  VARCHAR(155),
+	email                     VARCHAR(320),
+	password                  VARCHAR(255),
 	creation_date       	  TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modification_date         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	status                    INTEGER DEFAULT 0,
@@ -138,17 +138,18 @@ CREATE TABLE msnu_media_project (
 CREATE SEQUENCE msnu_comment_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 -- Define the msnu_comment table
 CREATE TABLE msnu_comment (
-	id				INTEGER DEFAULT nextval('msnu_comment_id_seq') NOT NULL,
-	comment    		TEXT NOT NULL,
-	isReported  	INTEGER,
-	status			VARCHAR(50),
-	-- id_user    INTEGER,
-	-- id_project INTEGER,
-	creation_date     		TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    modification_date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	id					INTEGER DEFAULT nextval('msnu_comment_id_seq') NOT NULL,
+	comment    			TEXT NOT NULL,
+	user_id    			INTEGER,
+	mail				VARCHAR(320) NOT NULL,
+	is_reported  		INTEGER NOT NULL,
+	name 				VARCHAR(50) NOT NULL,
+	project_id			INTEGER,
+	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (id),
-	-- FOREIGN KEY (id_user) REFERENCES msnu_user(id),
-	-- FOREIGN KEY (id_project) REFERENCES msnu_project(id_project)
+	CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES msnu_user(id),
+	CONSTRAINT fk_comment_project FOREIGN KEY (project_id) REFERENCES msnu_project(id)
 );
 
 -- Define the msnu_notification table

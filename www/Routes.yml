@@ -69,7 +69,7 @@
 /dashboard/add-comment:
   Controller: "Comment"
   Action: "addComment"
-  Security: true
+  # Security: true
   # Role: "admin"
 
 # TAGS

@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Core\View;
 use App\Core\Form;
+use App\Models\User;
 use App\Models\Comment as  CommentModel;
 
 class Comment{
@@ -19,13 +20,36 @@ class Comment{
         if( $form->isSubmitted() && $form->isValid() )
         {
             $comment = new CommentModel();
-            // $comment->setUserId($_POST['email']);
+
             $comment->setComment($_POST['comment']);
             $comment->setCreationDate($formattedDate);
             $comment->setModificationDate($formattedDate);
-            $comment->setStatus('Publié');
-            $comment->save();
-            $success[] = "Votre commentaire a été publié";
+            $comment->setReport(0);
+
+            if (isset($_SESSION['user'])) {
+                $user = unserialize($_SESSION['user']);
+                $userId = $user->getId();
+                $userEmail = $user->getEmail();
+                $userName = $user->getUserName();
+                $comment->setUserId($userId);
+                $comment->setMail($userEmail);
+                $comment->setName($userName);
+
+                $comment->save();
+                $success[] = "Votre commentaire a été publié";
+            } else {
+                $user = new User();
+                if ($user->emailExists($_POST["email"])) {
+                    $errors[] = "L'email correspond à un compte, merci de bien vouloir vous connecter";
+                } else {
+                    $comment->setMail($_POST['email']);
+                    $comment->setName($_POST['name']);
+                    $comment->save();
+                    $success[] = "Votre commentaire a été publié";
+                }
+            }
+
+           
         }
 
         $view = new View("Comment/add-coment", "front");
@@ -34,6 +58,7 @@ class Comment{
         $view->assign("successForm", $success);
         $view->render();
     }
+
 
     public function allComments(): void
     {
