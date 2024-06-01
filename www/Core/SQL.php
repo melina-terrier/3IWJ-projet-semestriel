@@ -154,17 +154,17 @@ class SQL
     //     return $queryPrepared->fetchAll();
     // }
 
-    // public function getDataId($value) {
-    //     $sql = "SELECT id FROM msnu_status WHERE status= :status LIMIT 1";
-    //     $queryPrepared = $this->pdo->prepare($sql);
-    //     $queryPrepared->bindValue(':status', $value, PDO::PARAM_STR);
-    //     $queryPrepared->execute();
-    //     $result = $queryPrepared->fetch(PDO::FETCH_ASSOC);
-    //     if ($result) {
-    //         return $result['id'];
-    //     }
-    //     return null;
-    // }
+    public function getDataId($value) {
+        $sql = "SELECT id FROM msnu_status WHERE status= :status LIMIT 1";
+        $queryPrepared = $this->pdo->prepare($sql);
+        $queryPrepared->bindValue(':status', $value, PDO::PARAM_STR);
+        $queryPrepared->execute();
+        $result = $queryPrepared->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result['id'];
+        }
+        return null;
+    }
     
     // public function getDraftProjects($status, $id = null)
     // {

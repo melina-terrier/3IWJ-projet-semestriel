@@ -38,28 +38,27 @@ class Form
                     $html .= "<option value='$value'>$value</option>";
                   }
                 }
-              
                 $html .= "</select>";
-              }
-              
-               else if ($input["type"] === "textarea") {
-                $html .= "
-                <label for='".$name."' > ".$input["label"]."
-                <textarea
-                  name='" . $name . "' 
-                  " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
-                  " . (isset($input["required"])) ? "required" : "" . "
-                ></textarea></label>";
-              } else {
+
+            } else if ($input["type"] === "textarea") {
+            $html .= "
+            <label for='" . $name . "'>" . $input["label"] . "</label>
+            <textarea
+                name='" . $name . "'
+                " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
+                " . (isset($input["required"]) ? "required" : "") . "
+            ></textarea>";
+            }
+            else {
                 $html .= "
                 <label for='".$name."' > ".$input["label"]."
                 <input 
-                  type='" . $input["type"] . "' 
-                  name='" . $name . "' 
-                  " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
-                  " . (($input["required"]) ? "required" : "") . "
+                type='" . $input["type"] . "' 
+                name='" . $name . "' 
+                " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
+                " . (isset($input["required"]) ? "required" : "") .  "
                 ></label>";
-              }
+            }
             
               $html .= "<br>";
 
