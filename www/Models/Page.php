@@ -6,44 +6,29 @@ use App\Core\SQL;
 
 class Page extends SQL
 {
-    protected ?int $id;
-    protected string $slug;
-    protected string $title;
-    protected string $content;
-    protected string $status;
+    protected ?int $id = null;
+    protected $title;
+    protected $content;
+    protected $slug;
+    protected $status_id;
     protected $creation_date;
     protected $modification_date;
-    // protected string $user_name;
+    protected $publication_date;
+    protected $user_id;
 
-    public function getId()
+    public function getId(): ?int
     {
-        if (isset($this->id)) {
-         return $this->id;
-        }
+        return $this->id;
     }
 
-    public function setId($id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
-    public function getSlug()
-    {
-        if (isset($this->slug)) {
-            return $this->slug;
-        }
-    }
-
-    public function setSlug($slug): void
-    {
-        $this->slug = $slug;
-    }
-
     public function getTitle()
     {
-        if (isset($this->title)) {
-            return $this->title;
-        }
+        return $this->title;
     }
 
     public function setTitle($title): void
@@ -53,9 +38,7 @@ class Page extends SQL
 
     public function getContent()
     {
-        if (isset($this->content)) {
-            return $this->content;
-        }
+        return $this->content;
     }
 
     public function setContent($content): void
@@ -65,14 +48,22 @@ class Page extends SQL
 
     public function getStatus()
     {
-        if (isset($this->status)) {
-            return $this->status;
-        }
+        return $this->status_id;
     }
 
-    public function setStatus($status): void
+    public function setStatus($status_id): void
     {
-        $this->status = $status;
+        $this->status_id = $status_id;
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    public function setSlug($slug): void
+    {
+        $this->slug = $slug;
     }
 
     public function getCreationDate()
@@ -95,36 +86,25 @@ class Page extends SQL
         $this->modification_date = $modification_date;
     }
 
-    public function validate(): array
+    public function getPublicationDate()
     {
-        $missingFields = array();
-
-        if (empty($this->getSlug()) ) {
-            $missingFields['slug'] = 'Le nom de la page est obligatoire';
-        }
-
-        if (empty($this->getTitle())) {
-            $missingFields['title'] = 'Le titre de la page est obligatoire';
-        }
-
-        if (empty($this->getContent())) {
-            $missingFields['content'] = 'Le contenu de la page est obligatoire';
-        }
-
-        return $missingFields;
+        return $this->publication_date;
     }
 
-    // public function setUserName($user): void
-    // {
-    //     $this->user_name = $user;
-    // }
+    public function setPublicationDate($publication_date): void
+    {
+        $this->publication_date = $publication_date;
+    }
 
-    // public function getUserName()
-    // {
-    //     if (isset($this->user_name)) {
-    //         return $this->user_name;
-    //     }
-    // }
+    public function getUser()
+    {
+        return $this->user_id;
+    }
+
+    public function setUser($user_id): void
+    {
+        $this->user_id = $user_id;
+    }
 
     public function getNbElements() {
         return $this->countElements();

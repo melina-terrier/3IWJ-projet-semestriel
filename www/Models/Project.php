@@ -121,23 +121,4 @@ class Project extends SQL
         return $this->countElements();
     }
 
-    public function getElementsByType($column, $value) {
-        return $this->countElements($column, $value);
-    }
-
-    public function getAllProjects() {
-        return $this->getProjects("Publié");
-    }
-
-    public function getPublishedProjects() {
-        return $this->getPublishedProject("project");
-    }
-
-    public function getDeletedProjects() {
-        return $this->getDleletedProjects("project");
-    }
-
-    public function getDraftProjects() {
-        return $this->getDraftProjects("project");
-    }
 }

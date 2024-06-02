@@ -99,7 +99,7 @@ CREATE SEQUENCE msnu_project_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE msnu_project (
 	id    					INTEGER DEFAULT nextval('msnu_project_id_seq') NOT NULL,
 	title          			VARCHAR(64) NOT NULL,
-	content        			TEXT NOT NULL,
+	content        			TEXT,
 	slug 					VARCHAR(255) NOT NULL,
 	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modification_date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -218,12 +218,14 @@ CREATE SEQUENCE msnu_page_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE msnu_page (
 	id                    	INTEGER DEFAULT nextval('msnu_page_id_seq') NOT NULL,
 	title 					VARCHAR(255) NOT NULL,
-	content					TEXT NOT NULL,
+	content					TEXT,
 	slug 					VARCHAR(255) NOT NULL,
-    status					VARCHAR(50) NOT NULL,
     creation_date 			TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modification_date		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -- id_user 				INTEGER NOT NULL,
-	PRIMARY KEY (id)
-	-- FOREIGN KEY (id_user) REFERENCES msnu_user(id)
+	publication_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status_id				INTEGER NOT NULL,
+	user_id 				INTEGER NOT NULL,
+	PRIMARY KEY (id),
+	CONSTRAINT fk_page_user FOREIGN KEY (user_id) REFERENCES msnu_user(id),
+	CONSTRAINT fk_page_status FOREIGN KEY (status_id) REFERENCES msnu_status(id)
 )
