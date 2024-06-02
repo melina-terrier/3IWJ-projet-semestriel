@@ -9,11 +9,13 @@ class Project extends SQL
     protected ?int $id = null;
     protected $title;
     protected $content;
-    // protected $slug;
-    protected $status;
+    protected $slug;
+    protected $status_id;
     protected $creation_date;
     protected $modification_date;
-    // protected $user_name;
+    protected $publication_date;
+    protected $user_id;
+    protected $tag_id;
 
     public function getId(): ?int
     {
@@ -47,23 +49,23 @@ class Project extends SQL
 
     public function getStatus()
     {
-        return $this->status;
+        return $this->status_id;
     }
 
-    public function setStatus($status): void
+    public function setStatus($status_id): void
     {
-        $this->status = $status;
+        $this->status_id = $status_id;
     }
 
-    // public function getSlug()
-    // {
-    //     return $this->slug;
-    // }
+    public function getSlug()
+    {
+        return $this->slug;
+    }
 
-    // public function setSlug($slug): void
-    // {
-    //     $this->slug = $slug;
-    // }
+    public function setSlug($slug): void
+    {
+        $this->slug = $slug;
+    }
 
     public function getCreationDate()
     {
@@ -85,16 +87,35 @@ class Project extends SQL
         $this->modification_date = $modification_date;
     }
 
-    // public function getUserName()
-    // {
-    //     return $this->user_name;
-    // }
+    public function getPublicationDate()
+    {
+        return $this->publication_date;
+    }
 
-    // public function setUserName($user_name): void
-    // {
-    //     $this->user_name = $user_name;
-    // }
+    public function setPublicationDate($publication_date): void
+    {
+        $this->publication_date = $publication_date;
+    }
 
+    public function getUser()
+    {
+        return $this->user_id;
+    }
+
+    public function setUser($user_id): void
+    {
+        $this->user_id = $user_id;
+    }
+
+    public function getTag()
+    {
+        return $this->tag_id;
+    }
+
+    public function setTag($tag_id): void
+    {
+        $this->tag_id = $tag_id;
+    }
 
     public function getNbElements() {
         return $this->countElements();

@@ -37,13 +37,13 @@ class AddUser
                     "required"=>true,
                     "error"=>"L'email doit faire entre 8 et 320 caractères"
                 ],
-                "role"=>[
-                    "type"=>"select",
-                    "label"=>"Rôle",
-                    "required"=>true,
-                    "option"=>["admin", "user"], 
-                    "error"=>"Veuillez sélectionner un rôle"
-                ],
+                // "role"=>[
+                //     "type"=>"select",
+                //     "label"=>"Rôle",
+                //     "required"=>true,
+                //     "option"=>['id'=>1,"name"=>"admin", "id"=>2, "name"=>"user"], 
+                //     "error"=>"Veuillez sélectionner un rôle"
+                // ],
             ]
 
         ];

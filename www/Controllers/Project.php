@@ -3,35 +3,79 @@ namespace App\Controllers;
 
 use App\Core\Form;
 use App\Core\View;
+use App\Core\SQL;
+use App\Models\Media;
 use App\Models\Project as ProjectModel;
 
 class Project{
 
     public function addProject(): void
     {
+        $allowedTags = '<p><strong><em><u><h1><h2><h3><h4><h5><h6><img>';
+        $allowedTags .= '<li><ol><ul><span><div><br><ins><del><table><tr><td><th><tbody><thead><tfoot>';
+        $allowedTags .= '<a><hr><iframe><video><source><embed><object><param>';
+
+        $media = new Media();
+        $medias = $media->getAllData("object");
+        if (count($medias) > 0) {
+            $mediasList = array();
+            foreach ($medias as $media) {
+                $mediasList[] = ['title' => $media->getTitle(), 'value' => $media->getUrl()];
+            }
+        }
+
         $form = new Form("AddProject");
         $errors = [];
         $success = [];
 
         $formattedDate = date('Y-m-d H:i:s');
+        $userSerialized = $_SESSION['user'];
+        $user = unserialize($userSerialized);
+        $userId = $user->getId();
 
         if( $form->isSubmitted() && $form->isValid() )
         {
+            $sql = new SQL();
+            
+            $status = $sql->getDataId("published"); // Assuming published by default
+
+            // Check for a hidden field indicating draft (optional)
+            // if (isset($_POST['draft']) && $_POST['draft'] === 'Enregistrer le brouillon') {
+            //     $status = $sql->getDataId("draft");
+            //     $success[] = "Votre projet a été enregistré en brouillon";
+            // }
+
+
             $project = new ProjectModel();
             $project->setTitle($_POST['title']);
             $project->setContent($_POST['content']);
+           
+            $slug = $_POST['slug'];
+            if (empty($slug)) {
+                $slug = strtolower(preg_replace('/\s+/', '-', $_POST['title']));
+                $project->setSlug($slug);
+            } else {
+                $project->setSlug($_POST['slug']);
+            }
 
-            // $project->setSlug();
-            // $project->setUserName();
-
+            $project->setUser($userId);
+            if ($_POST['tag'] == 0) {
+                $project->setTag(null); // Set tag to null if value is 0
+            } else {
+                $project->setTag($_POST['tag']);
+            }
+            
             $project->setCreationDate($formattedDate);
+            $project->setPublicationDate($formattedDate);
             $project->setModificationDate($formattedDate);
-            $project->setStatus('Publié');
+            $project->setStatus($status);
             $project->save();
+
             $success[] = "Votre projet a été publié";
         }
         $view = new View("Project/add-project", "back");
         $view->assign("form", $form->build());
+        $view->assign("mediasList", $mediasList ?? []);
         $view->assign("errorsForm", $errors);
         $view->assign("successForm", $success);
         $view->render();

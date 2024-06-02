@@ -100,28 +100,26 @@ CREATE TABLE msnu_project (
 	id    					INTEGER DEFAULT nextval('msnu_project_id_seq') NOT NULL,
 	title          			VARCHAR(64) NOT NULL,
 	content        			TEXT NOT NULL,
+	slug 					VARCHAR(255) NOT NULL,
 	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modification_date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	status					VARCHAR(50),
-	-- id_categorie   INTEGER,
-	-- id_user        INTEGER,
-	-- id_media       INTEGER,
-	-- id_status      INTEGER,
-	PRIMARY KEY (id)
-	-- FOREIGN KEY (id_categorie) REFERENCES msnu_category(id_categorie),
-	-- FOREIGN KEY (id_user) REFERENCES msnu_user(id),
-	-- FOREIGN KEY (id_media) REFERENCES msnu_media(id_media),
-	-- FOREIGN KEY (id_status) REFERENCES msnu_status(id_status)
+	publication_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	status_id				INTEGER NOT NULL,
+	user_id 				INTEGER NOT NULL,
+	tag_id 					INTEGER,
+	PRIMARY KEY (id),
+	CONSTRAINT fk_project_user FOREIGN KEY (user_id) REFERENCES msnu_user(id),
+	CONSTRAINT fk_project_tag FOREIGN KEY (tag_id) REFERENCES msnu_tag(id),
+	CONSTRAINT fk_project_status FOREIGN KEY (status_id) REFERENCES msnu_status(id)
 );
 
 -- Define the msnu_category_project table
-CREATE TABLE msnu_category_project (
-	id_category_project SERIAL,
-	id_project          INTEGER,
-	id_media            INTEGER,
-	PRIMARY KEY (id_category_project),
-	FOREIGN KEY (id_project) REFERENCES msnu_project(id_project),
-	FOREIGN KEY (id_media) REFERENCES msnu_media(id_media)
+CREATE TABLE msnu_project_tags (
+  project_id INTEGER NOT NULL,
+  tag_id INTEGER NOT NULL,
+  PRIMARY KEY (project_id, tag_id),
+  FOREIGN KEY (project_id) REFERENCES msnu_project(id),
+  FOREIGN KEY (tag_id) REFERENCES msnu_tag(id)
 );
 
 -- Define the msnu_media_project table

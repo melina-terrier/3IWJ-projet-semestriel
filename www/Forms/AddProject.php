@@ -2,6 +2,7 @@
 namespace App\Forms;
 
 use App\Models\Tag as  TagModel;
+use App\Core\SQL;
 
 class AddProject
 {
@@ -9,13 +10,31 @@ class AddProject
     public static function getConfig(): array
     {
         $tag = new TagModel();
-        $tags = $tag->getAllData("object");
+        $sql = new SQL();
+        $status = $sql->getDataId("published");
+        $tags = [];
+        $tagObjects = $tag->getOneBy(["status_id" => $status], "object");
+        if (is_array($tagObjects)) {
+            foreach ($tagObjects as $tagObject) {
+              $tags[] = [
+                "id" => $tagObject->getId(),
+                "name" => $tagObject->getName(),
+              ];
+            }
+        } else {
+            $tags[] = [
+                "id" => '0',
+                "name" => 'Aucune catgégorie disponible',
+                "selected" => true,
+              ];
+        }
+
 
         return [
             "config"=>[
                 "action"=>"",
                 "method"=>"POST",
-                "submit"=>"Enregistrer un projet"
+                "submit"=>"Publier",
             ],
             "inputs"=>[
                 "title"=>[
@@ -29,17 +48,20 @@ class AddProject
                 "content"=>[
                     "type"=>"text",
                     "min"=>2,
+                    "id"=>"content",
                     "label"=>"Contenu",
-                    "required"=>true,
                     "error"=>"",
+                ],
+                "slug"=>[
+                    "type"=>"text",
+                    "label"=>"Slug",
                 ],
                 "tag"=>[
                     "type"=>"select",
                     "label"=>"Catégorie du projet",
                     "option"=>$tags, 
-                    "required"=>false,
                 ],
-            ]
+            ],
         ];
     }
 }
