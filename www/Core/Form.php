@@ -28,26 +28,28 @@ class Form
         foreach ($this->config["inputs"] as $name=>$input){
 
             if ($input["type"] === "select") {
-                $html .= "<select name='$name' " . (isset($input["required"]) ? "required" : "") . ">"; // Use single quotes
+                $html .= "<select name='$name' " . (isset($input["required"]) ? "required" : "") .  " aria-label='Sélectionnez une catégorie'>";
               
-                // Add a disabled and selected option to prevent default selection
-                $html .= "<option value='' disabled selected>Sélectionnez</option>";
+                // Add a disabled and selected option with aria-label
+                $html .= "<option value='' disabled selected aria-label='Sélectionnez une catégorie'>Sélectionnez</option>";
               
                 if (isset($input["option"]) && is_array($input["option"])) {
                   foreach ($input["option"] as $value) {
-                    $html .= "<option value='$value'>$value</option>";
+                    $selected = isset($value['selected']) && $value['selected'] ? 'selected' : ''; // Add selected attribute if applicable
+                    $html .= "<option value='{$value['id']}' " . (isset($value["disabled"]) ? "disabled" : "") .  " $selected>{$value['name']}</option>";
                   }
                 }
+              
                 $html .= "</select>";
-
-            } else if ($input["type"] === "textarea") {
-            $html .= "
-            <label for='" . $name . "'>" . $input["label"] . "</label>
-            <textarea
-                name='" . $name . "'
-                " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
-                " . (isset($input["required"]) ? "required" : "") . "
-            ></textarea>";
+              }
+               else if ($input["type"] === "textarea") {
+                $html .= "
+                <label for='" . $name . "'>" . $input["label"] . "</label>
+                <textarea
+                    name='" . $name . "'
+                    " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
+                    " . (isset($input["required"]) ? "required" : "") . "
+                ></textarea>";
             }
             else {
                 $html .= "
@@ -63,6 +65,7 @@ class Form
               $html .= "<br>";
 
         }
+
         $html .= "<input type='submit' value='".htmlentities($this->config["config"]["submit"])."'>";
         $html .= "</form>";
         return $html;
@@ -83,6 +86,7 @@ class Form
     {
         // Est-ce que j'ai exactement le même nombre de champs
         if (count($this->config["inputs"]) != count($_POST)) {
+            $this->errors[] = count($this->config["inputs"]) ."/ " . count($_POST);
             $this->errors[] = "Tentative de Hack";
         }
 

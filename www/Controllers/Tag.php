@@ -28,7 +28,7 @@ class Tag{
         if( $form->isSubmitted() && $form->isValid() )
         {
 
-            // $status = getDataId("published");
+            $status = getDataId("published");
 
             $tag->setName($_POST['name']);
             $tag->setSlug($_POST['slug']);
@@ -36,7 +36,7 @@ class Tag{
             $tag->setCreationDate($formattedDate);
             $tag->setModificationDate($formattedDate);
             $tag->setUserId($userId);
-            $tag->setStatus(1);
+            $tag->setStatus($status);
             $tag->save();
             $success[] = "La catégorie".$_POST['name']."a été créée";
         }

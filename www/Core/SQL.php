@@ -106,6 +106,21 @@ class SQL
         return $queryPrepared->fetchAll();
     }
 
+    public function getDataObject(): array //pour récupérer les données de l'objet
+    {
+        return array_diff_key(get_object_vars($this), get_class_vars(get_class())); //mettre dans un tableau les données de l'objet
+    }
+
+    public function setDataFromArray(array $data): void //pour mettre à jour les données de l'objet
+    {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
+
+
     // public function getProjects($status, $id = null)
     // {
     //     $sql = "SELECT * FROM msnu_project WHERE status = :status";
@@ -209,19 +224,7 @@ class SQL
     //     return $queryPrepared->rowCount() > 0;
     // }
 
-    public function getDataObject(): array //pour récupérer les données de l'objet
-    {
-        return array_diff_key(get_object_vars($this), get_class_vars(get_class())); //mettre dans un tableau les données de l'objet
-    }
-
-    public function setDataFromArray(array $data): void //pour mettre à jour les données de l'objet
-    {
-        foreach ($data as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
-            }
-        }
-    }
+   
 
     // public function saveInpage()
     // {
