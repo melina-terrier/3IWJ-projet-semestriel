@@ -24,7 +24,8 @@ class Form
                 $html .= "<li>".$error."</li>";
             }
         }
-        $html .= "<form action='".$this->config["config"]["action"]."' method='".$this->config["config"]["method"]."'>";
+        $enctype = (isset($this->config["config"]["enctype"])) ? $this->config["config"]["enctype"] : '';
+        $html .= "<form action='".$this->config["config"]["action"]."' method='".$this->config["config"]["method"]."' enctype='".$enctype."'>";
         foreach ($this->config["inputs"] as $name=>$input){
 
             if ($input["type"] === "select") {
@@ -66,6 +67,8 @@ class Form
 
         }
 
+
+
         $html .= "<input type='submit' value='".htmlentities($this->config["config"]["submit"])."'>";
         $html .= "</form>";
         return $html;
@@ -85,7 +88,7 @@ class Form
     public function isValid(): bool
     {
         // Est-ce que j'ai exactement le même nombre de champs
-        if (count($this->config["inputs"]) != count($_POST)) {
+        if (count($this->config["inputs"]) != count($_POST) + count($_FILES)) {
             $this->errors[] = count($this->config["inputs"]) ."/ " . count($_POST);
             $this->errors[] = "Tentative de Hack";
         }

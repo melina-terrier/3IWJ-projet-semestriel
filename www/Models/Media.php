@@ -4,44 +4,51 @@ use App\Core\SQL;
 
 class Media extends SQL
 {
-    protected ?int $id;
+    protected ?int $id = null;
     protected string $title;
-    protected string $url;
+    protected string $name;
+    protected $type;
+    protected $size;
+    protected $url;
     protected string $description;
     protected $creation_date;
     protected $modification_date;
-    protected $status;
-    // protected $user_name;
+    protected $status_id;
+    protected $user_id;
 
-    public function getId()
+    public function getId(): ?int
     {
-        if (isset($this->id)) {
-            return $this->id;
-        }
+        return $this->id;
     }
 
-    public function setId($id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
     public function getTitle()
     {
-        if (isset($this->title)) {
-            return $this->title;
-        }
+        return $this->title;
     }
 
-    public function setTitle(string $title): void
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
 
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description): void
+    {
+        $this->description = $description;
+    }
+
     public function getUrl()
     {
-        if (isset($this->url)) {
-            return $this->url;
-        }
+        return $this->url;
     }
 
     public function setUrl($url): void
@@ -49,16 +56,44 @@ class Media extends SQL
         $this->url = $url;
     }
 
-    public function getDescription()
+    public function getName()
     {
-        if (isset($this->description)) {
-            return $this->description;
-        }
+        return $this->name;
     }
 
-    public function setDescription($description): void
+    public function setName($name): void
     {
-        $this->description = $description;
+        $this->name = $name;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type): void
+    {
+        $this->type = $type;
+    }
+
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    public function setSize($size): void
+    {
+        $this->size = $size;
+    }
+
+    public function getStatus()
+    {
+        return $this->status_id;
+    }
+
+    public function setStatus($status_id): void
+    {
+        $this->status_id = $status_id;
     }
 
     public function getCreationDate()
@@ -76,37 +111,23 @@ class Media extends SQL
         return $this->modification_date;
     }
 
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function setStatus($status): void
-    {
-        $this->status = $status;
-    }
-
-    // public function getUserName()
-    // {
-    //     return $this->user_name;
-    // }
-
-    // public function setUserName($user_name): void
-    // {
-    //     $this->user_name = $user_name;
-    // }
-
     public function setModificationDate($modification_date): void
     {
         $this->modification_date = $modification_date;
     }
 
-    public function getNbElements() {
-        return $this->countElements();
+    public function getUser()
+    {
+        return $this->user_id;
     }
 
-    public function getElementsByType($column, $value) {
-        return $this->countElements($column, $value);
+    public function setUser($user_id): void
+    {
+        $this->user_id = $user_id;
+    }
+
+    public function getNbElements() {
+        return $this->countElements();
     }
 
 }
