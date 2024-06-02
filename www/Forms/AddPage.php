@@ -24,9 +24,12 @@ class AddPage
                     "type"=>"textarea",
                     "id"=>"content",
                     "label"=>"Contenu de la page",
-                    "required"=>true,
                     "error"=>"",
-                ]
+                ],
+                "slug"=>[
+                    "type"=>"text",
+                    "label"=>"Slug",
+                ],
             ]
         ];
     }

@@ -64,7 +64,7 @@
 </script>
 
 <section>
-    <h2>Ajouter un nouveau projet</h2>
+    <h1>Ajouter un nouveau projet</h1>
     <?= $form ?>
 
     <?php if (!empty($errorsForm)): ?>

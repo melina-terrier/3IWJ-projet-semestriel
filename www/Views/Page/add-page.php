@@ -1,22 +1,3 @@
-<?php 
-
-if (empty($this->data['page']->getId())) {
-    echo "<h2>Nouvelle page</h2>";
-} else {
-    echo "<h2>Modification de la page</h2>";
-}
-
-
-$status = $this->data['page']->getStatus();
-
-
-if (!empty($this->data['mandatoryFields'])) {
-    $missingFields = implode("<br>", $this->data['mandatoryFields']);
-    echo "<div style='color: red'>$missingFields</div>";
-}
-
-?>   
-    
 <script type="text/javascript">
 
     const imgLists = [<?php
@@ -82,20 +63,26 @@ if (!empty($this->data['mandatoryFields'])) {
     });
 </script>
 
-    <h2>Créer une page</h2>
+<section>
 
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>">
-        
-        <input type="number" hidden name="id" value="<?php echo $this->data['page']->getId() ?? '' ?>"/>
+    <h1>Créer une page</h1>
 
-        <input name="pageSlug" id="pageName" class="pageName" placeholder="Nom de la page ..." value="<?php echo $this->data['page']->getSlug() ?? '' ?>"><br>
+    <?= $form ?>
 
-        <label for="title">Titre</label><br>
-        <input type="text" required name="title" value="<?php echo $this->data['page']->getTitle() ?? '' ?>"><br>
+    <?php if (!empty($errorsForm)): ?>
+        <div>
+            <?php foreach ($errorsForm as $error): ?>
+                <p class="text"><?php echo htmlspecialchars($error); ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-        <label for="content">Contenu de la page</label><br>
-        <textarea id="content" name="content" rows="15" cols="80"><?php echo $this->data['page']->getContent() ?? '' ?></textarea>
-        <br />
+    <?php if (!empty($successForm)): ?>
+        <div>
+            <?php foreach ($successForm as $message): ?>
+                <p class="text"><?php echo htmlspecialchars($message); ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-        <input type="submit" name="save" value="Submit" />
-    </form>
+    </section>

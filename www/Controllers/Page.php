@@ -39,66 +39,47 @@ class Page
             }
         }
         
-        $page = new PageModel();
-
-        if (isset($_GET['id'])) {
-            $retrievedPost = $page->getOneBy(['id' => $_GET['id']], 'object');
-            if (!empty($retrievedPost)) {
-                $page = $retrievedPost;
-            }
-        }
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-            if (!empty($_POST['id'])) {
-                $page->setId(intval($_POST['id']));
-            }
-            
-            $_POST['pageSlug'] = str_replace(' ', '', strtolower($_POST['pageSlug']));
-
-            $page->setSlug($_POST['pageSlug']);
-
-            $formattedDate = date('Y-m-d H:i:s');
-            $page2 = $page->getOneBy(['slug' => $_POST['pageSlug']], 'object');
-
-            if(!$page2 || $page2->getId() == $page->getId()){
-                $page->setTitle($_POST['title']);
-                $page->setContent(strip_tags(stripslashes($_POST['content']), $allowedTags));
-                $page->setStatus("Publié");
-                $page->setCreationDate($formattedDate);
-                $page->setModificationDate($formattedDate);
-        
-               
-                $missingFields = $page->validate();
-
-                if (count($missingFields) === 0) {
-                    $pageId = $page->save();
-                    $savedPage = $page->getOneBy(['id' => $pageId], 'object');
-                    $page = $savedPage;
-                    $info = "Page sauvegardée";
-                }
-            }else{
-                $errorSlug = "Slug déjà existant, veuillez en choisir un autre";
-            }
-        }
+        $form = new Form("AddPage");
+        $errors = [];
+        $success = [];
 
         
-        // if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        //     $page = new PageModel();
-        //     $pageSlug = strtolower(str_replace(' ', '-', $_POST['title']));
-            
-        //     $page->setTitle($_POST['title']);
-        //     $page->setContent(strip_tags(stripslashes($_POST['content']), $allowedTags));
-        //     $page->setCreationDate($formattedDate);
-        //     $page->setModificationDate($formattedDate);
-        //     $page->setSlug($pageSlug);
-        //     $page->setStatus('Publié');
-        //     $page->save();
-        //     $success[] = "Votre catgégorie a été créée";
-        // }
+        $formattedDate = date('Y-m-d H:i:s');
+        $userSerialized = $_SESSION['user'];
+        $user = unserialize($userSerialized);
+        $userId = $user->getId();
+        
+        if( $form->isSubmitted() && $form->isValid() )
+        {   
+            $sql = new SQL();
+            $status = $sql->getDataId("published");
+            $page = new PageModel();
+
+            $page->setTitle($_POST['title']);
+            $page->setContent(strip_tags(stripslashes($_POST['content']), $allowedTags));
+        
+            $slug = $_POST['slug'];
+            if (empty($slug)) {
+                $slug = strtolower(preg_replace('/\s+/', '-', $_POST['title']));
+                $page->setSlug($slug);
+            } else {
+                $page->setSlug($_POST['slug']);
+            }
+            $page->setUser($userId);
+            $page->setCreationDate($formattedDate);
+            $page->setPublicationDate($formattedDate);
+            $page->setModificationDate($formattedDate);
+            $page->setStatus($status);
+            $page->save();
+
+            $success[] = "Votre page a été publiée";
+        }
+
         $view = new View("Page/add-page", "back");
+        $view->assign("form", $form->build());
         $view->assign("mediasList", $mediasList ?? []);
-        $view->assign("page", $page);
+        $view->assign("errorsForm", $errors);
+        $view->assign("successForm", $success);
         $view->render();
     }
 
