@@ -9,22 +9,21 @@ class AddMedia
             "config"=>[
                 "action"=>"",
                 "method"=>"POST",
-                "submit"=>"Enregistrer un média"
+                "submit"=>"Enregistrer un média",
+                "enctype"=>"multipart/form-data",
             ],
             "inputs"=>[
-                "url"=>[
-                    "type"=>"text",
-                    "min"=>2,
-                    "max"=>50,
-                    "label"=>"Votre url",
+                "media"=>[
+                    "type"=>"file",
+                    "label"=>"Média",
                     "required"=>true,
-                    "error"=>"Votre url doit faire entre 2 et 50 caractères"
+                    "error"=>"Le format du fichier n'est pas pris en compte"
                 ],
                 "title"=>[
                     "type"=>"text",
                     "min"=>2,
                     "max"=>50,
-                    "label"=>"Votre titre",
+                    "label"=>"Titre",
                     "required"=>true,
                     "error"=>"Votre titre doit faire entre 2 et 50 caractères"
                 ],
@@ -32,7 +31,7 @@ class AddMedia
                     "type"=>"text",
                     "min"=>2,
                     "max"=>500,
-                    "label"=>"Votre description",
+                    "label"=>"Description",
                     "required"=>true,
                     "error"=>"Votre description doit faire entre 2 et 500 caractères"
                 ]

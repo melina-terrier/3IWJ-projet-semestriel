@@ -70,6 +70,7 @@ CREATE TABLE msnu_tag (
 	user_id INTEGER NOT NULL,
 	creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	modification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id),
 	CONSTRAINT fk_tag_status FOREIGN KEY (status_id) REFERENCES msnu_status(id),
 	CONSTRAINT fk_tag_user FOREIGN KEY (user_id) REFERENCES msnu_user(id)
 );
@@ -81,17 +82,19 @@ CREATE SEQUENCE msnu_media_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 -- Define the msnu_media table
 CREATE TABLE msnu_media (
 	id       		INTEGER DEFAULT nextval('msnu_media_id_seq') NOT NULL,
-	url       VARCHAR(255),
-	title           VARCHAR(50),
+	title           VARCHAR(255),
 	description 	VARCHAR(255),
-	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    modification_date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	status					VARCHAR(50),
-	-- id_type_media   INTEGER,
-	-- id_user        INTEGER,
-	PRIMARY KEY (id)
-	-- FOREIGN KEY (id_type_media) REFERENCES msnu_type_media(id_type_media)
-	-- FOREIGN KEY (id_user) REFERENCES msnu_user(id),
+	name           VARCHAR(255),
+	type 	VARCHAR(255),
+	size           INTEGER,
+	url VARCHAR(255) NOT NULL,
+	status_id 		INTEGER NOT NULL,
+	user_id 		INTEGER NOT NULL,
+	creation_date 	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	modification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id),
+	CONSTRAINT fk_media_status FOREIGN KEY (status_id) REFERENCES msnu_status(id),
+	CONSTRAINT fk_media_user FOREIGN KEY (user_id) REFERENCES msnu_user(id)
 );
 
 CREATE SEQUENCE msnu_project_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
