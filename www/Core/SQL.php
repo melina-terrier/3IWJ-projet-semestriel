@@ -70,7 +70,6 @@ class SQL
         $sql = substr($sql, 0, -3);
         $queryPrepared = $this->pdo->prepare($sql); 
         $queryPrepared->execute($data);
-
         if($return == "object") {
             $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
         } else {
