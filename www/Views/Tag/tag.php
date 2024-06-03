@@ -1,5 +1,13 @@
 <section class="add-tag">
-        <h2>Ajouter une catégorie</h2>
+
+        <?php
+        if (isset($_GET['id']) && $_GET['id']) {
+            echo "<h2>Modifier la catégorie</h2>";
+        } else {
+            echo "<h2>Ajouter une catégorie</h2>";
+        }
+        ?>
+        
         <?= $form ?>
 
         <?php if (!empty($errorsForm)): ?>

@@ -1,8 +1,8 @@
-CREATE TABLE msnu_type_media (
-	id_type_media        SERIAL,
-	label_type_media     VARCHAR(50),
-	PRIMARY KEY (id_type_media)
-);
+-- CREATE TABLE msnu_type_media (
+-- 	id_type_media        SERIAL,
+-- 	label_type_media     VARCHAR(50),
+-- 	PRIMARY KEY (id_type_media)
+-- );
 
 -- Define the msnu_status table
 CREATE TABLE msnu_status (
@@ -66,7 +66,6 @@ CREATE TABLE msnu_tag (
 	name VARCHAR(50) NOT NULL,
 	slug VARCHAR(255),
 	description VARCHAR(500),
-	status_id INTEGER NOT NULL,
 	user_id INTEGER NOT NULL,
 	creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	modification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -143,7 +142,7 @@ CREATE TABLE msnu_comment (
 	comment    			TEXT NOT NULL,
 	user_id    			INTEGER,
 	mail				VARCHAR(320) NOT NULL,
-	is_reported  		INTEGER NOT NULL,
+	status  			INTEGER NOT NULL,
 	name 				VARCHAR(50) NOT NULL,
 	project_id			INTEGER,
 	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,

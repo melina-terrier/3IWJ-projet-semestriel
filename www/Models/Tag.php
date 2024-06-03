@@ -10,7 +10,6 @@ class Tag extends SQL
     protected $description;
     protected $creation_date;
     protected $modification_date;
-    protected $status_id;
     protected $user_id;
 
     public function getId()
@@ -73,16 +72,6 @@ class Tag extends SQL
         $this->modification_date = $modification_date;
     }
 
-    public function getStatus()
-    {
-        return $this->status_id;
-    }
-
-    public function setStatus($status_id): void
-    {
-        $this->status_id = $status_id;
-    }
-
     public function getUserId()
     {
         return $this->user_id;
@@ -100,5 +89,6 @@ class Tag extends SQL
     public function getElementsByType($column, $value) {
         return $this->countElements($column, $value);
     }
+    
 
 }
