@@ -6,7 +6,9 @@ use App\Controllers\Error;
 use App\Controllers\Main;
 use App\Controllers\Security;
 use App\Models\User;
-use App\Core\PageBuilder;
+
+use App\Controllers\Page;
+use App\Controllers\Project;
 
 date_default_timezone_set('Europe/Paris');
 
@@ -107,8 +109,13 @@ if( !empty($listOfRoutes[$uri]) ) {
 }
 else if($uri){
     session_start();
-    $pageBuilder = new PageBuilder();
-    $pageBuilder->build($uri);
+    if (strpos($uri, 'projects') !== false) {
+        $projectBuilder = new Project();
+        $projectBuilder->showProject($uri);
+    } else {
+        $pageBuilder = new Page();
+        $pageBuilder->showPage($uri);
+    }
 }
 else{
     header("Status 404 Not Found", true, 404);

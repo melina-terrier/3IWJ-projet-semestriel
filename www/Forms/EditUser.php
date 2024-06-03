@@ -12,6 +12,10 @@ class EditUser
                 "submit"=>"Sauvegarder"
             ],
             "inputs"=>[
+                "photo"=>[
+                    "type"=>"file",
+                    "label"=>"Photo de profil",
+                ],
                 "lastname"=>[
                     "type"=>"text",
                     "min"=>2,

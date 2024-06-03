@@ -139,4 +139,25 @@ class User
         $view->render();
     }
 
+
+
+    public function updateUser(): void {
+        // $userId = $_GET['id'] ?? null;
+        $user = new UserModel();
+        $errors = [];
+        $success = [];
+
+        $form = new Form("EditUser");
+        
+        $view = new View("User/edit-user", "front");
+        $view->assign("form", $form->build());
+        $view->assign("errorsForm", $errors);
+        $view->assign("successForm", $success);
+        $view->render();
+    }
+
+    
+    public function showUser(): void
+    {
+    }
 }

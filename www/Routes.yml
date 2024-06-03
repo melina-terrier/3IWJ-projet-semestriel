@@ -9,6 +9,13 @@
   Security: true
   # Role: [admin]
 
+/edit-user:
+  Controller: "User"
+  Action: "updateUser"
+
+/show-user:
+  Controller: "User"
+  Action: "showUser"
 # USER
 /dashboard/users:
   Controller: "User"
@@ -66,7 +73,6 @@
   Security: true
   # Role: [admin]
 
-
 /dashboard/pages:
   Controller: "Page"
   Action: "allPages"
@@ -79,9 +85,9 @@
   Security: true
   # Role: [admin]
 
-/dashboard/add-comment:
-  Controller: "Comment"
-  Action: "addComment"
+# /dashboard/add-comment:
+#   Controller: "Comment"
+#   Action: "addComment"
   # Security: true
   # Role: "admin"
 
