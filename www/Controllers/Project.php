@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Core\Form;
 use App\Core\View;
 use App\Core\SQL;
+use App\Models\Status as StatusModel;
 use App\Models\Media;
 use App\Models\Project as ProjectModel;
 
@@ -81,24 +82,49 @@ class Project{
         $view->render();
     }
 
+
     public function allProjects(): void
     {
         $errors = [];
         $success = [];
         $project = new ProjectModel();
-
         $allProjects = $project->getAllData("object");
+        $statusModel = new StatusModel();
+        $statuses = $statusModel->getAllData("object");
 
+        if (isset($_GET['action']) && isset($_GET['id'])) {
+            $currentProject = $project->getOneBy(['id' => $_GET['id']], 'object');
+            if ($_GET['action'] === "delete") {
+                $status = $statusModel->getOneBy(["status"=>"deleted"], 'object');
+                $statusId = $status->getId();
+                $currentProject->setStatus($statusId);
+                $currentProject->save();
+                header('Location: /dashboard/projects?message=delete-success');
+                exit;
+            } else if ($_GET['action'] === "permanent-delete") {
+                $project->delete(['id' => (int)$_GET['id']]);
+                header('Location: /dashboard/projects?message=permanent-delete-success');
+                exit;
+            } else if ($_GET['action'] === "restore") {
+                $status = $statusModel->getOneBy(["status"=>"draft"], 'object');
+                $statusId = $status->getId();
+                $currentProject->setStatus($statusId);
+                $currentProject->save();
+                header('Location: /dashboard/projects?message=restore-success');
+                exit;
+            }
+        }
         $view = new View("Project/projects-list", "back");
         $view->assign("projects", $allProjects);
+        $view->assign("statuses", $statuses);
         $view->assign("errors", $errors);
         $view->assign("success", $success);
         $view->render();
     }
 
-    public function editProjects(): void
-    {
 
+    public function editProject(): void
+    {
         $project = new ProjectModel();
         if (isset($_GET['project']) && $_GET['project']) {
             $projectId = $_GET['project'];
