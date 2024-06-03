@@ -11,7 +11,7 @@ class Comment extends SQL
     protected $mail;
     protected $name;
     protected $status;
-    // protected int $project_id;
+    protected int $project_id;
     protected $creation_date;
     protected $modification_date;
 
@@ -75,15 +75,15 @@ class Comment extends SQL
         $this->status = $status;
     }
 
-    //  public function getProject()
-    // {
-    //     return $this->project_id;
-    // }
+     public function getProject()
+    {
+        return $this->project_id;
+    }
 
-    // public function setProject($project_id): void
-    // {
-    //     $this->project_id = $project_id;
-    // }
+    public function setProject($project_id): void
+    {
+        $this->project_id = $project_id;
+    }
 
     public function getCreationDate()
     {

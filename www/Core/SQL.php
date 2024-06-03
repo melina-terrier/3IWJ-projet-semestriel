@@ -89,7 +89,6 @@ class SQL
     }
 
     public function getAllData(string $return = "array")
-
     {
         $sql = "SELECT * FROM " . $this->table;
         $queryPrepared = $this->pdo->prepare($sql);
