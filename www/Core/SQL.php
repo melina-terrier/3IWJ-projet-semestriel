@@ -14,7 +14,6 @@ class SQL
         }catch (\Exception $e){
             die("Erreur SQL : ".$e->getMessage());
         }
-
         $classChild = get_called_class();
         $this->table = "msnu_".strtolower(str_replace("App\\Models\\","",$classChild));
     }
@@ -24,7 +23,6 @@ class SQL
         $columnsAll = get_object_vars($this);
         $columnsToDelete = get_class_vars(get_class());
         $columns = array_diff_key($columnsAll, $columnsToDelete);
-
         if( empty($this->getId()) ) {
             unset($columns['id']);
             $sql = "INSERT INTO ".$this->table. " (". implode(', ', array_keys($columns) ) .")  
@@ -46,7 +44,6 @@ class SQL
             return $this->getId();
         }
         return $this->pdo->lastInsertId($this->table."_id_seq");
-
     }
 
     public function emailExists($email): bool {

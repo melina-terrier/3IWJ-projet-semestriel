@@ -75,7 +75,7 @@ class Project{
             $project->setCreationDate($formattedDate);
             $project->setPublicationDate($formattedDate);
             $project->setModificationDate($formattedDate);
-            $project->setStatus($status);
+            $project->setStatus($publishedStatusId);
             $project->save();
 
             $success[] = "Votre projet a été publié";

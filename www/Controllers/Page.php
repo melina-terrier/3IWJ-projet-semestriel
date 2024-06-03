@@ -81,7 +81,6 @@ class Page
             $statuses = $statusModel->getAllData("object");
             $statusId = $statusModel->getOneBy(["status"=>"published"], 'object');
             $status = $statusId->getId();
-
             $page = new PageModel();
 
             $page->setTitle($_POST['title']);
@@ -98,7 +97,7 @@ class Page
             $page->setCreationDate($formattedDate);
             $page->setPublicationDate($formattedDate);
             $page->setModificationDate($formattedDate);
-            $page->setStatus($status);
+            $page->setStatus($publishedStatusId);
             $page->save();
 
             $success[] = "Votre page a été publiée";
