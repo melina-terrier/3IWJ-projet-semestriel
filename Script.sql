@@ -15,7 +15,17 @@ INSERT INTO msnu_status (status) VALUES
   ('deleted'),
   ('draft');
 
-CREATE SEQUENCE msnu_user_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
+CREATE SEQUENCE msnu_role_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
+CREATE TABLE msnu_role (
+	id                       INTEGER DEFAULT nextval('msnu_role_id_seq') NOT NULL,
+	role                	 VARCHAR(50) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+INSERT INTO msnu_role (role) VALUES
+  ('admin'),
+  ('user');
+
 -- Define the msnu_user table
 CREATE TABLE msnu_user (
 	id                        INTEGER DEFAULT nextval('msnu_user_id_seq') NOT NULL,
@@ -40,16 +50,7 @@ CREATE TABLE msnu_user (
 );
 
 
-CREATE SEQUENCE msnu_role_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
-CREATE TABLE msnu_role (
-	id                       INTEGER DEFAULT nextval('msnu_role_id_seq') NOT NULL,
-	role                	 VARCHAR(50) NOT NULL,
-	PRIMARY KEY (id),
-);
 
-INSERT INTO msnu_role (role) VALUES
-  ('admin'),
-  ('user');
 
 -- Define the msnu_type_notification table
 CREATE TABLE msnu_type_notification (
@@ -70,7 +71,6 @@ CREATE TABLE msnu_tag (
 	user_id INTEGER NOT NULL,
 	creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	modification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (id),
 	CONSTRAINT fk_tag_status FOREIGN KEY (status_id) REFERENCES msnu_status(id),
 	CONSTRAINT fk_tag_user FOREIGN KEY (user_id) REFERENCES msnu_user(id)
 );
@@ -123,16 +123,6 @@ CREATE TABLE msnu_project_tags (
   PRIMARY KEY (project_id, tag_id),
   FOREIGN KEY (project_id) REFERENCES msnu_project(id),
   FOREIGN KEY (tag_id) REFERENCES msnu_tag(id)
-);
-
--- Define the msnu_media_project table
-CREATE TABLE msnu_media_project (
-	id_media_project SERIAL,
-	id_project       INTEGER,
-	id_media         INTEGER,
-	PRIMARY KEY (id_media_project),
-	FOREIGN KEY (id_project) REFERENCES msnu_project(id_project),
-	FOREIGN KEY (id_media) REFERENCES msnu_media(id_media)
 );
 
 
