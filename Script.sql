@@ -1,8 +1,8 @@
-CREATE TABLE msnu_type_media (
-	id_type_media        SERIAL,
-	label_type_media     VARCHAR(50),
-	PRIMARY KEY (id_type_media)
-);
+-- CREATE TABLE msnu_type_media (
+-- 	id_type_media        SERIAL,
+-- 	label_type_media     VARCHAR(50),
+-- 	PRIMARY KEY (id_type_media)
+-- );
 
 -- Define the msnu_status table
 CREATE TABLE msnu_status (
@@ -15,17 +15,7 @@ INSERT INTO msnu_status (status) VALUES
   ('deleted'),
   ('draft');
 
-CREATE SEQUENCE msnu_role_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
-CREATE TABLE msnu_role (
-	id                       INTEGER DEFAULT nextval('msnu_role_id_seq') NOT NULL,
-	role                	 VARCHAR(50) NOT NULL,
-	PRIMARY KEY (id)
-);
-
-INSERT INTO msnu_role (role) VALUES
-  ('admin'),
-  ('user');
-
+CREATE SEQUENCE msnu_user_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 -- Define the msnu_user table
 CREATE TABLE msnu_user (
 	id                        INTEGER DEFAULT nextval('msnu_user_id_seq') NOT NULL,
@@ -50,7 +40,16 @@ CREATE TABLE msnu_user (
 );
 
 
+CREATE SEQUENCE msnu_role_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
+CREATE TABLE msnu_role (
+	id                       INTEGER DEFAULT nextval('msnu_role_id_seq') NOT NULL,
+	role                	 VARCHAR(50) NOT NULL,
+	PRIMARY KEY (id),
+);
 
+INSERT INTO msnu_role (role) VALUES
+  ('admin'),
+  ('user');
 
 -- Define the msnu_type_notification table
 CREATE TABLE msnu_type_notification (
@@ -67,10 +66,10 @@ CREATE TABLE msnu_tag (
 	name VARCHAR(50) NOT NULL,
 	slug VARCHAR(255),
 	description VARCHAR(500),
-	status_id INTEGER NOT NULL,
 	user_id INTEGER NOT NULL,
 	creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	modification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id),
 	CONSTRAINT fk_tag_status FOREIGN KEY (status_id) REFERENCES msnu_status(id),
 	CONSTRAINT fk_tag_user FOREIGN KEY (user_id) REFERENCES msnu_user(id)
 );
@@ -125,6 +124,16 @@ CREATE TABLE msnu_project_tags (
   FOREIGN KEY (tag_id) REFERENCES msnu_tag(id)
 );
 
+-- Define the msnu_media_project table
+CREATE TABLE msnu_media_project (
+	id_media_project SERIAL,
+	id_project       INTEGER,
+	id_media         INTEGER,
+	PRIMARY KEY (id_media_project),
+	FOREIGN KEY (id_project) REFERENCES msnu_project(id_project),
+	FOREIGN KEY (id_media) REFERENCES msnu_media(id_media)
+);
+
 
 CREATE SEQUENCE msnu_comment_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 -- Define the msnu_comment table
@@ -133,7 +142,7 @@ CREATE TABLE msnu_comment (
 	comment    			TEXT NOT NULL,
 	user_id    			INTEGER,
 	mail				VARCHAR(320) NOT NULL,
-	is_reported  		INTEGER NOT NULL,
+	status  			INTEGER NOT NULL,
 	name 				VARCHAR(50) NOT NULL,
 	project_id			INTEGER,
 	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
