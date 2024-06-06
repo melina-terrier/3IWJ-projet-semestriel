@@ -113,6 +113,12 @@ class Form
             if ($this->config['inputs'][$name]['label']=="Laisser un commentaire" && preg_match('/(https?|ftp):\/\/([^\s]+)/i', $dataSent)) {
                 $this->errors[] = "Les URL ne sont pas autorisés dans le commentaire.";
             }
+
+            // if ($this->config['inputs'][$name]['label'] == "Slug"){
+                
+            //         $this->errors[] = "Le slug existe déjà pour une autre catégorie";
+                
+            // }
                          
             if (isset($this->config["inputs"][$name]["confirm"]) && $dataSent != $_POST[$this->config["inputs"][$name]["confirm"]]) {
                 $this->errors[] = $this->config["inputs"][$name]["error"];

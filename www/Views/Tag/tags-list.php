@@ -49,14 +49,20 @@
                                 $tagName = $tag->getName();
                                 $tagDescription = $tag->getDescription();
                                 $tagSlug = $tag->getSlug();
-                                $tagNumber = "";
+                                $projectCount = "";
+
+                                foreach($projectCounts as $project){
+                                  if ($tagId == $project['id']){
+                                    $projectCount = $project["projectCount"];
+                                  }
+                                }
                                                                
                                 echo "
                                     <tr>
                                         <td>$tagName</td>
                                         <td>$tagSlug</td>
                                         <td>$tagDescription</td>
-                                        <td>$tagNumber</td>
+                                        <td>$projectCount</td>
                                         <td>
                                             <a href='/dashboard/edit-tag?id=$tagId'>Modifier</a>
                                             <a href='/dashboard/tags?action=delete&id=$tagId' onclick='return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');'>

@@ -135,4 +135,32 @@ class SQL
         }
         return $queryPrepared->fetchColumn();
     }
+
+
+    public function getAllDataWithWhere(array $data = [], string $return = "array"): mixed
+    {
+        $sql = "SELECT * FROM " . $this->table . " WHERE ";
+        $placeholders = [];
+        foreach ($data as $column => $value) {
+            $placeholders[] = "$column = :$column";
+            $type = is_bool($value) ? \PDO::PARAM_BOOL : (is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
+        }
+        $sql .= implode(' AND ', $placeholders);
+        $queryPrepared = $this->pdo->prepare($sql);
+        foreach ($data as $column => $value) {
+            $queryPrepared->bindValue(":$column", $value, $type);
+        }
+        $queryPrepared->execute();
+        if ($rowCount = $queryPrepared->rowCount()) {
+            if ($return == "object") {
+                $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+            } else {
+                $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
+            }
+            return $queryPrepared->fetchAll();
+        } else {
+            return []; 
+        }
+    }
+
 }
