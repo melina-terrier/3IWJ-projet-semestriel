@@ -14,7 +14,7 @@ class User extends SQL
     protected int $status;
     protected ?string $reset_token = null;
     protected ?string $reset_expires = null;
-    protected ?string $activation_Token = null;
+    protected ?string $activation_token = null;
     protected ?string $photo = null;
     protected $creation_date;
     protected $modification_date;
@@ -118,12 +118,12 @@ class User extends SQL
 
     public function getActivationToken(): string
     {
-        return $this->activation_Token;
+        return $this->activation_token;
     }
 
-    public function setActivationToken(?string $activationToken): void
+    public function setActivationToken(?string $activationtoken): void
     {
-        $this->activation_Token = $activationToken;
+        $this->activation_token = $activationtoken;
     }
     
     public function getPhoto(): string

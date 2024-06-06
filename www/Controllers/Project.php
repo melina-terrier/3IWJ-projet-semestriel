@@ -4,7 +4,11 @@ namespace App\Controllers;
 use App\Core\Form;
 use App\Core\View;
 use App\Core\SQL;
+use App\Models\Status as StatusModel;
 use App\Models\Media;
+use App\Controllers\Error;
+use App\Models\Tag as TagModel;
+use App\Models\Comment as CommentModel;
 use App\Models\Project as ProjectModel;
 
 class Project{
@@ -48,7 +52,7 @@ class Project{
 
             $project = new ProjectModel();
             $project->setTitle($_POST['title']);
-            $project->setContent($_POST['content']);
+            $project->setContent(strip_tags(stripslashes($_POST['content']),  $allowedTags));
            
             $slug = $_POST['slug'];
             if (empty($slug)) {
@@ -81,24 +85,49 @@ class Project{
         $view->render();
     }
 
+
     public function allProjects(): void
     {
         $errors = [];
         $success = [];
         $project = new ProjectModel();
-
         $allProjects = $project->getAllData("object");
+        $statusModel = new StatusModel();
+        $statuses = $statusModel->getAllData("object");
 
+        if (isset($_GET['action']) && isset($_GET['id'])) {
+            $currentProject = $project->getOneBy(['id' => $_GET['id']], 'object');
+            if ($_GET['action'] === "delete") {
+                $status = $statusModel->getOneBy(["status"=>"deleted"], 'object');
+                $statusId = $status->getId();
+                $currentProject->setStatus($statusId);
+                $currentProject->save();
+                header('Location: /dashboard/projects?message=delete-success');
+                exit;
+            } else if ($_GET['action'] === "permanent-delete") {
+                $project->delete(['id' => (int)$_GET['id']]);
+                header('Location: /dashboard/projects?message=permanent-delete-success');
+                exit;
+            } else if ($_GET['action'] === "restore") {
+                $status = $statusModel->getOneBy(["status"=>"draft"], 'object');
+                $statusId = $status->getId();
+                $currentProject->setStatus($statusId);
+                $currentProject->save();
+                header('Location: /dashboard/projects?message=restore-success');
+                exit;
+            }
+        }
         $view = new View("Project/projects-list", "back");
         $view->assign("projects", $allProjects);
+        $view->assign("statuses", $statuses);
         $view->assign("errors", $errors);
         $view->assign("success", $success);
         $view->render();
     }
 
-    public function editProjects(): void
-    {
 
+    public function editProject(): void
+    {
         $project = new ProjectModel();
         if (isset($_GET['project']) && $_GET['project']) {
             $projectId = $_GET['project'];
@@ -122,46 +151,100 @@ class Project{
         }
     }
 
-    public function updateProject(): void
-    {
-        $userSerialized = $_SESSION['user'];
-        $user = unserialize($userSerialized);
-        $username = $user->getFirstname();
 
-        $formattedDate = date('Y-m-d H:i:s');
+    public function showProject($slug){
+        $slugParts = explode('/', $slug);
+        $slug = end($slugParts);
+        $db = new ProjectModel();
+        $statusModel = new StatusModel();
+        $status = $statusModel->getOneBy(["status" => "published"], 'object');
+        $publishedStatusId = $status->getId();
 
-        $title = $_POST['title'];
-        $body = $_POST['content'];
+        $slugTrim = str_replace('/', '', $slug);
+        $arraySlug = ["slug" => $slugTrim];
+        $project = $db->getOneBy($arraySlug);
+        
+        if (!empty($project) && $project["status_id"] === $publishedStatusId) {
+            $content = $project["content"];
+            $title = $project["title"];
+            // print_r($project);
+            
+            $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            $routeFound = false;
+            if ('/projects/'.$slug === $requestUrl) {
+                $routeFound = true;
+            }
+            if ($routeFound) {
+                $form = new Form("AddComment");
+                $errors = [];
+                $success = [];
 
-        $project = new ProjectModel();
-        $project->setTitle($title);
-        $project->setBody($body);
+                $tag = new TagModel;
+                $tagName="";
+                $tag = $tag->getOneBy(['id'=>$project['tag_id']], 'object');
+                if ($tag){
+                    $tagName = $tag->getName(); 
+                }
 
-        if($_GET['id']){
-            $post = new ProjectModel();
-            $selectedProject = $post->getProjects("project", $_GET['id']);
+                $formattedDate = date('Y-m-d H:i:s');
+                if( $form->isSubmitted() && $form->isValid() )
+                {
+                    $comment = new CommentModel();
 
-            $project->setId($_GET['id']);
-            $project->setUpdatedAt($formattedDate);
-            $project->setCreatedAt($selectedProject[0]["createdat"]);
-            $project->setIsDeleted($selectedProject[0]["isdeleted"]);
-            $project->setPublished($selectedProject[0]["published"]);
-            $project->setSlug($selectedProject[0]["slug"]);
-            $project->setType($selectedProject[0]["type"]);
-            $project->setUserId($selectedProject[0]["user_firstname"]);
-        }else{
-            $project->setUpdatedAt($formattedDate);
-            $project->setCreatedAt($formattedDate);
+                    $comment->setComment($_POST['comment']);
+                    $comment->setCreationDate($formattedDate);
+                    $comment->setModificationDate($formattedDate);
+                    $comment->setProject($project['id']);
+                    $comment->setStatus(0);
 
-            $project->setIsDeleted(0);
-            $project->setPublished(1);
-            $project->setSlug("");
-            $project->setType("project");
-            $project->setUserId($username);
+                    if (isset($_SESSION['user'])) {
+                        $user = unserialize($_SESSION['user']);
+                        $userId = $user->getId();
+                        $userEmail = $user->getEmail();
+                        $userName = $user->getUserName();
+                        $comment->setUserId($userId);
+                        $comment->setMail($userEmail);
+                        $comment->setName($userName);
+                        $comment->save();
+                        $success[] = "Votre commentaire a été publié";
+                    } else {
+                        $user = new User();
+                        if ($user->emailExists($_POST["email"])) {
+                            $errors[] = "L'email correspond à un compte, merci de bien vouloir vous connecter";
+                        } else {
+                            $comment->setMail($_POST['email']);
+                            $comment->setName($_POST['name']);
+                            $comment->save();
+                            $success[] = "Votre commentaire a été publié";
+                        }
+                    }
+                }
+
+                $commentModel = new CommentModel();
+                $comments = $commentModel->getAllData();
+                $filteredComments = [];
+                foreach ($comments as $comment) {
+                if ($comment['status'] === 1 && $comment['project_id'] == $project['id']) {
+                    $filteredComments[] = $comment;
+                }
+                }
+
+                $view = new View("Main/project", "front");
+                $view->assign("content", $content);
+                $view->assign("tagName", $tagName);
+                $view->assign("title", $title);
+                $view->assign("form", $form->build());
+                $view->assign("errorsForm", $errors);
+                $view->assign("successForm", $success);
+                $view->assign("comments", $filteredComments);
+                $view->render(); 
+            }
+        } else {
+            header("Status 404 Not Found", true, 404);
+            $error = new Error();
+            $error->page404();
         }
-        $project->saveInpost();
-        header("Location: /dashboard/projects");
-        exit();
+
     }
 }
 

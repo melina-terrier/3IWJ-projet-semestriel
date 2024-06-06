@@ -10,19 +10,18 @@ class AddProject
     public static function getConfig(): array
     {
         $tag = new TagModel();
-        $sql = new SQL();
-        $status = $sql->getDataId("published");
-        $tags = [];
-        $tagObjects = $tag->getOneBy(["status_id" => $status], "object");
-        if (is_array($tagObjects)) {
-            foreach ($tagObjects as $tagObject) {
-              $tags[] = [
+        $tags = $tag->getAllData('object');
+
+        $formattedTags = [];
+        if (!empty($tags)) {
+            foreach ($tags as $tagObject) {
+              $formattedTags[] = [
                 "id" => $tagObject->getId(),
                 "name" => $tagObject->getName(),
               ];
             }
         } else {
-            $tags[] = [
+            $formattedTags[] = [
                 "id" => '0',
                 "name" => 'Aucune catgégorie disponible',
                 "selected" => true,
@@ -59,7 +58,7 @@ class AddProject
                 "tag"=>[
                     "type"=>"select",
                     "label"=>"Catégorie du projet",
-                    "option"=>$tags, 
+                    "option"=>$formattedTags, 
                 ],
             ],
         ];

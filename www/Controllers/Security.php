@@ -67,7 +67,9 @@ class Security{
                 $user->setLastname($_POST["lastname"]);
                 $user->setFirstname($_POST["firstname"]);
                 $user->setEmail($_POST["email"]);
+
                 $user->setpassword($_POST["password"]);
+
                 $user->setCreationDate($formattedDate);
                 $user->setModificationDate($formattedDate);  
                 $user->setModificationDate($formattedDate); 
@@ -129,7 +131,7 @@ class Security{
                 $errors[] = 'Cet email n\'est pas associé à un compte existant.';
             }
         }
-        $view = new View("Security/requestPassword", "front");
+        $view = new View("Security/request-password", "front");
         $view->assign("form", $form->build());
         $view->assign("errorsForm", $errors);
         $view->assign("successForm", $success);
@@ -137,50 +139,48 @@ class Security{
     }
 
     private function sendResetEmail($email, $resetToken) {
-        $mail = new PHPMailer(true); 
-
+        $phpmailer = new PHPMailer(); 
         try {
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->Port = 587;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->SMTPAuth = true; 
-            $mail->Username = 'melina.terrier@gmail.com'; 
-            $mail->Password = 'London88project!'; 
-            $mail->setFrom('melina.terrier@gmail.com', 'Support cms');
-            $mail->addAddress($email);
-            $mail->Subject = 'Recuperation du mot de passe';
 
-            $resetLink = "http://cms.fr/reset-password?token=" . $resetToken;
-            $mail->Body = 'Cliquez sur ce lien pour réinitialiser votre mot de passe: ' . $resetLink;
-            $mail->send();
+            $phpmailer->isSMTP();
+            $phpmailer->Host = 'sandbox.smtp.mailtrap.io';
+            $phpmailer->SMTPAuth = true;
+            $phpmailer->Port = 2525;
+            $phpmailer->Username = '634e887ab334e4';
+            $phpmailer->Password = '24453e62a4f0b3';
+            $phpmailer->setFrom('melina.terrier@gmail.com', 'Support cms');
+            $phpmailer->addAddress($email);
+            $phpmailer->Subject = 'Recuperation du mot de passe';
+
+            $resetLink = "http://localhost/reset-password?token=" . $resetToken;
+            $phpmailer->Body = 'Cliquez sur ce lien pour réinitialiser votre mot de passe: ' . $resetLink;
+            $phpmailer->send();
             return ['success' => 'Le lien de recuperation de mot de passe a été envoyé par mail.'];
         } catch (Exception $e) {
-            return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$mail->ErrorInfo}"];
+            return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$phpmailer->ErrorInfo}"];
         }
     }
 
     private function sendActivationEmail($email, $activationToken) {
-        $mail = new PHPMailer(true); 
+        $phpmailer = new PHPMailer(true); 
         try {
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->Port = 465;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->SMTPAuth = true; 
-            $mail->Username = 'melina.terrier@gmail.com'; 
-            $mail->Password = 'London88project'; 
-            $mail->setFrom('melina.terrier@gmail.com', 'Support cms');
-            $mail->addAddress($email);
-            $mail->Subject = 'Activation de votre compte cms';
+            $phpmailer->isSMTP();
+            $phpmailer->Host = 'sandbox.smtp.mailtrap.io';
+            $phpmailer->SMTPAuth = true;
+            $phpmailer->Port = 2525;
+            $phpmailer->Username = '634e887ab334e4';
+            $phpmailer->Password = '24453e62a4f0b3';
+            $phpmailer->setFrom('melina.terrier@gmail.com', 'Support cms');
+            $phpmailer->addAddress($email);
+            $phpmailer->Subject = 'Activation de votre compte cms';
 
-            $activationLink = "http://cms.fr/activate-account?token=" . $activationToken;
-            $mail->Body = 'Veuillez cliquer sur ce lien pour activer votre compte: ' . $activationLink;
+            $activationLink = "http://localhost/activate-account?token=" . $activationToken;
+            $phpmailer->Body = 'Veuillez cliquer sur ce lien pour activer votre compte: ' . $activationLink;
 
-            $mail->send();
+            $phpmailer->send();
             return ['success' => 'Le lien de recuperation de mot de passe a été envoyé par mail.'];
         } catch (Exception $e) {
-            return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$mail->ErrorInfo}"];
+            return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$phpmailer->ErrorInfo}"];
         }
     }
 
@@ -188,14 +188,12 @@ class Security{
     {
         $form = new Form("ResetPassword");
         $token = $_GET['token'] ?? '';
-        $config = $formInitPass->getConfig($token);
-
+        $config = $form->setField('token', $token);
         $errors = [];
         $success = [];
 
         if( $form->isSubmitted() && $form->isValid() ) {
             $token = $_REQUEST['token'] ?? '';
-
             if (empty($token)) {
                 $errors[] = "Le token de réinitialisation est manquant.";
             } else {
@@ -204,7 +202,7 @@ class Security{
                 if (!$user || strtotime($user['reset_expires']) < time()) {
                     $errors[] = "Le token de réinitialisation est invalide ou a expiré.";
                 } else {
-                    $pwd = $_POST['password'] ?? '';
+                    $pwd = $_POST['password'];
                     $userModel->setDataFromArray($user);
                     $userModel->setPassword($pwd);
                     $userModel->setResetToken(null);
@@ -214,8 +212,7 @@ class Security{
                 }
             }
         }
-
-        $view = new View("Security/resetPassword", "front");
+        $view = new View("Security/reset-password", "front");
         $view->assign("form", $form->build());
         $view->assign("errorsForm", $errors);
         $view->assign("successForm", $success);
@@ -231,20 +228,18 @@ class Security{
             $errors[] = "Le token d'activation est manquant.";
             return;
         }
-
         $user = new User();
         $userModel = $user->getOneBy(['activation_token' => $token]);
         $user->setDataFromArray($userModel);
         if ($user) {
-            $user->setIsActive(1);
+            $user->setStatus(1);
             $user->setActivationToken(null);
             $user->save();
             $success[] = "Votre compte a été activé avec succès.";
         } else {
             $errors[] = "Le token d'activation est invalide.";
         }
-        $view = new View("Security/activateAccount", "front"); 
-        $view->assign("form", $form->build());
+        $view = new View("Security/activate-account", "front"); 
         $view->assign("errors", $errors);
         $view->assign("success", $success);
         $view->render();
