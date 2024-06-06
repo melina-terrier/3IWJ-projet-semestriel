@@ -41,7 +41,10 @@ class Project{
         {
             $sql = new SQL();
             
-            $status = $sql->getDataId("published"); // Assuming published by default
+            $statusModel = new StatusModel();
+            $statuses = $statusModel->getAllData("object");
+            $statusId = $statusModel->getOneBy(["status"=>"published"], 'object');
+            $status = $statusId->getId();
 
             // Check for a hidden field indicating draft (optional)
             // if (isset($_POST['draft']) && $_POST['draft'] === 'Enregistrer le brouillon') {
@@ -64,7 +67,7 @@ class Project{
 
             $project->setUser($userId);
             if ($_POST['tag'] == 0) {
-                $project->setTag(null); // Set tag to null if value is 0
+                $project->setTag(null);
             } else {
                 $project->setTag($_POST['tag']);
             }
