@@ -67,9 +67,7 @@ class Security{
                 $user->setLastname($_POST["lastname"]);
                 $user->setFirstname($_POST["firstname"]);
                 $user->setEmail($_POST["email"]);
-
-                $user->setpassword($_POST["password"]);
-
+                $user->setPassword($_POST["password"]);
                 $user->setCreationDate($formattedDate);
                 $user->setModificationDate($formattedDate);  
                 $user->setModificationDate($formattedDate); 

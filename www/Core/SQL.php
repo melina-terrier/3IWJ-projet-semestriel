@@ -2,7 +2,6 @@
 namespace App\Core;
 use PDO;
 
-// require __DIR__ . '/../config.php';
 class SQL
 {
     private $pdo;
@@ -15,29 +14,24 @@ class SQL
         }catch (\Exception $e){
             die("Erreur SQL : ".$e->getMessage());
         }
-
         $classChild = get_called_class();
         $this->table = "msnu_".strtolower(str_replace("App\\Models\\","",$classChild));
     }
 
     public function save()
     {
-        // Vous ne devez pas écrire en dur le nom de la table ou des colonnes à insérer en BDD
         $columnsAll = get_object_vars($this);
         $columnsToDelete = get_class_vars(get_class());
         $columns = array_diff_key($columnsAll, $columnsToDelete);
-
         if( empty($this->getId()) ) {
             unset($columns['id']);
             $sql = "INSERT INTO ".$this->table. " (". implode(', ', array_keys($columns) ) .")  
             VALUES (:". implode(',:', array_keys($columns) ) .")";
         }else{
             $isUpdate = true;
-            //UPDATE esgi_user SET firstname=:firstname, lastname=:lastname WHERE id=1
             foreach ( $columns as $column=>$value){
                 $sqlUpdate[] = $column."=:".$column;
             }
-
             $sql = "UPDATE " . $this->table . " SET " . implode(', ', $sqlUpdate) . " WHERE id=" . $this->getId();
         }
         $queryPrepared = $this->pdo->prepare($sql);
@@ -45,12 +39,11 @@ class SQL
             $type = is_bool($value) ? \PDO::PARAM_BOOL : (is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
             $queryPrepared->bindValue(":$key", $value, $type);
         }
-        $queryPrepared->execute($columns); //pour exécuter la requête
+        $queryPrepared->execute($columns);
         if (isset($isUpdate)) {
             return $this->getId();
         }
         return $this->pdo->lastInsertId($this->table."_id_seq");
-
     }
 
     public function emailExists($email): bool {
@@ -75,7 +68,7 @@ class SQL
         } else {
             $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
         }
-        return $queryPrepared->fetch(); // pour récupérer le résultat de la requête (un seul enregistrement)
+        return $queryPrepared->fetch();
     }
 
     public function checkUserCredentials(string $email, string $password): ?object
@@ -92,42 +85,26 @@ class SQL
         $sql = "SELECT * FROM " . $this->table;
         $queryPrepared = $this->pdo->prepare($sql);
         $queryPrepared->execute();
-
         if($return == "object") {
-            // les resultats seront sous forme d'objet de la classe appelée
             $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
         } else {
-            // pour récupérer un tableau associatif
             $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
         }
-
         return $queryPrepared->fetchAll();
     }
 
-    public function getDataObject(): array //pour récupérer les données de l'objet
+    public function getDataObject(): array
     {
-        return array_diff_key(get_object_vars($this), get_class_vars(get_class())); //mettre dans un tableau les données de l'objet
+        return array_diff_key(get_object_vars($this), get_class_vars(get_class()));
     }
 
-    public function setDataFromArray(array $data): void //pour mettre à jour les données de l'objet
+    public function setDataFromArray(array $data): void
     {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->$key = $value;
             }
         }
-    }
-
-    public function getDataId($value) {
-        $sql = "SELECT id FROM msnu_status WHERE status= :status LIMIT 1";
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->bindValue(':status', $value, PDO::PARAM_STR);
-        $queryPrepared->execute();
-        $result = $queryPrepared->fetch(PDO::FETCH_ASSOC);
-        if ($result) {
-            return $result['id'];
-        }
-        return null;
     }
     
     public function delete(array $data)
@@ -146,7 +123,6 @@ class SQL
         return $queryPrepared->rowCount() > 0;
     }
 
-
     public function countElements($typeColumn = null, $typeValue = null): int {
         if ($typeColumn && $typeValue) {
             $sql = "SELECT COUNT(*) FROM " . $this->table . " WHERE " . $typeColumn . " = :typeValue";
@@ -157,7 +133,6 @@ class SQL
             $queryPrepared = $this->pdo->prepare($sql);
             $queryPrepared->execute();
         }
-
         return $queryPrepared->fetchColumn();
     }
 }

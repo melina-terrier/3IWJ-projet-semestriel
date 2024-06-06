@@ -109,9 +109,6 @@ class Media{
                 
                 if( $form->isSubmitted() && $form->isValid() )
                 {
-                    $sql = new SQL();
-                    $status = $sql->getDataId("published");
-
                     $media->setTitle($_POST['title']);
                     $media->setUrl('/uploads/media/'. $_POST['url']);
                     $media->setDescription($_POST['description']);
@@ -120,7 +117,6 @@ class Media{
                     $media->setSize($currentMedia->getSize());
                     $media->setType($currentMedia->getType());
                     $media->setModificationDate($formattedDate);
-                    $media->setStatus($status);
                     $media->setUser($userId);
                     $media->save();
                     header("Location: /dashboard/medias?message=update-success");

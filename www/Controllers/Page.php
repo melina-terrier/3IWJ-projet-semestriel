@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Core\SQL;
 use App\Core\Form;
 use App\Core\View;
 use App\Core\PageBuilder;
@@ -78,8 +77,10 @@ class Page
         
         if( $form->isSubmitted() && $form->isValid() )
         {   
-            $sql = new SQL();
-            $status = $sql->getDataId("published");
+            $statusModel = new StatusModel();
+            $statuses = $statusModel->getAllData("object");
+            $statusId = $statusModel->getOneBy(["status"=>"published"], 'object');
+            $status = $statusId->getId();
             $page = new PageModel();
 
             $page->setTitle($_POST['title']);
@@ -96,7 +97,7 @@ class Page
             $page->setCreationDate($formattedDate);
             $page->setPublicationDate($formattedDate);
             $page->setModificationDate($formattedDate);
-            $page->setStatus($status);
+            $page->setStatus($publishedStatusId);
             $page->save();
 
             $success[] = "Votre page a été publiée";

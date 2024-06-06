@@ -13,7 +13,6 @@ class Media extends SQL
     protected string $description;
     protected $creation_date;
     protected $modification_date;
-    protected $status_id;
     protected $user_id;
 
     public function getId(): ?int
@@ -84,16 +83,6 @@ class Media extends SQL
     public function setSize($size): void
     {
         $this->size = $size;
-    }
-
-    public function getStatus()
-    {
-        return $this->status_id;
-    }
-
-    public function setStatus($status_id): void
-    {
-        $this->status_id = $status_id;
     }
 
     public function getCreationDate()

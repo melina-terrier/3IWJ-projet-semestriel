@@ -95,7 +95,7 @@ class Form
 
         foreach ($_POST as $name => $dataSent) {
             if (!isset($this->config["inputs"][$name])) {
-                $this->errors[] = "Tentative de Hack, le champ " . $name . " n'est pas autorisé";
+                $this->errors[] = "Le champ " . $name . " n'est pas autorisé";
             }
 
             if (isset($this->config["inputs"][$name]["required"]) && empty($dataSent)) {
@@ -110,6 +110,10 @@ class Form
                 $this->errors[] = $this->config["inputs"][$name]["error"];
             }
 
+            if ($this->config['inputs'][$name]['label']=="Laisser un commentaire" && preg_match('/(https?|ftp):\/\/([^\s]+)/i', $dataSent)) {
+                $this->errors[] = "Les URL ne sont pas autorisés dans le commentaire.";
+            }
+                         
             if (isset($this->config["inputs"][$name]["confirm"]) && $dataSent != $_POST[$this->config["inputs"][$name]["confirm"]]) {
                 $this->errors[] = $this->config["inputs"][$name]["error"];
             } else {

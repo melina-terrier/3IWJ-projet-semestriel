@@ -24,9 +24,9 @@ class Main
 
         $elementsCount = [
             'users' => $user->getNbElements(),
-            // 'pages' => $post->getElementsByType('type', 'page'),
+            'pages' => $post->getNbElements(),
             'medias' => $media->getNbElements(),
-            // 'projects' => $post->getElementsByType('type', 'project'),
+            'projects' => $post->getNbElements(),
         ];
 
         if(isset($_SESSION['user'])) {
