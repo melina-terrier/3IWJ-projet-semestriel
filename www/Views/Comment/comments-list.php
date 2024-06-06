@@ -69,15 +69,15 @@ if (isset($this->data['comments'])) {
       }
     }
 
-    displayComments('all', $allComments);
-    displayComments('pending', $pendingComments);
-    displayComments('approved', $approvedComments);
-    displayComments('unwanted', $unwantedComments);
-    displayComments('deleted', $deletedComments);
+    displayComments('all', $allComments, $projects);
+    displayComments('pending', $pendingComments, $projects);
+    displayComments('approved', $approvedComments, $projects);
+    displayComments('unwanted', $unwantedComments, $projects);
+    displayComments('deleted', $deletedComments, $projects);
   }
 
 
-function displayComments($status, $comments) {
+function displayComments($status, $comments, $projects) {
   echo "<section id=\"$status\">";
   echo "<h2>$status</h2>";
 
@@ -99,11 +99,19 @@ function displayComments($status, $comments) {
       $content = $comment->getComment();
       $username = $comment->getName();
       $status = $comment->getStatus();
-
+      $projectId = $comment->getProject();
+      $projectName='';
+      if ($projects) {
+        foreach ($projects as $project) {
+          if ($projectId == $project['id']){
+            $projectName = $project['title'];
+          }
+        }
+      } 
       echo "<tr>";
       echo "<td>$content</td>";
       echo "<td>$username</td>";
-      echo "<td>A faire</td>";
+      echo "<td>$projectName</td>";
 
       $statusText = "";
       switch ($status) {
