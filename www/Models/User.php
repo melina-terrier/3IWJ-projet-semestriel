@@ -10,7 +10,7 @@ class User extends SQL
     protected string $email;
     
     protected string $password;
-    protected ?string $id_role = '1';
+    // protected ?string $id_role = '1';
     protected int $status;
     protected ?string $reset_token = null;
     protected ?string $reset_expires = null;
@@ -78,15 +78,15 @@ class User extends SQL
         $this->password = $password;
     }
 
-    public function getRole(): int
-    {
-        return $this->id_role;
-    }
+    // public function getRole(): int
+    // {
+    //     return $this->id_role;
+    // }
 
-    public function setRole($id_role): void
-    {
-        $this->id_role = $id_role;
-    }
+    // public function setRole($id_role): void
+    // {
+    //     $this->id_role = $id_role;
+    // }
 
     public function getStatus(): int
     {

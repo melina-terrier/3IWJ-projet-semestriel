@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Core\View;
 use App\Core\Form;
 use App\Models\User;
+use App\Models\Project as ProjectModel;
 use App\Models\Comment as  CommentModel;
 
 class Comment{
@@ -12,6 +13,15 @@ class Comment{
     {
         $comment = new CommentModel();
         $comments = $comment->getAllData("object");
+
+        $projects = []; // Initialize as an empty array
+        foreach ($comments as $comment) {
+            $projectId = $comment->getProject(); // Assuming a method to get project ID
+            $projectModel = new ProjectModel();
+            $project = $projectModel->getOneBy(['id' => $projectId], 'object');
+            $projectName = $project->getTitle();
+            $projects[] = ["id" => $projectId, "title" => $projectName];
+        }
 
         if (isset($_GET['action']) && isset($_GET['id'])) {
             if ($_GET['action'] === "delete") {
@@ -44,9 +54,9 @@ class Comment{
                 exit;
             }
         }
-
         $view = new View("Comment/comments-list", "back");
         $view->assign("comments", $comments);
+        $view->assign("projects", $projects);
         $view->render();
     }
 }
