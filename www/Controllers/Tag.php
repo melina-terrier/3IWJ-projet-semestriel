@@ -23,8 +23,23 @@ class Tag{
                 exit;
             }
         }
+
+        $projectCounts = []; // Use plural for clarity (storing multiple counts)
+        foreach ($tags as $tag) {
+            $tagId = $tag->getId();
+            if ($tagId !== null) {
+                $projectModel = new Project(); // Assuming you have a ProjectModel class
+                $projectCount = $projectModel->countElements("tag_id", $tagId); // Replace with appropriate method
+                $projectCounts[] = ["id" => $tagId, "projectCount" => $projectCount]; // Use descriptive keys
+            }
+        }
+        // print_r($projectCounts);
+        
+        
+
         $view = new View("Tag/tags-list", "back");
         $view->assign("errors", $errors);
+        $view->assign("projectCounts", $projectCounts);
         $view->assign("success", $success);
         $view->assign("tags", $tags);
         $view->render();
@@ -44,21 +59,31 @@ class Tag{
         if( $form->isSubmitted() && $form->isValid() )
         {
             $slug = $_POST['slug'];
-            if (empty($slug)) {
-                $slug = strtolower(preg_replace('/\s+/', '-', $_POST['name']));
-                $tag->setSlug($slug);
+            if (!empty($slug) && !empty($tag->getOneBy(["slug"=>$_POST['slug']]))) {
+                $errors[] = "Le slug existe déjà pour une autre catégorie";
             } else {
-                $tag->setSlug($_POST['slug']);
+                if (empty($slug)){
+                    $existingName = $tag->getOneBy(["name"=>$_POST['name']]);
+                    if (!empty($existingName)){
+                        $existingTags = $tag->getAllDataWithWhere(["name"=>$_POST['name']]);
+                        $count = count($existingTags);
+                        $tag->setSlug($_POST['name'] . '-' . ($count + 1));    
+                    } else {
+                        $tag->setSlug($_POST['name']);
+                    }
+                } else {
+                    $tag->setSlug($_POST['slug']);
+                }
+                $tag->setName($_POST['name']);
+                $tag->setDescription($_POST['description']);
+                $tag->setCreationDate($formattedDate);
+                $tag->setModificationDate($formattedDate);
+                $tag->setUserId($userId);
+                $tag->save();
+                $success[] = "La catégorie".$_POST['name']."a été créée";
+                header("Location: /dashboard/tags?message=success");
+                exit();
             }
-            $tag->setName($_POST['name']);
-            $tag->setDescription($_POST['description']);
-            $tag->setCreationDate($formattedDate);
-            $tag->setModificationDate($formattedDate);
-            $tag->setUserId($userId);
-            $tag->save();
-            $success[] = "La catégorie".$_POST['name']."a été créée";
-            header("Location: /dashboard/tags?message=success");
-            exit; 
         }
         $view = new View("Tag/tag", "back");
         $view->assign("form", $form->build());
@@ -92,8 +117,7 @@ class Tag{
                 {
                     $slug = $_POST['slug'];
                     if (empty($slug)) {
-                        $slug = strtolower(preg_replace('/\s+/', '-', $_POST['name']));
-                        $tag->setSlug($slug);
+                        $tag->setSlug($_POST['name']);
                     } else {
                         $tag->setSlug($_POST['slug']);
                     }
