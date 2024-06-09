@@ -127,6 +127,9 @@ class Form
                 $submittedDataCount++;
             }
         }
+        foreach ($_FILES as $key => $value) {
+            $submittedDataCount++;
+        }
 
         if ($expectedFieldsCount != $submittedDataCount) {
             $this->errors[] = "Tentative de Hack";
