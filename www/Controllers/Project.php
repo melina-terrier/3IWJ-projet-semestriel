@@ -10,6 +10,7 @@ use App\Controllers\Error;
 use App\Models\Tag as TagModel;
 use App\Models\Comment as CommentModel;
 use App\Models\Project as ProjectModel;
+use App\Models\User as UserModel;
 
 class Project{
 
@@ -19,6 +20,7 @@ class Project{
         $allowedTags .= '<li><ol><ul><span><div><br><ins><del><table><tr><td><th><tbody><thead><tfoot>';
         $allowedTags .= '<a><hr><iframe><video><source><embed><object><param>';
 
+        $project = new ProjectModel();
         $media = new Media();
         $medias = $media->getAllData("object");
         if (count($medias) > 0) {
@@ -37,48 +39,94 @@ class Project{
         $user = unserialize($userSerialized);
         $userId = $user->getId();
 
+        if (isset($_GET['id']) && $_GET['id']) {
+            $projectId = $_GET['id'];
+            $selectedProject = $project->getOneBy(["id"=>$projectId], 'object');
+            if ($selectedProject) {
+                $form->setField('title', $selectedProject->getTitle());
+                $form->setField('content', $selectedProject->getContent());
+                $form->setField('slug', $selectedProject->getSlug());
+                $form->setField('tag', $selectedProject->getTag());
+
+                $errorsUpdate = [];
+                $successUpdate = [];
+            } else {
+                echo "Projet non trouvé.";
+            }
+        }
+
         if( $form->isSubmitted() && $form->isValid() )
         {
-            $sql = new SQL();
-            
-            $statusModel = new StatusModel();
-            $statuses = $statusModel->getAllData("object");
-            $statusId = $statusModel->getOneBy(["status"=>"published"], 'object');
-            $status = $statusId->getId();
+            if(isset($_GET['id']) && $_GET['id']){
+                $project->setId($selectedProject->getId());
+                $project->setModificationDate($formattedDate);
+                $project->setCreationDate($selectedProject->getCreationDate());
 
-            // Check for a hidden field indicating draft (optional)
-            // if (isset($_POST['draft']) && $_POST['draft'] === 'Enregistrer le brouillon') {
-            //     $status = $sql->getDataId("draft");
-            //     $success[] = "Votre projet a été enregistré en brouillon";
-            // }
-
-
-            $project = new ProjectModel();
+                if ($_POST['slug'] !== $selectedProject->getSlug()) {
+                    $slug = $_POST['slug'];
+                    if (!empty($slug) && !empty($project->getOneBy(["slug"=>$_POST['slug']]))) {
+                        $errors[] = "Le slug existe déjà pour un autre projet";
+                    } else {
+                        if (empty($slug)){
+                            $existingName = $project->getOneBy(["title"=>$_POST['title']]);
+                            if (!empty($existingName)){
+                                $existingProjcts = $project->getAllDataWithWhere(["title"=>$_POST['title']]);
+                                $count = count($existingProjcts);
+                                $project->setSlug($_POST['title'] . '-' . ($count + 1));    
+                            } else {
+                                $project->setSlug($_POST['title']);
+                            }
+                        } else {
+                            $project->setSlug($_POST['slug']);
+                        }
+                    }
+                } else {
+                    $project->setSlug($selectedProject->getSlug());
+                }
+            } else {
+                $project->setCreationDate($formattedDate);
+                $project->setModificationDate($formattedDate);
+                $slug = $_POST['slug'];
+                if (!empty($slug) && !empty($project->getOneBy(["slug"=>$_POST['slug']]))) {
+                    $errors[] = "Le slug existe déjà pour un autre projet";
+                } else {
+                    if (empty($slug)){
+                        $existingName = $project->getOneBy(["title"=>$_POST['title']]);
+                        if (!empty($existingName)){
+                            $existingProjcts = $project->getAllDataWithWhere(["title"=>$_POST['title']]);
+                            $count = count($existingProjcts);
+                            $project->setSlug($_POST['title'] . '-' . ($count + 1));    
+                        } else {
+                            $project->setSlug($_POST['title']);
+                        }
+                    } else {
+                        $project->setSlug($_POST['slug']);
+                    }
+                }
+            }
             $project->setTitle($_POST['title']);
             $project->setContent(strip_tags(stripslashes($_POST['content']),  $allowedTags));
-           
-            $slug = $_POST['slug'];
-            if (empty($slug)) {
-                $slug = strtolower(preg_replace('/\s+/', '-', $_POST['title']));
-                $project->setSlug($slug);
-            } else {
-                $project->setSlug($_POST['slug']);
-            }
-
             $project->setUser($userId);
             if ($_POST['tag'] == 0) {
                 $project->setTag(null);
             } else {
                 $project->setTag($_POST['tag']);
             }
-            
-            $project->setCreationDate($formattedDate);
-            $project->setPublicationDate($formattedDate);
-            $project->setModificationDate($formattedDate);
-            $project->setStatus($publishedStatusId);
-            $project->save();
 
-            $success[] = "Votre projet a été publié";
+            $statusModel = new StatusModel();
+            if (isset($_POST['submit-draft'])) {
+                $statusId = $statusModel->getOneBy(["status"=>"draft"], 'object');
+                $status = $statusId->getId();
+                $project->setStatus($status);
+                $success[] = "Votre projet a été enregistré en brouillon";
+            } else {
+                $statusId = $statusModel->getOneBy(["status"=>"published"], 'object');
+                $status = $statusId->getId();
+                $project->setPublicationDate($formattedDate);
+                $project->setStatus($status);
+                $success[] = "Votre projet a été publié";  
+            }
+            $project->save();
         }
         $view = new View("Project/add-project", "back");
         $view->assign("form", $form->build());
@@ -94,9 +142,9 @@ class Project{
         $errors = [];
         $success = [];
         $project = new ProjectModel();
-        $allProjects = $project->getAllData("object");
+        $allProjects = $project->getAllData("array");
         $statusModel = new StatusModel();
-        $statuses = $statusModel->getAllData("object");
+        $userModel = new UserModel();
 
         if (isset($_GET['action']) && isset($_GET['id'])) {
             $currentProject = $project->getOneBy(['id' => $_GET['id']], 'object');
@@ -120,40 +168,28 @@ class Project{
                 exit;
             }
         }
+
+        foreach ($allProjects as &$project) {
+            $userId = $project['user_id'];
+            $statusId = $project['status_id'];
+            $project['user_name'] ='';
+            $project['status_name'] ='';
+            if ($userId || $statusId) {
+                $user = $userModel->getOneBy(['id' => $userId], 'object');
+                $status = $statusModel->getOneBy(['id' => $statusId], 'object');
+                if ($user || $status) {
+                    $project['user_name'] = $user->getUserName();
+                    $project['status_name'] = $status->getName();
+              }
+            }
+          }
+
         $view = new View("Project/projects-list", "back");
         $view->assign("projects", $allProjects);
-        $view->assign("statuses", $statuses);
         $view->assign("errors", $errors);
         $view->assign("success", $success);
         $view->render();
     }
-
-
-    public function editProject(): void
-    {
-        $project = new ProjectModel();
-        if (isset($_GET['project']) && $_GET['project']) {
-            $projectId = $_GET['project'];
-            $selectedProject = $project->getProjectsAndBlogs("project", $projectId);
-
-            if ($selectedProject) {
-                $formUpdate = new UpdateProject();
-                $configUpdate = $formUpdate->getConfig($selectedProject[0]["title"], $selectedProject[0]["body"], $selectedProject[0]["id"]);
-                $errorsUpdate = [];
-                $successUpdate = [];
-
-                $view = new View("Project/edit-projects", "back");
-                $view->assign("project", $selectedProject);
-                $view->assign("configForm", $configUpdate);
-                $view->assign("errorsForm", $errorsUpdate);
-                $view->assign("successForm", $successUpdate);
-                $view->render();
-            } else {
-                echo "Project non trouvé.";
-            }
-        }
-    }
-
 
     public function showProject($slug){
         $slugParts = explode('/', $slug);
@@ -167,12 +203,15 @@ class Project{
         $arraySlug = ["slug" => $slugTrim];
         $project = $db->getOneBy($arraySlug);
         
-        if (!empty($project) && $project["status_id"] === $publishedStatusId) {
+        $tags = new TagModel();
+        $tag = $tags->getOneBy($arraySlug);
+        $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        
+        if (!empty($project) && ($project["status_id"] === $publishedStatusId || (isset($_GET['preview']) && $_GET['preview'] == true))) {
             $content = $project["content"];
             $title = $project["title"];
             // print_r($project);
             
-            $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             $routeFound = false;
             if ('/projects/'.$slug === $requestUrl) {
                 $routeFound = true;
@@ -182,11 +221,10 @@ class Project{
                 $errors = [];
                 $success = [];
 
-                $tag = new TagModel;
                 $tagName="";
-                $tag = $tag->getOneBy(['id'=>$project['tag_id']], 'object');
-                if ($tag){
-                    $tagName = $tag->getName(); 
+                $tagId = $tags->getOneBy(['id'=>$project['tag_id']], 'object');
+                if ($tagId){
+                    $tagName = $tagId->getName(); 
                 }
 
                 $formattedDate = date('Y-m-d H:i:s');
@@ -242,7 +280,35 @@ class Project{
                 $view->assign("comments", $filteredComments);
                 $view->render(); 
             }
-        } else {
+        } else if (!empty($tag)) {
+            $title = $tag['name'];
+            $description = $tag['description'];
+
+            $projects = $db->getAllDataWithWhere(['tag_id'=>$tag['id']]);
+
+            $view = new View('Main/tag', 'front');
+            $view->assign("title", $title);
+            $view->assign("description", $description);
+            $view->assign("projects", $projects);
+            $view->render();  
+        } else if($requestUrl === '/projects' || $requestUrl === '/projects//') {
+            $projects = $db->getAllDataWithWhere(['status_id' => $publishedStatusId]);
+            // Loop through projects and fetch category name for each
+            foreach ($projects as &$project) {
+              $tagId = $project['tag_id'];
+              $project['category_name'] ='';
+              if ($tagId) {
+                $tag = $tags->getOneBy(['id' => $tagId], 'object');
+                if ($tag) {
+                  $project['category_name'] = $tag->getName(); // Add category name to project data
+                }
+              }
+            }
+        
+            $view = new View("Main/all-projects", "front");
+            $view->assign("projects", $projects);
+            $view->render();
+        }else {
             header("Status 404 Not Found", true, 404);
             $error = new Error();
             $error->page404();

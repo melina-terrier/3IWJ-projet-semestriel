@@ -49,6 +49,16 @@ class Form
                 }
               
                 $html .= "</select>";
+            }else if ($input["type"] === "checkbox") {
+                $html .= "<label for='$name'>" . $input["label"] . "</label>";
+              
+                if (isset($input["option"]) && is_array($input["option"])) {
+                  foreach ($input["option"] as $option) {
+                    $html .= "
+                      <label for='{$option['id']}'>{$option['name']}</label>
+                      <input type='checkbox' name='$name' value='{$option['id']}'><br>";
+                  }
+                }
             } else if ($input["type"] === "textarea") {
                 $html .= "
                 <label for='" . $name . "'>" . $input["label"] . "</label>
@@ -57,6 +67,14 @@ class Form
                     " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
                     " . (isset($input["required"]) ? "required" : "") . "
                 >" . htmlentities($value) . "</textarea>";
+            } else if ($input["type"] === "submit") {
+                $html .= "
+                <label for='" . $name . "'>" . $input["label"] . "</label>
+                <input 
+                    type='" . $input["type"] . "' 
+                    name='" . $name . "' 
+                    value='" . $input["value"] . "'
+                >";
             } else {
                 $html .= "
                 <label for='" . $name . "'>" . $input["label"] . "</label>
@@ -89,7 +107,28 @@ class Form
 
     public function isValid(): bool
     {
-        if (count($this->config["inputs"]) != count($_POST) + count($_FILES)) {
+
+        $expectedFieldsCount = 0;
+        foreach ($this->config["inputs"] as $name => $inputConfig) {
+            if (isset($inputConfig["required"]) && $inputConfig["required"] === true) {
+                $expectedFieldsCount++;
+            }
+            if (isset($inputConfig["type"]) && $inputConfig["type"] === "submit") {
+                continue;
+            }
+            if (!isset($inputConfig["required"]) && isset($_POST[$name])) {
+                $expectedFieldsCount++;
+            }
+        }
+
+        $submittedDataCount = 0;
+        foreach ($_POST as $key => $value) {
+            if ($key !== "submit-draft") { 
+                $submittedDataCount++;
+            }
+        }
+
+        if ($expectedFieldsCount != $submittedDataCount) {
             $this->errors[] = "Tentative de Hack";
         }
 
