@@ -63,6 +63,7 @@ class Page extends SQL
 
     public function setSlug($slug): void
     {
+        $slug = strtolower(preg_replace('/\s+|[^\w-]/', '-', $slug));
         $this->slug = $slug;
     }
 

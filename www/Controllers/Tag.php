@@ -6,7 +6,7 @@ use App\Core\Form;
 use App\Core\SQL;
 use App\Models\User;
 use App\Models\Project;
-use App\Models\Tag as  TagModel;
+use App\Models\Tag as TagModel;
 
 class Tag{
 
@@ -121,6 +121,7 @@ class Tag{
                     } else {
                         $tag->setSlug($_POST['slug']);
                     }
+                    $tag->setId($currentTag->getId());
                     $tag->setName($_POST['name']);
                     $tag->setDescription($_POST['description']);
                     $tag->setCreationDate($currentTag->getCreationDate());
@@ -141,4 +142,6 @@ class Tag{
             }
         }
     }
+
+    
 }

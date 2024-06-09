@@ -3,6 +3,8 @@ namespace App\Controllers;
 use App\Core\Form;
 use App\Core\View;
 use App\Models\User;
+use App\Models\Role as RoleModel;
+use App\Core\Security as CoreSecurity;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -15,24 +17,29 @@ class Security{
         $form = new Form("Login");
         $errorsLogin = [];
         $successLogin = [];
-       
-        if( $form->isSubmitted() && $form->isValid() )
-        {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            
-            $userModel = new User();
-            $user = $userModel->checkUserCredentials($email, $password);
-            if ($user) {
-                $userSerialized = serialize($user);
-                $_SESSION['user'] = $userSerialized; 
-                header("Location: /dashboard");
-                exit();
-            } else {
-                $errorsLogin[] = 'Email ou mot de passe incorrect';
+
+        $security = new CoreSecurity();
+        if ($security->isLogged()){
+            $view = new View("Security/already-login", "front");
+        } else {
+            if( $form->isSubmitted() && $form->isValid() )
+            {
+                $email = $_POST['email'];
+                $password = $_POST['password'];
+                
+                $userModel = new User();
+                $user = $userModel->checkUserCredentials($email, $password);
+                if ($user) {
+                    $userSerialized = serialize($user);
+                    $_SESSION['user'] = $userSerialized; 
+                    header("Location: /dashboard");
+                    exit();
+                } else {
+                    $errorsLogin[] = 'Email ou mot de passe incorrect';
+                }
             }
+            $view = new View("Security/login", "front");
         }
-        $view = new View("Security/login", "front");
         $view->assign("form", $form->build());
         $view->assign("errorsForm", $errorsLogin);
         $view->assign("successForm", $successLogin);
@@ -57,39 +64,47 @@ class Security{
         $errors = [];
         $success = [];
 
-        if( $form->isSubmitted() && $form->isValid() )
-        {
-            $user = new User();
-            $formattedDate = date('Y-m-d H:i:s');
-            if ($user->emailExists($_POST["email"])) {
-                $errors[] = "L'email est déjà utilisé par un autre compte.";
-            } else {
-                $user->setLastname($_POST["lastname"]);
-                $user->setFirstname($_POST["firstname"]);
-                $user->setEmail($_POST["email"]);
-                $user->setPassword($_POST["password"]);
-                $user->setCreationDate($formattedDate);
-                $user->setModificationDate($formattedDate);  
-                $user->setModificationDate($formattedDate); 
-                $user->setStatus(0);
-                $activationToken = bin2hex(random_bytes(16));
-                $user->setActivationToken($activationToken);
-                $user->save();
-                $success[] = "Votre compte a bien été créé";
-                $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
-
-                if (isset($emailResult['success'])) {
-                    $success[] = $emailResult['success'];
-                } elseif (isset($emailResult['error'])) {
-                    $errors[] = $emailResult['error'];
+        $roles = new RoleModel();
+        $role = $roles->getOneBy(["role"=>"user"], 'object');
+        $roleId = $role->getId();
+        $security = new CoreSecurity();
+        if ($security->isLogged()){
+            $view = new View("Security/already-login", "front");
+        } else {
+            if( $form->isSubmitted() && $form->isValid() )
+            {
+                $user = new User();
+                $formattedDate = date('Y-m-d H:i:s');
+                if ($user->emailExists($_POST["email"])) {
+                    $errors[] = "L'email est déjà utilisé par un autre compte.";
+                } else {
+                    $user->setLastname($_POST["lastname"]);
+                    $user->setFirstname($_POST["firstname"]);
+                    $user->setEmail($_POST["email"]);
+                    $user->setRole($roleId);
+                    $user->setPassword($_POST["password"]);
+                    $user->setCreationDate($formattedDate);
+                    $user->setModificationDate($formattedDate);  
+                    $user->setModificationDate($formattedDate); 
+                    $user->setStatus(0);
+                    $activationToken = bin2hex(random_bytes(16));
+                    $user->setActivationToken($activationToken);
+                    $user->save();
+                    $success[] = "Votre compte a bien été créé";
+                    $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
+    
+                    if (isset($emailResult['success'])) {
+                        $success[] = $emailResult['success'];
+                    } elseif (isset($emailResult['error'])) {
+                        $errors[] = $emailResult['error'];
+                    }
+    
+                    header("Location: /register?message=checkmail");
+                    exit; 
                 }
-
-                header("Location: /register?message=checkmail");
-                exit; 
-
             }
+            $view = new View("Security/register", "front");
         }
-        $view = new View("Security/register", "front");
         $view->assign("form", $form->build());
         $view->assign("errorsForm", $errors);
         $view->assign("successForm", $success);

@@ -4,10 +4,10 @@ namespace App\Models;
 use App\Core\SQL;
 
 
-class Status extends SQL
+class Role extends SQL
 {
     protected ?int $id = null;
-    protected $status;
+    protected $role;
 
     public function getId(): ?int
     {
@@ -21,11 +21,11 @@ class Status extends SQL
 
     public function getName()
     {
-        return $this->status;
+        return $this->role;
     }
 
-    public function setName($status): void
+    public function setName($role): void
     {
-        $this->status = $status;
+        $this->role = $role;
     }
 }
