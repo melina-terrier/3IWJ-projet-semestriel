@@ -16,6 +16,8 @@
 
 <h2>Médias</h2>
 
+<a href="/dashboard/add-media">Ajouter un média</a>
+
 <?php $successMessage = isset($_GET['message']) && $_GET['message'] === 'success';
     if (isset($_GET['message']) && $_GET['message'] === 'success') {
       echo "<p>Le média a été ajouté.</p>";
@@ -24,9 +26,6 @@
     }
 ?>
 
-<a href="/dashboard/add-media">
-    Ajouter un média
-</a>
 
 <section>
     <table id="mediaTable">
@@ -40,14 +39,14 @@
             </tr>
         </thead>
         <?php
-        if (isset($this->data['medias'])) {
-            foreach ($this->data['medias'] as $media) {
-                $mediaId = $media->getId();
-                $path = $media->getUrl();
-                $user_id = $media->getUser();
-                $title = $media->getTitle();
-                $filename = $media->getName();
-                $date = (new DateTime($media->getCreationDate()))->format('d/m/Y');
+        if ($medias) {
+            foreach ($medias as $media) {
+                $mediaId = $media['id'];
+                $path = $media['url'];
+                $user_id = $media['user_name'];
+                $title = $media['title'];
+                $filename = $media['name'];
+                $date = $media['creation_date'];
                 echo "
                     <tr class='tab-page'>
                         <td><img style='width:10%' src='".$path."'><p>$title</p><p>$filename</p></td>

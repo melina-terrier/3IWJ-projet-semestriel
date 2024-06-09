@@ -89,12 +89,10 @@ CREATE TABLE msnu_media (
 	type 	VARCHAR(255),
 	size           INTEGER,
 	url VARCHAR(255) NOT NULL,
-	status_id 		INTEGER NOT NULL,
 	user_id 		INTEGER NOT NULL,
 	creation_date 	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	modification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (id),
-	CONSTRAINT fk_media_status FOREIGN KEY (status_id) REFERENCES msnu_status(id),
 	CONSTRAINT fk_media_user FOREIGN KEY (user_id) REFERENCES msnu_user(id)
 );
 

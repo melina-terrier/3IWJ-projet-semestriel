@@ -23,7 +23,6 @@ class Tag{
                 exit;
             }
         }
-
         $projectCounts = []; // Use plural for clarity (storing multiple counts)
         foreach ($tags as $tag) {
             $tagId = $tag->getId();
@@ -33,10 +32,6 @@ class Tag{
                 $projectCounts[] = ["id" => $tagId, "projectCount" => $projectCount]; // Use descriptive keys
             }
         }
-        // print_r($projectCounts);
-        
-        
-
         $view = new View("Tag/tags-list", "back");
         $view->assign("errors", $errors);
         $view->assign("projectCounts", $projectCounts);

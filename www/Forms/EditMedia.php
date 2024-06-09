@@ -21,11 +21,6 @@ class EditMedia
                     "required"=>true,
                     "error"=>"Votre titre doit faire entre 2 et 50 caractères"
                 ],
-                "url"=>[
-                    "type"=>"text",
-                    "label"=>"Url",
-
-                ],
                 "description"=>[
                     "type"=>"text",
                     "min"=>2,

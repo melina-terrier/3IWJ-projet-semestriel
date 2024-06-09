@@ -40,14 +40,10 @@ class Media{
               } else {
                 $errors[] = "Erreur lors du téléchargement du média.";
               }
-            $sql = new SQL();
-            $status = $sql->getDataId("published");
-
             $media->setTitle($_POST['title']);
             $media->setDescription($_POST['description']);
             $media->setCreationDate($formattedDate);
             $media->setModificationDate($formattedDate);
-            $media->setStatus($status);
             $media->setUser($userId);
             $media->save();
             $success[] = "Le média a été ajouté";
@@ -65,9 +61,10 @@ class Media{
     public function allMedias(): void
     {
         $media = new MediaModel();
-        $medias = $media->getAllData("object");
+        $medias = $media->getAllData("array");
         $errors = [];
         $success = [];
+        $userModel = new UserModel();
             
         if (isset($_GET['action']) && isset($_GET['id'])) {
             if ($_GET['action'] === "delete") {
@@ -77,6 +74,16 @@ class Media{
             }
         }
         
+        foreach ($medias as &$media) {
+            $userId = $media['user_id'];
+            $media['user_name'] ='';
+            if ($userId) {
+                $user = $userModel->getOneBy(['id' => $userId], 'object');
+                if ($user || $status) {
+                    $media['user_name'] = $user->getUserName();
+                }
+            }
+        }
         $view = new View("Media/medias-list", "back");
         $view->assign("medias", $medias);
         $view->assign("errors", $errors);
@@ -91,17 +98,11 @@ class Media{
         $media = new MediaModel();
         if (isset($_GET['id']) && $_GET['id']) {
             $mediaId = $_GET['id'];
-            $currentMedia = $media->getOneBy(['id' => $mediaId], 'object');
-            if ($currentMedia) {
+            $selectedMedia = $media->getOneBy(['id' => $mediaId], 'object');
+            if ($selectedMedia) {
                 $form = new Form("EditMedia");
-                $form->setField('title', $currentMedia->getTitle());
-                $url = $currentMedia->getUrl();
-                $lastPart = explode('/', parse_url($url, PHP_URL_PATH));
-                $lastPart = end($lastPart);
-                $parts = explode('.', $lastPart); 
-                $fileName = $parts[0]; // Get the first element (before the ".")
-                $form->setField('url', $fileName); // Get the last element of the array
-                $form->setField('description', $currentMedia->getDescription());
+                $form->setField('title', $selectedMedia->getTitle());
+                $form->setField('description', $selectedMedia->getDescription());
                 $formattedDate = date('Y-m-d H:i:s');
                 $userSerialized = $_SESSION['user'];
                 $user = unserialize($userSerialized);
@@ -109,13 +110,14 @@ class Media{
                 
                 if( $form->isSubmitted() && $form->isValid() )
                 {
+                    $media->setId($selectedMedia->getId());
                     $media->setTitle($_POST['title']);
-                    $media->setUrl('/uploads/media/'. $_POST['url']);
+                    $media->setUrl($selectedMedia->getUrl());
                     $media->setDescription($_POST['description']);
-                    $media->setCreationDate($currentMedia->getCreationDate());
-                    $media->setName($currentMedia->getName());
-                    $media->setSize($currentMedia->getSize());
-                    $media->setType($currentMedia->getType());
+                    $media->setCreationDate($selectedMedia->getCreationDate());
+                    $media->setName($selectedMedia->getName());
+                    $media->setSize($selectedMedia->getSize());
+                    $media->setType($selectedMedia->getType());
                     $media->setModificationDate($formattedDate);
                     $media->setUser($userId);
                     $media->save();
@@ -124,7 +126,6 @@ class Media{
                 }
             }
         }
-
         $view = new View("Media/add-media", "back");
         $view->assign("form", $form->build());
         $view->assign("errorsForm", $errors);
