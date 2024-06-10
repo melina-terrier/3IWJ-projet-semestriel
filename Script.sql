@@ -468,6 +468,7 @@ CREATE TABLE msnu_page (
 	CONSTRAINT fk_page_status FOREIGN KEY (status_id) REFERENCES msnu_status(id)
 )
 
+-- Define the msnu_setting table
 CREATE SEQUENCE msnu_setting_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE msnu_setting
 (
