@@ -18,8 +18,10 @@ if (!empty($errors)): ?>
 <h3>Utilisateurs</h3>
 
 <?php
-if (isset($_GET['message']) && $_GET['message'] === 'success') {
+if (isset($_GET['message']) && $_GET['message'] === 'succes') {
     echo "<p>Le nouveau compte a été créé.</p>";
+} else if (isset($_GET['message']) && $_GET['message'] === 'permanent-delete-success') {
+    echo "<p>Le compte a été définitivement supprimé.</p>";
 }
 
 ?>
@@ -39,12 +41,12 @@ if (isset($_GET['message']) && $_GET['message'] === 'success') {
         </thead>
         <tbody>
             <?php
-                foreach ($users as $userData): 
-                    $userId = $userData['id'];
-                    $userName = $userData['firstname'].' '.$userData['lastname'];
-                    $email = $userData['email'];
-                    $role = $userData['role'];
-                    $status = $userData['status'];
+                foreach ($users as $user): 
+                    $userId = $user['id'];
+                    $userName = $user['firstname'].' '.$user['lastname'];
+                    $email = $user['email'];
+                    $role = $user['role_name'];
+                    $status = $user['status'];
 
                     $statusText = "";
                     switch ($status) {
@@ -68,7 +70,7 @@ if (isset($_GET['message']) && $_GET['message'] === 'success') {
                             <td>$role</td>
                             <td>$statusText</td>
                             <td>
-                                <a href='/dashboard/view-user?id=$userId'>Voir</a>
+                                <a href='/profiles/".$user["slug"]."'>Voir</a>
                                 <a href='/dashboard/edit-user?id=$userId'>Modifier</a>
                                 <a href='/dashboard/users?action=delete&id=$userId' onclick='return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');'>Supprimer</a>
                             </td>

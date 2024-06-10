@@ -8,9 +8,8 @@ class User extends SQL
     protected string $firstname;
     protected string $lastname;
     protected string $email;
-    
-    protected string $password;
-    // protected ?string $id_role = '1';
+    protected ?string $password = null;
+    protected INT $id_role;
     protected int $status;
     protected ?string $reset_token = null;
     protected ?string $reset_expires = null;
@@ -155,18 +154,21 @@ class User extends SQL
     {
         $this->modification_date = $modification_date;
     }
-
-    
-    public function getUsers()
+    public function setSlug()
     {
-        return $this->getAllData(); 
-
+        $fullName = $this->getUserName();
+        $slug = mb_strtolower(preg_replace('/\s+/', '-', trim($fullName)));
+        $slug = preg_replace('/[^a-zA-Z0-9-]/', '', $slug);
+        $this->slug = $slug;
+    }
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     public function getNbElements() {
         return $this->countElements();
     }
-
     public function __sleep() {
         return array_diff(array_keys(get_object_vars($this)), array('pdo'));
     }

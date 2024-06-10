@@ -37,6 +37,12 @@
 
 /dashboard/edit-user:
   Controller: "User"
+  Action: "addUser"
+  Security: true
+  # Role: [user, admin]
+
+/profile:
+  Controller: "User"
   Action: "editUser"
   Security: true
   # Role: [user, admin]
@@ -159,6 +165,7 @@
 
 
 /logout:
+  Controller: "Security"
   Action: "logout"
 
 /reset-password:

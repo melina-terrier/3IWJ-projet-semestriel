@@ -14,7 +14,8 @@ class ResetPassword
             "inputs"=>[
                 "token"=>[
                     "type"=>"hidden", 
-                    "required"=>true
+                    "required"=>true,
+                    "label"=>"",
                 ],
                 "password"=>[
                     "type"=>"password",
