@@ -1,10 +1,31 @@
 <?php
 namespace App\Forms;
 
+use App\Models\Role as RoleModel;
+
 class AddUser
 {
     public static function getConfig(): array
     {
+
+        $role = new RoleModel();
+        $roles = $role->getAllData('object');
+
+        $formattedRoles = [];
+        if (!empty($roles)) {
+            foreach ($roles as $role) {
+              $formattedRoles[] = [
+                "id" => $role->getId(),
+                "name" => $role->getName(),
+              ];
+            }
+        } else {
+            $formattedRoles[] = [
+                "id" => '0',
+                "name" => 'Aucun rôle disponible',
+                "selected" => true,
+              ];
+        }
 
         return [
             "config"=>[
@@ -37,13 +58,13 @@ class AddUser
                     "required"=>true,
                     "error"=>"L'email doit faire entre 8 et 320 caractères"
                 ],
-                // "role"=>[
-                //     "type"=>"select",
-                //     "label"=>"Rôle",
-                //     "required"=>true,
-                //     "option"=>['id'=>1,"name"=>"admin", "id"=>2, "name"=>"user"], 
-                //     "error"=>"Veuillez sélectionner un rôle"
-                // ],
+                "role"=>[
+                    "type"=>"select",
+                    "label"=>"Rôle",
+                    "required"=>true,
+                    "option"=>$formattedRoles, 
+                    "error"=>"Veuillez sélectionner un rôle"
+                ],
             ]
 
         ];

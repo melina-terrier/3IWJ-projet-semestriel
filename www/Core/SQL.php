@@ -45,6 +45,7 @@ class SQL
         }
         return $this->pdo->lastInsertId($this->table."_id_seq");
     }
+    
 
     public function emailExists($email): bool {
         $sql = "SELECT COUNT(*) FROM " . $this->table . " WHERE email = :email";

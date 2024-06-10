@@ -30,10 +30,19 @@ class Security{
                 $userModel = new User();
                 $user = $userModel->checkUserCredentials($email, $password);
                 if ($user) {
-                    $userSerialized = serialize($user);
-                    $_SESSION['user'] = $userSerialized; 
-                    header("Location: /dashboard");
-                    exit();
+                    if ($user->getStatus() === 1) {
+                        $userSerialized = serialize($user);
+                        $_SESSION['user'] = $userSerialized;
+                        $role = new RoleModel();
+                        $role = $role->getOneBy(['role' => 'admin'], 'object');
+                        $roleId = $role->getId();
+                        if ($user->getRole() === $roleId) {
+                            header("Location: /dashboard");
+                        } else {
+                            header("Location: /profiles/" . $user->getSlug());
+                        }
+                        exit();
+                    }
                 } else {
                     $errorsLogin[] = 'Email ou mot de passe incorrect';
                 }
@@ -49,13 +58,11 @@ class Security{
 
     public function logout(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
-            session_start();
-            $_SESSION = array();
-            session_destroy();
-            header("Location: /login");
-            exit();
-        }
+        session_start();
+        $_SESSION = array();
+        session_destroy();
+        header("Location: /login");
+        exit();
     }
 
     public function register(): void
@@ -87,6 +94,7 @@ class Security{
                     $user->setModificationDate($formattedDate);  
                     $user->setModificationDate($formattedDate); 
                     $user->setStatus(0);
+                    $user->setSlug();
                     $activationToken = bin2hex(random_bytes(16));
                     $user->setActivationToken($activationToken);
                     $user->save();
@@ -191,7 +199,7 @@ class Security{
             $phpmailer->Body = 'Veuillez cliquer sur ce lien pour activer votre compte: ' . $activationLink;
 
             $phpmailer->send();
-            return ['success' => 'Le lien de recuperation de mot de passe a été envoyé par mail.'];
+            return ['success' => 'Le lien d\'activation du compte a été envoyé'];
         } catch (Exception $e) {
             return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$phpmailer->ErrorInfo}"];
         }
@@ -220,6 +228,7 @@ class Security{
                     $userModel->setPassword($pwd);
                     $userModel->setResetToken(null);
                     $userModel->setResetExpires(null);
+
                     $userModel->save();
                     $success[] = "Votre mot de passe a été réinitialisé avec succès.";
                 }
@@ -256,5 +265,29 @@ class Security{
         $view->assign("errors", $errors);
         $view->assign("success", $success);
         $view->render();
+    }
+
+    public function sendCreateAccount($email, $activationToken) {
+        print_r('true');
+        $phpmailer = new PHPMailer(true); 
+        try {
+            $phpmailer->isSMTP();
+            $phpmailer->Host = 'sandbox.smtp.mailtrap.io';
+            $phpmailer->SMTPAuth = true;
+            $phpmailer->Port = 2525;
+            $phpmailer->Username = '634e887ab334e4';
+            $phpmailer->Password = '24453e62a4f0b3';
+            $phpmailer->setFrom('melina.terrier@gmail.com', 'Support cms');
+            $phpmailer->addAddress($email);
+            $phpmailer->Subject = 'Activation de votre compte';
+
+            $activationLink = "http://localhost/reset-password?token=" . $activationToken;
+            $phpmailer->Body = 'Bonjour, un compte a été créer avec votre adresse email. Merci de suivre ce lien pour créer votre mot de passe : ' . $activationLink;
+
+            $phpmailer->send();
+            return ['success' => 'Le lien d\'activation du compte a été envoyé'];
+        } catch (Exception $e) {
+            return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$phpmailer->ErrorInfo}"];
+        }
     }
 }

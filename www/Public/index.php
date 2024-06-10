@@ -9,6 +9,7 @@ use App\Models\User;
 
 use App\Controllers\Page;
 use App\Controllers\Project;
+use App\Controllers\User as UserController;
 
 date_default_timezone_set('Europe/Paris');
 
@@ -112,6 +113,9 @@ else if($uri){
     if (strpos($uri, 'projects') !== false) {
         $projectBuilder = new Project();
         $projectBuilder->showProject($uri);
+    } else if (strpos($uri, 'profiles') !== false) {
+        $userBuilder = new UserController();
+        $userBuilder->showUser($uri);
     } else {
         $pageBuilder = new Page();
         $pageBuilder->showPage($uri);

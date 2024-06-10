@@ -76,14 +76,14 @@ class EditUser
                     "label"=>"Description",
                     "error"=>"Ce champ doit faire entre 2 et 1000 caractères",
                 ],
-                "link"=>{
+                "link"=>[
                     "type"=>"text",
                     "min"=>2,
                     "max"=>255,
                     "label"=>"Votre parcours académique",
                     "required"=>true,
                     "error"=>"ce champ doit faire entre 2 et 255 caractères",
-                }
+                ],
                 "experience"=>[
                     "type"=>"text",
                     "min"=>2,

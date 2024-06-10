@@ -107,11 +107,11 @@ class Project{
             $project->setTitle($_POST['title']);
             $project->setContent(strip_tags(stripslashes($_POST['content']),  $allowedTags));
             $project->setUser($userId);
-            if ($_POST['tag'] == 0) {
-                $project->setTag(null);
-            } else {
-                $project->setTag($_POST['tag']);
-            }
+            // if ($_POST['tag'] == 0) {
+            //     $project->setTag(null);
+            // } else {
+            //     $project->setTag($_POST['tag']);
+            // }
 
             $statusModel = new StatusModel();
             if (isset($_POST['submit-draft'])) {
