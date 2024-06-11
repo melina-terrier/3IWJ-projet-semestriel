@@ -1,0 +1,42 @@
+.modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.9); // En dur :(
+	display: flex;
+	z-index: 999;
+	display: none;
+	section {
+		h6 {
+			text-align: center;
+			color: var(--black);
+			@include color-theme-dark-font-color;
+		}
+        color: var(--blue);
+		margin: auto;
+		max-width: rem(600);
+		background-color: var(--white);
+		padding: rem(16);
+		border-radius: var(--main-radius);
+		@include color-theme-dark-bg;
+        a {
+			color: var(--black);
+            text-decoration: none;
+            text-align: center;
+			@media (prefers-color-scheme: dark) {
+				color: white;
+			}
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+	}
+	footer {
+		padding: rem(8);
+		display: flex;
+		justify-content: center;
+
+	}
+}

@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de bord</title>
-    <link rel="stylesheet" href="path_to_your_css">
+    <link rel="stylesheet" href="../styles/dist/main.css">
+
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 <body>
@@ -29,7 +30,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main>
+    <main class="main-content">
         <section class="dashboard-cards">
             <!-- Pages -->
             <a href="/dashboard/pages">
@@ -91,52 +92,45 @@
             </div>
         </section>
 
+        <section class="chart-section">
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+                google.charts.load('current', {'packages':['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
 
-        
+                function drawChart() {
+                    var data = google.visualization.arrayToDataTable([
+                        ['Catégorie', 'Nombre'],
+                        ['Visiteurs', <?php echo $nombreVisiteursNonInscrits; ?>],
+                        ['Abonnés', <?php echo $nombreUtilisateursInscrits; ?>],
+                        ['Auteurs', 0 ] // Remplacez par votre valeur
+                    ]);
 
-<section>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+                    var options = {
+                        title: 'Statistiques',
+                        chartArea: {width: '50%'},
+                        hAxis: {
+                            title: 'Nombre total',
+                            minValue: 0
+                        },
+                        vAxis: {
+                            title: 'Catégorie'
+                        }
+                    };
 
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Catégorie', 'Nombre'],
-                ['Visiteurs', <?php echo $nombreVisiteursNonInscrits; ?>],
-                ['Abonnés', <?php echo $nombreUtilisateursInscrits; ?>],
-                ['Auteurs', 0 ] // Remplacez par votre valeur
-            ]);
-
-            var options = {
-                title: 'Statistiques',
-                chartArea: {width: '50%'},
-                hAxis: {
-                    title: 'Nombre total',
-                    minValue: 0
-                },
-                vAxis: {
-                    title: 'Catégorie'
+                    var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+                    chart.draw(data, options);
                 }
-            };
+            </script>
 
-            var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
-        }
-    </script>
+            <div>
+                <p>Nombre d'utilisateurs inscrits : <?php echo htmlspecialchars($nombreUtilisateursInscrits); ?></p>
+                <p>Nombre de visiteurs non inscrits : <?php echo htmlspecialchars($nombreVisiteursNonInscrits); ?></p>
+            </div>
+            <div id="chart_div" style="width: 900px; height: 500px;"></div>
+        </section>
 
-<div>
-    <div>
-	<p>Nombre d'utilisateurs inscrits : <?php echo htmlspecialchars($nombreUtilisateursInscrits); ?></p>
-    <p>Nombre de visiteurs non inscrits : <?php echo htmlspecialchars($nombreVisiteursNonInscrits); ?></p>
-
-    </div>
-    <div id="chart_div" style="width: 900px; height: 500px;"></div>
-    </div>
-    </section>
-
-        <!-- Chart Section -->
-        <section>
+        <section class="chart-section">
             <div id="donutChart"></div>
             <script>
                 document.addEventListener("DOMContentLoaded", () => {
@@ -167,24 +161,23 @@
             </script>
         </section>
 
-        <!-- Summary Cards -->
-        <section>
-            <div class="card">
+        <section class="summary-cards">
+            <article class="card">
                 <h3>Pages</h3>
                 <p><?= $elementsCount['pages'] ?? 0; ?></p>
-            </div>
-            <div class="card">
+            </article>
+            <article class="card">
                 <h3>Projets</h3>
                 <p><?= $elementsCount['projects'] ?? 0; ?></p>
-            </div>
-            <div class="card">
+            </article>
+            <article class="card">
                 <h3>Utilisateurs</h3>
                 <p><?= $elementsCount['users'] ?? 0; ?></p>
-            </div>
-            <div class="card">
+            </article>
+            <article class="card">
                 <h3>Commentaires</h3>
                 <p><?= $elementsCount['comments'] ?? 0; ?></p>
-            </div>
+            </article>
             <div class="card">
                 <h3>Médias</h3>
                 <p><?= $elementsCount['medias'] ?? 0; ?></p>

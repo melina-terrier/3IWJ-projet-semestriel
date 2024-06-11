@@ -1,0 +1,31 @@
+@import "partials/functions.scss";
+@import "partials/fonts.scss";
+@import "partials/variables.scss";
+@import "partials/mixins.scss";
+@import "partials/global.scss";
+@import "partials/block.scss";
+@import "partials/button.scss";
+@import "partials/scoreseo.scss";
+@import "partials/grid.scss";
+@import "partials/theme.scss";
+@import "partials/cardavis.scss";
+@import "partials/accordion.scss";
+@import "partials/modal.scss";
+@import "partials/reset.scss";
+@import "partials/dashboard.scss";
+
+
+
+@import "components/Templates/back.tpl.scss";
+@import "components/Templates/neutral.tpl";
+@import "components/Post/post.scss";
+@import "components/Post/newPost.scss";
+@import "components/Media/allMedia";
+@import "components/Media/media";
+@import "components/Themes/boulangerieTheme";
+@import "components/Security/security";
+@import "components/User/user";
+@import "components/Blogs/blogs";
+@import "components/Setting/setting";
+@import "components/Components/form.scss";
+@import "components/Main/home.scss";

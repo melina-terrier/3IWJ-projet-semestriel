@@ -1,0 +1,49 @@
+:root {
+  /* Couleurs */
+  $main-color: #fff;
+  $secondary-color: #000;
+  $gfm-alert: #dc3545;
+  $gfm-primary-grey: #70726e;
+  $color-hover: #ddd; // Gris pour hover
+
+
+  /* Variables css */
+  /* Couleurs */
+  --main-color: #{$main-color};
+  --secondary-color: #{$secondary-color};
+  --font-color: #{$secondary-color};
+  --font-color-light: #{$main-color};
+  --desc-color: #{$gfm-primary-grey};
+  --alert: #{$gfm-alert};
+  --hover-color: #{$color-hover};
+
+  /* Transitions */
+  --transition-duration: 0.3s;
+
+  /* Typo */
+  --text-font: #{$font-primary};
+
+
+  /* Ecrans */
+  $md-size: 1024px;
+
+  /* Border-radius */
+  --border-radius-std: rem(10);
+  --border-radius-light: rem(5);
+  --border-radius-hard: rem(15);
+
+  /* Box-shadow */
+  $box-shadow-base: rem(0) rem(4) rem(4) rem(0) rgba(0, 0, 0, 0.25);
+
+  [data-theme="boulangerie-template"] {
+    --secondary-color: #dcb253;
+    --font-color: #dcb253;
+    --hover-color: #{$secondary-color};
+  }
+
+  [data-theme="music-template"] {
+    --secondary-color: #{$secondary-color};
+    --font-color: #{$secondary-color};
+  }
+
+}
