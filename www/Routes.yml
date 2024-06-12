@@ -9,13 +9,6 @@
   Security: true
   # Role: [admin]
 
-/edit-user:
-  Controller: "User"
-  Action: "updateUser"
-
-/show-user:
-  Controller: "User"
-  Action: "showUser"
 # USER
 /dashboard/users:
   Controller: "User"
@@ -29,19 +22,13 @@
   Security: true
   # Role: [admin]
 
-/dashboard/view-user:
+/dashboard/profile:
   Controller: "User"
   Action: "viewUser"
   Security: true
   # Role: [admin]
 
 /dashboard/edit-user:
-  Controller: "User"
-  Action: "addUser"
-  Security: true
-  # Role: [user, admin]
-
-/profile:
   Controller: "User"
   Action: "editUser"
   Security: true
@@ -60,22 +47,10 @@
   Security: true
   # Role: [admin]
 
-/dashboard/edit-project:
-  Controller: "Project"
-  Action: "editProject"
-  Security: true
-  # Role: [admin]
-
 # PAGE
 /dashboard/add-page:
   Controller: "Page"
   Action: "addPage"
-  Security: true
-  # Role: [admin]
-
-/dashboard/edit-page:
-  Controller: "Page"
-  Action: "editPage"
   Security: true
   # Role: [admin]
 
@@ -91,9 +66,9 @@
   Security: true
   # Role: [admin]
 
-# /dashboard/add-comment:
-#   Controller: "Comment"
-#   Action: "addComment"
+/dashboard/add-comment:
+  Controller: "Comment"
+  Action: "addComment"
   # Security: true
   # Role: "admin"
 
@@ -103,11 +78,6 @@
   Action: "addTag"
   Security: true
   # Role: "admin"
-
-/dashboard/edit-tag:
-  Controller: "Tag"
-  Action: "editTag"
-  Security: true
 
 /dashboard/tags:
   Controller: "Tag"
@@ -125,12 +95,6 @@
 /dashboard/add-media:
   Controller: "Media"
   Action: "addMedia"
-  Security: true
-  # Role: "admin"
-
-/dashboard/edit-media:
-  Controller: "Media"
-  Action: "editMedia"
   Security: true
   # Role: "admin"
 
@@ -165,7 +129,6 @@
 
 
 /logout:
-  Controller: "Security"
   Action: "logout"
 
 /reset-password:

@@ -13,8 +13,6 @@
         
     </head>
     <body>
-
-        <a href="/logout">Se déconnecter</a>
         
         <header id="header" class="back-office-header">
             <nav>

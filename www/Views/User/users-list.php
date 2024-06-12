@@ -1,89 +1,67 @@
-<?php 
-if (!empty($errors)): ?>
-    <div class="error">
-        <?php foreach ($errors as $error): ?>
-            <p class="text"><?php echo htmlspecialchars($error); ?></p>
-            <?php endforeach; ?>
-    </div>
-    <?php endif; ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<h3>Tous les utilisateurs</h3>
+
+    <?php 
+    $successMessage = isset($_GET['message']) && $_GET['message'] === 'success';
+    if ($successMessage) {
+      echo "<p>Le nouveau compte a été créé.</p>";
+    }
     
+    if (!empty($errors)): ?>
+        <div class="error">
+            <?php foreach ($errors as $error): ?>
+                <p class="text"><?php echo htmlspecialchars($error); ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
     <?php if (!empty($success)): ?>
         <div class="success">
             <?php foreach ($success as $message): ?>
                 <p class="text"><?php echo htmlspecialchars($message); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-<h3>Utilisateurs</h3>
-
-<?php
-if (isset($_GET['message']) && $_GET['message'] === 'succes') {
-    echo "<p>Le nouveau compte a été créé.</p>";
-} else if (isset($_GET['message']) && $_GET['message'] === 'permanent-delete-success') {
-    echo "<p>Le compte a été définitivement supprimé.</p>";
-}
-
-?>
-
-<a href="/dashboard/add-user">Ajouter un utilisateur</a>
-
-<section>
-    <table id="userTable">
-        <thead>
+<section class="section1-user-table">
+<div class="user-table">
+    <table class="responsive-table" id="myTable">
+        <thead class="responsive-th">
             <tr>
-                <th>Nom</th>
+                <th>Pseudo</th>
                 <th>Email</th>
                 <th>Rôle</th>
-                <th>Etat</th>
-                <th>Actions</th>
+                <th>Action</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="responsive-tb">
             <?php
-                foreach ($users as $user): 
-                    $userId = $user['id'];
-                    $userName = $user['firstname'].' '.$user['lastname'];
-                    $email = $user['email'];
-                    $role = $user['role_name'];
-                    $status = $user['status'];
 
-                    $statusText = "";
-                    switch ($status) {
-                        case -1:
-                            $statusText = "Supprimé";
-                            break;
-                        case 0:
-                            $statusText = "En attente";
-                            break;
-                        case 1:
-                            $statusText = "Verifié";
-                            break;
-                        default:
-                            $statusText = "Inconnu";
-                    }
+                foreach ($users as $userData): ?>
+                <tr>
+                    <td><?php echo $userData['firstname']; ?></td>
+                    <td><?php echo $userData['email']; ?></td>
+                    <td><?php echo $userData['status']; ?></td>
+                    <td class="link-list">
+                        <a href="/bo/user/view-user?id=<?php echo $userData['id']; ?>" class="link-primary">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                        <a href="/bo/user/edit-user?id=<?php echo $userData['id']; ?>" class="link-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        <a href="/bo/user?action=delete&id=<?php echo $userData['id']; ?>" class="link-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                            <i class="fa fa-minus-square-o" aria-hidden="true"></i>
+                        </a>
 
-                    echo "
-                        <tr>
-                            <td>$userName</td>
-                            <td>$email</td>
-                            <td>$role</td>
-                            <td>$statusText</td>
-                            <td>
-                                <a href='/profiles/".$user["slug"]."'>Voir</a>
-                                <a href='/dashboard/edit-user?id=$userId'>Modifier</a>
-                                <a href='/dashboard/users?action=delete&id=$userId' onclick='return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');'>Supprimer</a>
-                            </td>
-                        </tr>
-                    ";
-            endforeach; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
+</div>
 </section>
 
 <script>
     $(document).ready(function() {
-        var table = $('#userTable').DataTable({
+        var table = $('#myTable').DataTable({
             "rowCallback": function(row, data, index) {
                 if (index % 2 === 0) {
                     $(row).css("background-color", "white");
@@ -103,4 +81,5 @@ if (isset($_GET['message']) && $_GET['message'] === 'succes') {
             }
         });
     });
+
 </script>

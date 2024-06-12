@@ -1,110 +1,60 @@
-<?php if (!empty($errors)): ?>
-    <div class="error">
-        <?php foreach ($errors as $error): ?>
-            <p class="text"><?php echo htmlspecialchars($error); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+<h2>Mes pages</h2>
 
-<?php if (!empty($success)): ?>
-    <div class="success">
-        <?php foreach ($success as $message): ?>
-            <p class="text"><?php echo htmlspecialchars($message); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
-
-<h2>Pages</h2>
-
-<a href="/dashboard/add-page">Ajouter une page</a>
-
-<?php
-    if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
-      echo "<p>La page a été supprimée.</p>";
-    } else if (isset($_GET['message']) && $_GET['message'] === 'permanent-delete-success'){
-        echo "<p>La page a été définitivement supprimée.</p>";
-    } else if (isset($_GET['message']) && $_GET['message'] === 'restore-success'){
-        echo "<p>La page a été restaurée.</p>";
-    }
-?>
-
-<section class="section1-status-tab"> 
-    <a href="#allPages">Toutes</a>
-    <a href="#publishedPages">Publiées</a>
-    <a href="#draftPages">Brouillons</a>
-    <a href="#suppressedPages">Supprimées</a>
-</section>
-
-<?php
-
-// print_r($statuses);
-// $statusNames = [];
-// foreach ($statuses as $status) {
-//     $statusName = $status->getName(); 
-//     $statusId = $status->getId();
-//     displayPages($statusName, $pages, $statusId);
-// }
-
-
-// function displayPages($status, $pages, $statusId){
-    echo "<section id=''>";
-    echo "<h2></h2>";
-    echo "<table id=''>";
-    echo "<thead>";
-    echo "<tr>";
-    echo "<th>Titre</th>";
-    echo "<th>Auteur</th>";
-    echo "<th>Status</th>";
-    echo "<th>Date</th>";
-    echo "<th>Actions</th>";
-    echo "</tr>";
-    echo "</thead>";
-    echo "<tbody>";
-
-    if ($pages) {
-    foreach ($pages as $page) {
-        $status = $page['status_name'];
-        // if ($status == $statusId){
-            $pageId = $page['id'];
-            $title = $page['title'];
-            $userName = $page['user_name'];
-            $creationDate = $page['creation_date'];
-            $publicationDate = $page['publication_date'];
-            $modificationDate = $page['modification_date'];
-            echo "<tr>";
-            echo "<td>$title</td>";
-            echo "<td>$userName</td>";
-            echo "<td>$status</td>"; 
-
-           switch ($status) {
-              case "published":
-                  echo "<td>$publicationDate</td>";
-                  echo "<td><a href='/".$page['slug']."'>Voir</a>
-                  <a href='/dashboard/add-page?id=$pageId'>Modifier</a>
-                  <a href='/dashboard/pages?action=delete&id=$pageId'>Supprimer</a></td>";
-                  break;
-              case "deleted":
-                  echo "<td>$modificationDate</td>";
-                  echo "<td>
-                  <a href='/dashboard/pages?action=restore&id=$pageId'>Restaurer</a>
-                  <a href='/dashboard/pages?action=permanent-delete&id=$pageId'>Supprimer définitivement</a></td>";
-                  break;
-              case "draft":
-                  echo "<td>$modificationDate</td>";
-                  echo "<td><a href='/".$page['slug']."?preview=true'>Prévisualiser</a>
-                  <a href='/dashboard/add-page?id=$pageId'>Modifier</a>
-                  <a href='/dashboard/pages?action=delete&id=$pageId'>Supprimer</a></td>"; 
-                  break;
-          }
-          echo "</tr>";
-        }
-    }
-//   } else {
-//     echo "<tr><td colspan='5'>Aucun commentaire trouvé</td></tr>";
-//   }
-
-  echo "</tbody>";
-  echo "</table>";
-  echo "</section>";
-// }
-?>
+<div class="page">
+    <section class="section1-status-tab">
+        <table class="status-tab">
+            <thead>
+                <tr class="tab">
+                    <th class="tab-item active"><a href="#">Tous</a></th>
+                    <th class="tab-item"><a href="#">Publiées</a></th>
+                    <th class="tab-item"><a href="#">Brouillon</a></th>
+                </tr>
+            </thead>
+        </table>
+    </section>
+    <section class="section2-search-bar">
+        <div class="block-line-search">
+            <label for="input-name"></label>
+            <input type="text" id="input-name" class="search-input" placeholder="Rechercher..."/>
+        </div>
+    </section>
+    <section class="section3-information-page">
+        <table class="status-tab">
+            <thead>
+            <tr class="tab">
+                <th class="tab-item active">Titre</th>
+                <th class="tab-item">Auteur</th>
+                <th class="tab-item">Date</th>
+                <th class="tab-item">Status</th>
+                <th class="tab-item">Modifier</th>
+            </tr>
+            </thead>
+            <?php
+            if (isset($this->data['pages'])) {
+                foreach ($this->data['pages'] as $page) {
+                    $pageId = $page->getId();
+                    $title = $page->getTitle();
+                    // $username = $page->getUserUsername();
+                    $creationDate = (new DateTime($page->getCreationDate()))->format('Y-m-d');
+                    $status = $page->getStatus() ? 'Publié' : "Non publié";
+                    echo "
+                    <tr class='tab-page'>
+                        <td>$title</td>
+                        <td>$creationDate</td>
+                        <td>$status</td>
+                        <td>
+                            <a href='/dashboard/pages/page?id=$pageId' class='link-primary'><i class='fa fa-pencil' aria-hidden='true'></i></a>
+                        </td>
+                    </tr>
+                    ";
+                }
+            }
+            ?>
+        </table>
+    </section>
+    <section class="section4-add">
+        <a href="/dashboard/add-page" class="add-content">
+            <button class="button button-primary">Ajouter</button>
+        </a>
+    </section>
+</div>
