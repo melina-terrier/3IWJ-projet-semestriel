@@ -1,5 +1,6 @@
 <?php
 namespace App\Forms;
+
 class Setting
 {
 
