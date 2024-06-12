@@ -71,6 +71,7 @@ class Security{
         $errors = [];
         $success = [];
 
+
         $roles = new RoleModel();
         $role = $roles->getOneBy(["role"=>"user"], 'object');
         $roleId = $role->getId();
