@@ -1,0 +1,53 @@
+/* Couleurs */
+$primary-white: #fff;
+$primary-black: #000;
+$gfm-secondary-green: #A8E141;
+$gfm-accent-blue: #4169E1;
+$red: #dc3545;
+$gfm-primary-grey:rgba(16, 24, 40, 0.08);;
+
+/* Variables css */
+:root {
+  /* Couleurs */
+  --white: #{$primary-white};
+  --black: #{$primary-black};
+  --grey: #{$gfm-primary-grey};
+  --grey-darker: #{darken($gfm-primary-grey, 10%)};
+  --blue: #{$gfm-accent-blue};
+  --blue-darker: #{darken($gfm-accent-blue, 10%)};
+  --green: #{$gfm-secondary-green};
+  --red: #{$red};
+  --red-darker: #{darken($red, 10%)};
+
+  /* Transitions */
+  --transition-duration: 0.3s;
+
+  /* Typo */
+  --headers-font: #{$font1};
+  --text-font: #{$font2};
+
+
+}
+  /* Ecrans */
+  $md-size: 1024px;
+
+  /* Border-radius */
+  $border-radius-std: rem(10);
+  $border-radius-light: rem(5);
+  $border-radius-hard: rem(15);
+
+  /* Box-shadow */
+  $box-shadow-base: rem(0) rem(4) rem(4) rem(0) rgba(0, 0, 0, 0.25);
+
+// src/css/partials/_variables.scss
+
+$primary-color: #3498db;
+$secondary-color: #2ecc71;
+$tertiary-color: #e74c3c;
+$quaternary-color: #f39c12;
+
+$font-family: 'Arial, sans-serif';
+
+$padding: 1rem;
+$margin: 1rem;
+$border-radius: 5px;

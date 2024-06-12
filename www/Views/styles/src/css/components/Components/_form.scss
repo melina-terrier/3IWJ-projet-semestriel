@@ -1,0 +1,98 @@
+form {
+  display: flex;
+  padding: rem(16) rem(0);
+  flex-direction: column;
+  align-items: center;
+  gap: rem(8);
+  align-self: stretch;
+
+   li {
+    list-style-type: none !important;
+    padding: 0;
+    margin: 0;
+   }
+}
+
+.error {
+  color: red;
+  padding: rem(8);
+  border-radius: rem(5);
+  margin-bottom: rem(20);
+  text-align: center;
+}
+
+.success {
+  color: green;
+  padding: rem(8);
+  border-radius: rem(5);
+  margin-bottom: rem(20);
+  text-align: center;
+}
+
+.input-form {
+  display: flex;
+  padding: rem(8) rem(24);
+  align-items: center;
+  gap: rem(16);
+  align-self: flex-start;
+
+
+  label {
+    display: flex;
+    flex-wrap: wrap;
+    width: rem(100);
+    align-items: center;
+    text-align: left;
+    flex: 1 0 0;
+  }
+
+  input {
+    height: rem(16);
+    display: flex;
+    padding: rem(6) rem(24);
+    align-items: flex-start;
+    gap: rem(8);
+    border-radius: rem(5);
+    border: rem(1) solid rgba(0, 0, 0, 0.20);
+
+  }
+
+  input::placeholder {
+    color: var(--grey);
+    display: flex;
+    height: rem(22);
+    flex-direction: column;
+    justify-content: center;
+    flex: 1 0 0;
+  }
+
+}
+input[type="submit"] {
+  cursor: pointer;
+  margin: rem(16);
+}
+
+@media (max-width: 768px) {
+  form, .input-form, input[type="submit"] {
+    padding: rem(12) 0;
+    gap: rem(6);
+  }
+
+  .input-form label, .input-form input {
+    width: auto;
+    padding: rem(4) rem(12);
+  }
+}
+
+/* Media Query pour mobile */
+@media (max-width: 480px) {
+  form, .input-form, input[type="submit"] {
+    padding: rem(8) 0;
+    gap: rem(4);
+  }
+
+  .input-form label, .input-form input {
+    width: auto;
+    padding: rem(2) rem(8);
+  }
+}

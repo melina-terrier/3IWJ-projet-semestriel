@@ -1,0 +1,104 @@
+.button {
+  --bg-color: var(--blue);
+  --bg-hover-color: var(--white);
+  --bg-hover-border-color: var(--blue);
+  --bg-text-color: var(--white);
+  --bg-text-hover-color: var(--blue);
+  --bg-border-color: var(--blue);
+  display: inline-block; // Pour que le bouton s'adapte à la taille du texte
+  padding: rem(6) rem(24); // Pour que le bouton ait une taille minimum
+  border-radius: rem(30); // Pour que le bouton ait des coins arrondis
+  text-decoration: none; // Pour que le bouton n'ait pas de soulignement
+  cursor: pointer;
+  border: none;
+  font-family: var(--text-font); // Pour que le bouton utilise la police principale
+  font-weight: 600;
+  font-size: rem(12); // Pour que le bouton ait une taille de texte minimum
+  line-height: rem(18); // Pour que le bouton ait une hauteur de ligne minimum
+  background-color: var(--bg-color);// Pour que le bouton ait une couleur de fond
+  color: var(--bg-text-color); // Pour que le bouton ait une couleur de texte
+
+
+  &:hover {
+    background-color: var(--bg-hover-color);
+    color: var(--bg-text-hover-color);
+    border: rem(1) solid var(--bg-hover-border-color);
+    @include color-theme-dark-button-hover-cover;
+  }
+
+  /* Modificateurs de couleur */
+  &-primary {
+    --bg-color: var(--blue);
+    --bg-hover-color: var(--white);
+    --bg-hover-border-color: var(--blue);
+    --bg-text-hover-color: var(--blue);
+  }
+  &-secondary {
+    --bg-color: var(--green);
+    --bg-hover-color: var(--white);
+    --bg-hover-border-color: var(--green);
+    --bg-text-hover-color: var(--green);
+  }
+  &-danger {
+    --bg-color: var(--red);
+    --bg-hover-color: var(--white);
+    --bg-hover-border-color: var(--red);
+    --bg-text-hover-color: var(--red);
+  }
+
+  /* Modificateurs de taille */
+  &-lg {
+    padding: rem(10) rem(32);
+    font-size: rem(16);
+
+  }
+  &-sm {
+    line-height: rem(16);
+    padding: rem(4) rem(16);
+    font-size: rem(12);
+
+  }
+}
+
+@media (max-width: 768px) {
+  .button {
+    padding: rem(5) rem(20); /* Ajustement du padding pour les tablettes */
+    font-size: rem(11); /* Légère réduction de la taille de la police pour conserver l'espace */
+    min-width: rem(160); /* Assurer une largeur minimale pour le contenu */
+    border-radius: rem(25); /* Ajustement du rayon de bordure */
+  }
+
+  .button-lg {
+    padding: rem(9) rem(28);
+    font-size: rem(14); /* Garder une taille de police lisible */
+    min-width: rem(200); /* Largeur minimale pour les boutons plus grands */
+  }
+
+  .button-sm {
+    padding: rem(3) rem(14);
+    font-size: rem(10); /* Ajuster légèrement la taille de la police */
+    min-width: rem(120); /* Largeur minimale pour les petits boutons */
+  }
+}
+
+/* Media Query pour mobile */
+@media (max-width: 480px) {
+  .button {
+    padding: rem(4) rem(16); /* Optimisation du padding pour les mobiles */
+    font-size: rem(10); /* Ajustement de la taille pour une meilleure lisibilité */
+    min-width: rem(140); /* Garantir une largeur minimale adaptée aux mobiles */
+    border-radius: rem(20); /* Ajustement du rayon de bordure */
+  }
+
+  .button-lg {
+    padding: rem(8) rem(24);
+    font-size: rem(13); /* Assurer la lisibilité du texte */
+    min-width: rem(180); /* Largeur minimale pour les boutons plus grands */
+  }
+
+  .button-sm {
+    padding: rem(2) rem(12);
+    font-size: rem(9); /* S'adapter aux contraintes d'espace tout en restant lisible */
+    min-width: rem(100); /* Largeur minimale pour les petits boutons */
+  }
+}

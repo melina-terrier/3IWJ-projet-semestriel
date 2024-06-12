@@ -1,0 +1,14 @@
+$cols: 12;
+.grid{
+  @for $i from 1 through $cols{
+    .col-#{$i}{
+      width: calc(100% / $cols * $i);
+    }
+  }
+  .row{
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    @include color-theme-dark-bg;
+  }
+}

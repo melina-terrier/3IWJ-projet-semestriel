@@ -1,0 +1,82 @@
+.card{
+    display: inline-block;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: rem(8);
+    background: var(--white);
+    border: rem(1) solid var(--black);
+    padding: rem(16) rem(24);
+    @include color-theme-dark-bg;
+
+    &-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-self: stretch;
+        font-size: rem(32);
+        font-family: var(--headers-font);
+        text-align: center;
+        color: var(--black);
+        @include color-theme-dark-font-color;
+    }
+
+    &-avis{
+        display: flex;
+        padding: rem(8);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: rem(4);
+        border-bottom: 1px solid var(--black);
+
+        &-elements {
+            display: flex;
+            padding: rem(0) rem(4);
+            justify-content: center;
+            align-items: center;
+
+
+            img {
+                width: rem(70);
+                height: rem(70);
+                border-radius: rem(70);
+            }
+
+            &.text {
+                display: flex;
+                padding: rem(8);
+                flex-direction: column;
+                align-items: flex-start;
+                gap: rem(4);
+
+                &-name {
+                    font-size: rem(16);
+                    font-family: var(--headers-font);
+                    text-align: left;
+                    color: var(--black);
+                    @include color-theme-dark-font-color;
+                }
+
+                &-avis {
+                    font-size: rem(12);
+                    font-family: var(--text-font);
+                    text-align: left;
+                    color: rgba(0, 0, 0, 0.75);
+                    @include color-theme-dark-font-color;
+                }
+            }
+
+        }
+    }
+
+    &-button {
+        display: flex;
+        padding: rem(16);
+        justify-content: center;
+        align-items: center;
+        align-self: stretch;
+    }
+
+
+}
+

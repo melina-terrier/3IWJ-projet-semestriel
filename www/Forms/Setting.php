@@ -1,6 +1,8 @@
 <?php
 namespace App\Forms;
 
+use App\Core\SQL;
+
 class Setting
 {
 

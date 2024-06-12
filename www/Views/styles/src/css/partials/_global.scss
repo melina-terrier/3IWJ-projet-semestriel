@@ -1,0 +1,24 @@
+// src/css/partials/_global.scss
+
+body {
+  font-family: $font-family;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+h2 {
+  color: $primary-color;
+  margin-bottom: $margin;
+}
+
+.subtitle {
+  color: $secondary-color;
+  margin-bottom: $margin;
+}
+
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $margin;
+}

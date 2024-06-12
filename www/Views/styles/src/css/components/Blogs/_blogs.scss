@@ -1,0 +1,113 @@
+.no-border {
+  border: none;
+}
+
+.container {
+  margin: rem(0) auto;
+  max-width: rem(1170);
+  position: relative;
+}
+
+.fix-right{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+}
+
+.link-list{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  list-style: none;
+  font-size: rem(20);
+}
+
+.all-blogs{
+  width: 100%;
+  margin-bottom: rem(10);
+}
+.article-text{
+  height: rem(100);
+  overflow: scroll;
+}
+
+.one-blog{
+  background-color: white;
+  border-radius: rem(10);
+  margin-top: rem(15);
+  padding: rem(10);
+
+  .blog-text{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .text-content{
+      margin-left: rem(15);
+      height: rem(150);
+      width: 100%;
+      overflow: scroll;
+    }
+  }
+  .blog-date{
+    height: 8%;
+  }
+}
+
+
+.edit-icon{
+  text-align: end;
+
+  > a{
+      margin-left: rem(10);
+  }
+}
+
+.link-danger{
+  color: red;
+}
+.link-primary{
+  color: #214cce;
+}
+
+.blog-date{
+  text-align: start;
+  margin-top: rem(10);
+  color: #869df3;
+}
+
+.blog-title{
+  text-align: start;
+  margin-bottom: rem(10);
+}
+
+.blog-image{
+  border-radius: rem(10);
+}
+
+.section1-form-update {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  //height: 100vh;
+}
+
+.form-in-center {
+  width: 40%;
+  background-color: white;
+  padding: rem(10);
+  border-radius: rem(10);
+}
+
+.form-in-center textarea {
+  border-radius: 10px;
+  height: rem(100);
+}
+
+
+

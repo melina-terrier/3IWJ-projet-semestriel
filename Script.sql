@@ -1,8 +1,11 @@
-CREATE TABLE msnu_type_media (
-	id_type_media        SERIAL,
-	label_type_media     VARCHAR(50),
-	PRIMARY KEY (id_type_media)
-);
+DROP TABLE IF EXISTS msnu_role;
+DROP TABLE IF EXISTS msnu_status;
+DROP TABLE IF EXISTS msnu_user;
+DROP TABLE IF EXISTS msnu_media;
+DROP TABLE IF EXISTS msnu_page;
+DROP TABLE IF EXISTS msnu_project;
+DROP TABLE IF EXISTS msnu_tag;
+DROP TABLE IF EXISTS msnu_comment;
 
 -- Define the msnu_type_notification table
 CREATE TABLE msnu_type_notification (
@@ -167,13 +170,29 @@ CREATE TABLE msnu_skills (
 	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
 );
 
--- Define the msnu_interests table
-CREATE TABLE msnu_interests (
-	id_interests          SERIAL,
-	title                 VARCHAR(50),
-	level_skills          VARCHAR(50),
-	description_interests TEXT,
-	id_user               INTEGER,
-	PRIMARY KEY (id_interests),
-	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
-);
+-- -- Define the msnu_interests table
+-- CREATE TABLE msnu_interests (
+-- 	id_interests          SERIAL,
+-- 	title                 VARCHAR(50),
+-- 	level_skills          VARCHAR(50),
+-- 	description_interests TEXT,
+-- 	id_user               INTEGER,
+-- 	PRIMARY KEY (id_interests),
+-- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
+-- );
+
+CREATE SEQUENCE msnu_page_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
+CREATE TABLE msnu_page (
+	id                    	INTEGER DEFAULT nextval('msnu_page_id_seq') NOT NULL,
+	title 					VARCHAR(255) NOT NULL,
+	content					TEXT,
+	slug 					VARCHAR(255) NOT NULL,
+    creation_date 			TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    modification_date		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	publication_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status_id				INTEGER NOT NULL,
+	user_id 				INTEGER,
+	PRIMARY KEY (id),
+	CONSTRAINT fk_page_user FOREIGN KEY (user_id) REFERENCES msnu_user(id),
+	CONSTRAINT fk_page_status FOREIGN KEY (status_id) REFERENCES msnu_status(id)
+)

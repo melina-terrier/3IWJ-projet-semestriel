@@ -1,0 +1,17 @@
+.score-seo {
+  display: inline-block;
+  width: rem(12);
+  height: rem(12);
+  margin: rem(3) rem(4) 0 rem(3);
+  border-radius: 50%;
+  vertical-align: top;
+  &.seo-good {
+    background-color: var(--green);
+  }
+  &.seo-middle {
+  background-color: #FF6C02;
+  }
+  &.seo-bad {
+    background-color: var(--red);
+  }
+}
