@@ -24,11 +24,13 @@ class AddTag
                     "type"=>"text",
                     "label"=>"Slug",
                     "max"=>255,
+                    "error"=>"Le slug doit avoir au moins 255 caractères."
                 ],
                 "description"=>[
                     "type"=>"textarea",
                     "label"=>"Description",
-                    "max"=>2000,
+                    "max"=>4000,
+                    "error"=>"La description doit avoir au moins 4000 caractères."
                 ]
             ]
         ];

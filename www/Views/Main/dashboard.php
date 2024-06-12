@@ -1,59 +1,49 @@
-<h2>Tableau de bord</h2>
-<p class="subtitle">Bonjour, <strong><?php echo htmlspecialchars($lastname); ?> <?php echo htmlspecialchars($firstname); ?> </strong>!
-    <br>Vous êtes connecté en tant que <em><?php echo htmlspecialchars($roles); ?></em>
+<h1>Tableau de bord</h1>
 
-</p>
-<section class="dashboard-cards">
-    <a href="/dashboard/pages">
-		<div class="block-card-dashboard">
-			<div class="block-card-dashboard-total blue">
-				<img src="/Views/styles/dist/images/pages.png" alt="pages-image">
-				<div class="block-card-dashboard-total-text">
-					<div class="title">Pages</div>
-					<div class="number"><?php echo htmlspecialchars($elementsCount['pages']); ?></div>
-				</div>
-		</div>
-	</a>
-	<a href="/dashboard/user">
-		<div class="block-card-dashboard-total blue">
-			<img src="/Views/styles/dist/images/profil.png" alt="users-image">
-			<div class="block-card-dashboard-total-text">
-				<div class="title">Utilisateurs</div>
-				<div class="number"><?php echo htmlspecialchars($elementsCount['users']); ?></div>
-			</div>
-		</div>
-	</a>
-	</div>
+<section>
 
-    <div class="block-card-dashboard">
-	<a href="/dashboard/medias">
-		<div class="block-card-dashboard-total green">
-			<img src="/Views/styles/dist/images/video.png" alt="video-image">
-			<div class="block-card-dashboard-total-text">
-				<div class="title">Médias</div>
-				<div class="number"><?php echo htmlspecialchars($elementsCount['medias']); ?></div>
-			</div>
-		</div>
-	</a>
-    <a href="/dashboard/projects">
-        <div class="block-card-dashboard-total green">
-            <img src="/Views/styles/dist/images/comment.png" alt="comment-image">
-            <div class="block-card-dashboard-total-text">
-                <div class="title">Projets</div>
-                <div class="number"><?php echo htmlspecialchars($elementsCount['projects']); ?></div>
-            </div>
-        </div>
-    </a>
-	</div>
-    <div class="block-card-dashboard">
-	<a href="/dashboard/comments">
-		<div class="block-card-dashboard-total blue">
-			<img src="/Views/styles/dist/images/avis.png" alt="avis-image">
-			<div class="block-card-dashboard-total-text">
-				<div class="title">Commentaires</div>
-				<div class="number"><?php echo htmlspecialchars($elementsCount['comments']); ?></div>
-			</div>
-		</div>
-	</a>
-	</div>
+	<article>
+		<h3>Pages</h3>
+		<p><?php echo $elementsCount['pages']; ?></p>
+	</article>
+
+	<article>
+		<h3>Projets</h3>
+		<p><?php echo $elementsCount['projects']; ?></p>
+	</article>
+
+	<article>
+		<h3>Tags</h3>
+		<p><?php echo $elementsCount['tags']; ?></p>
+	</article>
+		
+	<article>
+		<h3>Médias</h3>
+		<p><?php echo $elementsCount['medias']; ?></p>
+	</article>
+
+	<article>
+		<h3>Utilisateurs</h3>
+		<p><?php echo $elementsCount['users']; ?></p>
+	</article>
+
+	<article>
+		<h3>Commentaires</h3>
+		<p><?php echo $elementsCount['comments']; ?></p>
+	</article>
+
+</section>
+
+<section>
+	<h2>Commentaires en attentes de validation</h2>
+	<?php 
+		foreach ($comments as $comment) {
+			if($comment['status'] == 0){
+				echo '<article>
+					<p>'.$comment["name"].'</p>
+					<p>'.$comment["comment"].'<p>
+				</article>';
+			}
+		}
+	?>
 </section>

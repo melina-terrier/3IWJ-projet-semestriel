@@ -1,22 +1,30 @@
 <section>
-    <h3>Récupération de Mot de Passe</h3>
-    <p class="text">Entrez votre e-mail et nous allons vous envoyer un lien pour récupérer votre compte</p>
-    <?= $form ?>
-    <p class="text">Vous avez déjà un compte ? <a href="/login">Connectez-vous</a></p>
+    <header>
+        <h3>Réinitialiser votre mot de passe</h3>
+        <p>Saisissez votre adresse e-mail ci-dessous pour récupérer votre mot de passe</p>
+    </header>
+
+    <article>
+        <?php 
+        echo $form;
+
+        if ($errors) {
+            echo "<ul>"; 
+            foreach ($errors as $error){
+                echo "<li>$error</li>";
+            }
+            echo "</ul>";
+        } else if ($successes) {
+            echo "<ul>"; 
+            foreach ($successes as $success){
+                echo "<li>$success</li>";
+            }
+            echo "</ul>";
+        }
+        ?>
+    </article>
+
+    <footer>
+        <a href="/login">Retour à la connexion</a>
+    </footer>
 </section>
-
-<?php if (!empty($errors)): ?>
-    <div class="error">
-        <?php foreach ($errors as $error): ?>
-            <p class="text"><?php echo htmlspecialchars($error); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
-
-<?php if (!empty($success)): ?>
-    <div class="success">
-        <?php foreach ($success as $message): ?>
-            <p class="text"><?php echo htmlspecialchars($message); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>

@@ -22,7 +22,7 @@ class AddComment
                 "max"=>4000,
                 "label"=>"Laisser un commentaire",
                 "required"=>true,
-                "error"=>"Votre commentaire doit faire entre 2 et 1000 caractères"
+                "error"=>"Votre commentaire doit faire entre 2 et 4000 caractères"
             ];
         } else {
             $config["inputs"]["comment"] = [
@@ -31,7 +31,7 @@ class AddComment
                 "max"=>4000,
                 "label"=>"Laisser un commentaire",
                 "required"=>true,
-                "error"=>"Votre commentaire doit faire entre 2 et 1000 caractères"
+                "error"=>"Votre commentaire doit faire entre 2 et 4000 caractères"
             ];
             $config["inputs"]["email"] = [
                 "type"=>"email",
@@ -43,11 +43,11 @@ class AddComment
             ];
             $config["inputs"]["name"] = [
                 "type"=>"text",
-                "min"=>2,
+                "min"=>4,
                 "max"=>100,
                 "label"=>"Nom et prénom",
                 "required"=>true,
-                "error"=>"Le nom et le prénom doit faire entre 2 et 100 caractères"
+                "error"=>"Le nom et le prénom doivent faire entre 4 et 100 caractères"
             ];
         }
         return $config;

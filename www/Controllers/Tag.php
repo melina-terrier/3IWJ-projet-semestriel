@@ -24,14 +24,14 @@ class Tag{
             }
         }
         $projectCounts = []; // Use plural for clarity (storing multiple counts)
-        foreach ($tags as $tag) {
-            $tagId = $tag->getId();
-            if ($tagId !== null) {
-                $projectModel = new Project(); // Assuming you have a ProjectModel class
-                $projectCount = $projectModel->countElements("tag_id", $tagId); // Replace with appropriate method
-                $projectCounts[] = ["id" => $tagId, "projectCount" => $projectCount]; // Use descriptive keys
-            }
-        }
+        // foreach ($tags as $tag) {
+        //     $tagId = $tag->getId();
+        //     if ($tagId !== null) {
+        //         $projectModel = new Project(); // Assuming you have a ProjectModel class
+        //         $projectCount = $projectModel->countElements("tag_id", $tagId); // Replace with appropriate method
+        //         $projectCounts[] = ["id" => $tagId, "projectCount" => $projectCount]; // Use descriptive keys
+        //     }
+        // }
         $view = new View("Tag/tags-list", "back");
         $view->assign("errors", $errors);
         $view->assign("projectCounts", $projectCounts);
@@ -95,7 +95,7 @@ class Tag{
             $tagId = $_GET['id'];
             $currentTag = $tag->getOneBy(['id' => $tagId], 'object');
             if ($currentTag) {
-                $form = new Form("EditTag");
+                $form = new Form("AddTag");
                 $errors = [];
                 $success = [];
 

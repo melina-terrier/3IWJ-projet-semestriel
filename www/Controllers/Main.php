@@ -5,6 +5,8 @@ use App\Models\User;
 use App\Models\Page;
 use App\Models\Media;
 use App\Models\Comment;
+use App\Models\Project;
+use App\Models\Tag;
 class Main
 {
     public function home()
@@ -19,29 +21,26 @@ class Main
     public function dashboard()
     {
         $user = new User();
-        $post = new Page();
+        $page = new Page();
         $media = new Media();
+        $project = new Project();
+        $comment = new Comment();
+        $tag = new Tag();
 
         $elementsCount = [
             'users' => $user->getNbElements(),
-            'pages' => $post->getNbElements(),
+            'pages' => $page->getNbElements(),
             'medias' => $media->getNbElements(),
-            'projects' => $post->getNbElements(),
+            'projects' => $project->getNbElements(),
+            'comments' => $comment->getNbElements(),
+            'tags'=>$tag->getNbElements(),
         ];
 
-        if(isset($_SESSION['user'])) {
-            $userSerialized = $_SESSION['user'];
-            $user = unserialize($userSerialized);
-            $lastname = $user->getLastname();
-            $firstname = $user->getFirstname();
-            // $roles = $user->getRole();
+        $comments = $comment->getAllData();
 
-        }
         $view = new View("Main/dashboard", "back");
         $view->assign("elementsCount", $elementsCount);
-        $view->assign("lastname", $lastname);
-        $view->assign("firstname", $firstname);
-        // $view->assign("roles", $roles);
+        $view->assign("comments", $comments);
         $view->render();
     }
 

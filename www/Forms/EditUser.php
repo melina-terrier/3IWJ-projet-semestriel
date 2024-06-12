@@ -15,6 +15,8 @@ class EditUser
                 "photo"=>[
                     "type"=>"file",
                     "label"=>"Photo de profil",
+                    "accept"=>"image/png, image/jpeg",
+                    "error"=>"Le format du fichier n'est pas pris en compte"
                 ],
                 "lastname"=>[
                     "type"=>"text",
@@ -40,6 +42,8 @@ class EditUser
                     "max"=>320,
                     "error"=>"Veuillez entrer une adresse email valide",
                 ],
+
+                
                 "birthday"=>[
                     "type"=>"date",
                     "label"=>"Votre date de naissance",
