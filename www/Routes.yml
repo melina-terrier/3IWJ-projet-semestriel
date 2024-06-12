@@ -54,7 +54,7 @@
   Security: true
   # Role: [admin]
 
-/dashbord/edit-project:
+/dashboard/edit-project:
   Controller: "Project"
   Action: "editProject"
   Security: true

@@ -78,15 +78,15 @@ class User extends SQL
         $this->password = $password;
     }
 
-    // public function getRole(): int
-    // {
-    //     return $this->id_role;
-    // }
+    public function getRole(): int
+    {
+        return $this->id_role;
+    }
 
-    // public function setRole($id_role): void
-    // {
-    //     $this->id_role = $id_role;
-    // }
+    public function setRole($id_role): void
+    {
+        $this->id_role = $id_role;
+    }
 
     public function getStatus(): int
     {

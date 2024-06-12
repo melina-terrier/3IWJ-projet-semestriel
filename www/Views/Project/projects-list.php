@@ -37,17 +37,11 @@ if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
 
 <?php
 
-$statusNames = [];
-foreach ($statuses as $status) {
-    $statusName = $status->getName(); 
-    $statusId = $status->getId();
-    displayProjects($statusName, $projects, $statusId);
-}
 
-function displayProjects($status, $projects, $statusId){
-  echo "<section id=\"$status\">";
-  echo "<h2>$status</h2>";
-  echo "<table id=\"{$status}Projects\">";
+// function displayProjects($status, $projects, $statusId){
+  echo "<section id=''>";
+  echo "<h2></h2>";
+  echo "<table id='Projects'>";
   echo "<thead>";
   echo "<tr>";
   echo "<th>Titre</th>";
@@ -61,54 +55,50 @@ function displayProjects($status, $projects, $statusId){
 
   if ($projects) {
   foreach ($projects as $project) {
-      $status = $project->getStatus();
-      if ($status == $statusId){
-          $projectId = $project->getId();
-          $title = $project->getTitle();
-          $userId = $project->getUser();
-          $creationDate = $project->getCreationDate();
-          $publicationDate = $project->getPublicationDate();
-          $modificationDate = $project->getModificationDate();
+      $status = $project['status_name'];
+      // if ($status == $statusId){
+          $projectId = $project['id'];
+          $title = $project['title'];
+          $userName = $project['user_name'];
+          $creationDate = $project['creation_date'];
+          $publicationDate = $project['publication_date'];
+          $modificationDate = $project['modification_date'];
           echo "<tr>";
           echo "<td>$title</td>";
-          echo "<td>$userId</td>";
+          echo "<td>$userName</td>";
           echo "<td>$status</td>"; 
-          if (!empty($publicationDate)){
-              echo "<td>$publicationDate</td>";
-          }else{
-              echo "<td>$modificationDate</td>";
-          }
-          echo "<td>";
 
           switch ($status) {
-              case 1:
-                  echo "<a href='/projects/".$project->getSlug()."'>Voir</a>
-                  <a href='/dashboard/edit-project?id=$projectId'>Modifier</a>
-                  <a href='/dashboard/projects?action=delete&id=$projectId'>Supprimer</a>";
+              case "published":
+                  echo "<td>$publicationDate</td>";
+                  echo "<td><a href='/projects/".$project['slug']."'>Voir</a>
+                  <a href='/dashboard/add-project?id=$projectId'>Modifier</a>
+                  <a href='/dashboard/projects?action=delete&id=$projectId'>Supprimer</a></td>";
                   break;
-              case 2:
-                  echo "
+              case "deleted":
+                  echo "<td>$modificationDate</td>";
+                  echo "<td>
                   <a href='/dashboard/projects?action=restore&id=$projectId'>Restaurer</a>
-                  <a href='/dashboard/projects?action=permanent-delete&id=$projectId'>Supprimer définitivement</a>";
+                  <a href='/dashboard/projects?action=permanent-delete&id=$projectId'>Supprimer définitivement</a></td>";
                   break;
-              case 3:
-                  echo "<a href=''>Prévisualiser</a>
-                  <a href='/dashboard/edit-project?id=$projectId'>Modifier</a>
-                  <a href='/dashboard/projects?action=delete&id=$projectId'>Supprimer</a>"; 
+              case "draft":
+                  echo "<td>$modificationDate</td>";
+                  echo "<td><a href='/projects/".$project['slug']."?preview=true'>Prévisualiser</a>
+                  <a href='/dashboard/add-project?id=$projectId'>Modifier</a>
+                  <a href='/dashboard/projects?action=delete&id=$projectId'>Supprimer</a></td>"; 
                   break;
           }
-          echo "</td>";
           echo "</tr>";
       }
   }
-} else {
-  echo "<tr><td colspan='5'>Aucun commentaire trouvé</td></tr>";
-}
+// } else {
+//   echo "<tr><td colspan='5'>Aucun commentaire trouvé</td></tr>";
+// }
 
 echo "</tbody>";
 echo "</table>";
 echo "</section>";
-}
+// }
 ?>
 
 
