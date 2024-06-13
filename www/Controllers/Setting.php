@@ -4,6 +4,11 @@ namespace App\Controllers;
 
 use App\Core\Form;
 use App\Core\View;
+use App\Models\User;
+use App\Models\Settiing as  SettingModel;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 class Setting{
 

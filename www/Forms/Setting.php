@@ -1,5 +1,11 @@
 <?php
 namespace App\Forms;
+<<<<<<< HEAD
+=======
+
+use App\Core\SQL;
+
+>>>>>>> 0bb330b08f695036374413d2d62504ce35a61b0d
 class Setting
 {
 

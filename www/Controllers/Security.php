@@ -57,6 +57,7 @@ class Security{
         $errors = [];
         $success = [];
 
+<<<<<<< HEAD
         if( $form->isSubmitted() && $form->isValid() )
         {
             $user = new User();
@@ -81,6 +82,47 @@ class Security{
                     $success[] = $emailResult['success'];
                 } elseif (isset($emailResult['error'])) {
                     $errors[] = $emailResult['error'];
+=======
+
+        $roles = new RoleModel();
+        $role = $roles->getOneBy(["role"=>"user"], 'object');
+        $roleId = $role->getId();
+        $security = new CoreSecurity();
+        if ($security->isLogged()){
+            $view = new View("Security/already-login", "front");
+        } else {
+            if( $form->isSubmitted() && $form->isValid() )
+            {
+                $user = new User();
+                $formattedDate = date('Y-m-d H:i:s');
+                if ($user->emailExists($_POST["email"])) {
+                    $errors[] = "L'email est déjà utilisé par un autre compte.";
+                } else {
+                    $user->setLastname($_POST["lastname"]);
+                    $user->setFirstname($_POST["firstname"]);
+                    $user->setEmail($_POST["email"]);
+                    $user->setRole($roleId);
+                    $user->setPassword($_POST["password"]);
+                    $user->setCreationDate($formattedDate);
+                    $user->setModificationDate($formattedDate);  
+                    $user->setModificationDate($formattedDate); 
+                    $user->setStatus(0);
+                    $user->setSlug();
+                    $activationToken = bin2hex(random_bytes(16));
+                    $user->setActivationToken($activationToken);
+                    $user->save();
+                    $success[] = "Votre compte a bien été créé";
+                    $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
+    
+                    if (isset($emailResult['success'])) {
+                        $success[] = $emailResult['success'];
+                    } elseif (isset($emailResult['error'])) {
+                        $errors[] = $emailResult['error'];
+                    }
+    
+                    header("Location: /register?message=checkmail");
+                    exit; 
+>>>>>>> 0bb330b08f695036374413d2d62504ce35a61b0d
                 }
 
                 header("Location: /register?message=checkmail");
