@@ -8,15 +8,19 @@ class User extends SQL
     protected string $firstname;
     protected string $lastname;
     protected string $email;
-    protected ?string $password = null;
-    protected INT $id_role;
+    protected string $password;
     protected int $status;
     protected ?string $reset_token = null;
     protected ?string $reset_expires = null;
-    protected ?string $activation_token = null;
+    protected ?string $activation_Token = null;
     protected ?string $photo = null;
     protected $creation_date;
     protected $modification_date;
+
+    public function __construct()
+    {
+        parent::__construct(); // Appel du constructeur de la classe parente SQL
+    }
 
     public function getUserName()
     {
@@ -77,16 +81,6 @@ class User extends SQL
         $this->password = $password;
     }
 
-    public function getRole(): int
-    {
-        return $this->id_role;
-    }
-
-    public function setRole($id_role): void
-    {
-        $this->id_role = $id_role;
-    }
-
     public function getStatus(): int
     {
         return $this->status;
@@ -96,7 +90,8 @@ class User extends SQL
     {
         $this->status = $status;
     }
-    public function getResetToken(): string
+
+    public function getResetToken(): ?string
     {
         return $this->reset_token;
     }
@@ -106,26 +101,27 @@ class User extends SQL
         $this->reset_token = $reset_token;
     }
 
-    public function getResetExpires(): string
+    public function getResetExpires(): ?string
     {
         return $this->reset_expires;
     }
 
-    public function setResetExpires(?string $reset_expires): void {
+    public function setResetExpires(?string $reset_expires): void
+    {
         $this->reset_expires = $reset_expires;
     }
 
-    public function getActivationToken(): string
+    public function getActivationToken(): ?string
     {
-        return $this->activation_token;
+        return $this->activation_Token;
     }
 
-    public function setActivationToken(?string $activationtoken): void
+    public function setActivationToken(?string $activationToken): void
     {
-        $this->activation_token = $activationtoken;
+        $this->activation_Token = $activationToken;
     }
-    
-    public function getPhoto(): string
+
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }
@@ -154,22 +150,21 @@ class User extends SQL
     {
         $this->modification_date = $modification_date;
     }
-    public function setSlug()
+
+    public function getUsers()
     {
-        $fullName = $this->getUserName();
-        $slug = mb_strtolower(preg_replace('/\s+/', '-', trim($fullName)));
-        $slug = preg_replace('/[^a-zA-Z0-9-]/', '', $slug);
-        $this->slug = $slug;
-    }
-    public function getSlug()
-    {
-        return $this->slug;
+        return $this->getAllData();
     }
 
-    public function getNbElements() {
+    public function getNbElements()
+    {
         return $this->countElements();
     }
-    public function __sleep() {
+
+    public function __sleep()
+    {
         return array_diff(array_keys(get_object_vars($this)), array('pdo'));
     }
+
+   
 }

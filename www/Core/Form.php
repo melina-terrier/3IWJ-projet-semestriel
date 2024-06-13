@@ -6,7 +6,6 @@ class Form
 {
     private $config;
     private $errors = [];
-    private $fields = [];
 
     public function __construct(String $name)
     {
@@ -18,78 +17,59 @@ class Form
         $this->config = $name::getConfig();
     }
 
-    public function setField($fieldName, $value) {
-        $this->fields[$fieldName] = $value;
-    }
-
-    public function build(): string
-    {
+    public function build(): string{
         $html = "";
-        if (!empty($this->errors)) {
-            foreach ($this->errors as $error) {
-                $html .= "<li>" . $error . "</li>";
+        if(!empty($this->errors)){
+            foreach ($this->errors as $error){
+                $html .= "<li>".$error."</li>";
             }
         }
-        $enctype = isset($this->config["config"]["enctype"]) ? $this->config["config"]["enctype"] : '';
-        $html .= "<form action='" . $this->config["config"]["action"] . "' method='" . $this->config["config"]["method"] . "' enctype='" . $enctype . "'>";
-        
-        foreach ($this->config["inputs"] as $name => $input) {
-            $value = isset($this->fields[$name]) ? $this->fields[$name] : '';
+        $enctype = (isset($this->config["config"]["enctype"])) ? $this->config["config"]["enctype"] : '';
+        $html .= "<form action='".$this->config["config"]["action"]."' method='".$this->config["config"]["method"]."' enctype='".$enctype."'>";
+        foreach ($this->config["inputs"] as $name=>$input){
 
             if ($input["type"] === "select") {
-                $html .= "<label for='$name'>" . $input["label"] . "</label>";
-                $html .= "<select name='$name' " . (isset($input["required"]) ? "required" : "") . " aria-label='Sélectionnez une catégorie'>";
-                $html .= "<option value='' disabled " . ($value == '' ? 'selected' : '') . " aria-label='Sélectionnez une catégorie'>Sélectionnez</option>";
+                $html .= "<select name='$name' " . (isset($input["required"]) ? "required" : "") .  " aria-label='Sélectionnez une catégorie'>";
+              
+                // Add a disabled and selected option with aria-label
+                $html .= "<option value='' disabled selected aria-label='Sélectionnez une catégorie'>Sélectionnez</option>";
               
                 if (isset($input["option"]) && is_array($input["option"])) {
-                    foreach ($input["option"] as $option) {
-                        $selected = $value == $option['id'] ? 'selected' : '';
-                        $html .= "<option value='{$option['id']}' " . (isset($option["disabled"]) ? "disabled" : "") . " $selected>{$option['name']}</option>";
-                    }
+                  foreach ($input["option"] as $value) {
+                    $selected = isset($value['selected']) && $value['selected'] ? 'selected' : ''; // Add selected attribute if applicable
+                    $html .= "<option value='{$value['id']}' " . (isset($value["disabled"]) ? "disabled" : "") .  " $selected>{$value['name']}</option>";
+                  }
                 }
               
                 $html .= "</select>";
-            }else if ($input["type"] === "checkbox") {
-                $html .= "<label for='$name'>" . $input["label"] . "</label>";
-              
-                if (isset($input["option"]) && is_array($input["option"])) {
-                  foreach ($input["option"] as $option) {
-                    $html .= "
-                      <label for='{$option['id']}'>{$option['name']}</label>
-                      <input type='checkbox' name='$name' value='{$option['id']}'><br>";
-                  }
-                }
-            } else if ($input["type"] === "textarea") {
+              }
+               else if ($input["type"] === "textarea") {
                 $html .= "
                 <label for='" . $name . "'>" . $input["label"] . "</label>
                 <textarea
                     name='" . $name . "'
                     " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
                     " . (isset($input["required"]) ? "required" : "") . "
-                >" . htmlentities($value) . "</textarea>";
-            } else if ($input["type"] === "submit") {
-                $html .= "
-                <label for='" . $name . "'>" . $input["label"] . "</label>
-                <input 
-                    type='" . $input["type"] . "' 
-                    name='" . $name . "' 
-                    value='" . $input["value"] . "'
-                >";
-            } else {
-                $html .= "
-                <label for='" . $name . "'>" . $input["label"] . "</label>
-                <input 
-                    type='" . $input["type"] . "' 
-                    name='" . $name . "' 
-                    " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
-                    " . (isset($input["required"]) ? "required" : "") . "
-                    value='" . htmlentities($value) . "'
-                >";
+                ></textarea>";
             }
-            $html .= "<br>";
+            else {
+                $html .= "
+                <label for='".$name."' > ".$input["label"]."
+                <input 
+                type='" . $input["type"] . "' 
+                name='" . $name . "' 
+                " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
+                " . (isset($input["required"]) ? "required" : "") .  "
+                ></label>";
+            }
+            
+              $html .= "<br>";
+
         }
 
-        $html .= "<input type='submit' value='" . htmlentities($this->config["config"]["submit"]) . "'>";
+
+
+        $html .= "<input type='submit' value='".htmlentities($this->config["config"]["submit"])."'>";
         $html .= "</form>";
         return $html;
     }
@@ -107,77 +87,59 @@ class Form
 
     public function isValid(): bool
     {
-
-        $expectedFieldsCount = 0;
-        foreach ($this->config["inputs"] as $name => $inputConfig) {
-            if (isset($inputConfig["required"]) && $inputConfig["required"] === true) {
-                $expectedFieldsCount++;
-            }
-            if (isset($inputConfig["type"]) && $inputConfig["type"] === "submit") {
-                continue;
-            }
-            if (!isset($inputConfig["required"]) && isset($_POST[$name])) {
-                $expectedFieldsCount++;
-            }
-        }
-
-        $submittedDataCount = 0;
-        foreach ($_POST as $key => $value) {
-            if ($key !== "submit-draft") { 
-                $submittedDataCount++;
-            }
-        }
-        foreach ($_FILES as $key => $value) {
-            $submittedDataCount++;
-        }
-
-        if ($expectedFieldsCount != $submittedDataCount) {
+        // Est-ce que j'ai exactement le même nombre de champs
+        if (count($this->config["inputs"]) != count($_POST) + count($_FILES)) {
+            $this->errors[] = count($this->config["inputs"]) ."/ " . count($_POST);
             $this->errors[] = "Tentative de Hack";
         }
 
         foreach ($_POST as $name => $dataSent) {
+            // Est-ce qu'il s'agit d'un champ que je lui ai donné ?
             if (!isset($this->config["inputs"][$name])) {
-                $this->errors[] = "Le champ " . $name . " n'est pas autorisé";
+                $this->errors[] = "Tentative de Hack, le champ " . $name . " n'est pas autorisé";
             }
 
+            // Est-ce que ce n'est pas vide si required
             if (isset($this->config["inputs"][$name]["required"]) && empty($dataSent)) {
                 $this->errors[] = "Le champ " . $name . " ne doit pas être vide";
             }
 
+            // Est-ce que le min correspond
             if (isset($this->config["inputs"][$name]["min"]) && strlen($dataSent) < $this->config["inputs"][$name]["min"]) {
                 $this->errors[] = $this->config["inputs"][$name]["error"];
             }
 
+            // Est-ce que le max correspond
             if (isset($this->config["inputs"][$name]["max"]) && strlen($dataSent) > $this->config["inputs"][$name]["max"]) {
                 $this->errors[] = $this->config["inputs"][$name]["error"];
             }
 
-            if ($this->config['inputs'][$name]['label']=="Laisser un commentaire" && preg_match('/(https?|ftp):\/\/([^\s]+)/i', $dataSent)) {
-                $this->errors[] = "Les URL ne sont pas autorisés dans le commentaire.";
+            //Est ce que la confirmation correspond
+            if(isset($this->config["inputs"][$name]["confirm"]) && $dataSent != $_POST[$this->config["inputs"][$name]["confirm"]]){
+                $this->errors[] = $this->config["inputs"][$name]["error"] ;
+            }else{
+                //Est ce que le format email est OK
+
+                if ($this->config["inputs"][$name]["type"]=="email" && !filter_var($dataSent, FILTER_VALIDATE_EMAIL)){
+                    $this->errors[] = "Le format de l'email est incorrect";
+                } 
+
+                //Est ce que le format password est OK
+                if($this->config["inputs"][$name]["type"]=="password" && strlen($dataSent) >= 8 &&
+                    (!preg_match("#[a-z]#",$dataSent)||
+                    !preg_match("#[A-Z]#",$dataSent)||
+                    !preg_match("#[0-9]#",$dataSent))
+                ){
+                    $this->errors[] = $this->config["inputs"][$name]["error"] ;
+                }
             }
 
-            // if ($this->config['inputs'][$name]['label'] == "Slug"){
-                
-            //         $this->errors[] = "Le slug existe déjà pour une autre catégorie";
-                
-            // }
-                         
-            if (isset($this->config["inputs"][$name]["confirm"]) && $dataSent != $_POST[$this->config["inputs"][$name]["confirm"]]) {
-                $this->errors[] = $this->config["inputs"][$name]["error"];
+            if(empty($this->errors))
+            {
+                return true;
             } else {
-                if ($this->config["inputs"][$name]["type"] == "email" && !filter_var($dataSent, FILTER_VALIDATE_EMAIL)) {
-                    $this->errors[] = "Le format de l'email est incorrect";
-                }
-
-                if ($this->config["inputs"][$name]["type"] == "password" && strlen($dataSent) >= 8 &&
-                    (!preg_match("#[a-z]#", $dataSent) ||
-                    !preg_match("#[A-Z]#", $dataSent) ||
-                    !preg_match("#[0-9]#", $dataSent))) {
-                    $this->errors[] = $this->config["inputs"][$name]["error"];
-                }
+                return false;
             }
         }
-
-        return empty($this->errors);
     }
 }

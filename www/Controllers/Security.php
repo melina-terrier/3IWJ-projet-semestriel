@@ -3,8 +3,6 @@ namespace App\Controllers;
 use App\Core\Form;
 use App\Core\View;
 use App\Models\User;
-use App\Models\Role as RoleModel;
-use App\Core\Security as CoreSecurity;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -17,38 +15,24 @@ class Security{
         $form = new Form("Login");
         $errorsLogin = [];
         $successLogin = [];
-
-        $security = new CoreSecurity();
-        if ($security->isLogged()){
-            $view = new View("Security/already-login", "front");
-        } else {
-            if( $form->isSubmitted() && $form->isValid() )
-            {
-                $email = $_POST['email'];
-                $password = $_POST['password'];
-                
-                $userModel = new User();
-                $user = $userModel->checkUserCredentials($email, $password);
-                if ($user) {
-                    if ($user->getStatus() === 1) {
-                        $userSerialized = serialize($user);
-                        $_SESSION['user'] = $userSerialized;
-                        $role = new RoleModel();
-                        $role = $role->getOneBy(['role' => 'admin'], 'object');
-                        $roleId = $role->getId();
-                        if ($user->getRole() === $roleId) {
-                            header("Location: /dashboard");
-                        } else {
-                            header("Location: /profiles/" . $user->getSlug());
-                        }
-                        exit();
-                    }
-                } else {
-                    $errorsLogin[] = 'Email ou mot de passe incorrect';
-                }
+       
+        if( $form->isSubmitted() && $form->isValid() )
+        {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            
+            $userModel = new User();
+            $user = $userModel->checkUserCredentials($email, $password);
+            if ($user) {
+                $userSerialized = serialize($user);
+                $_SESSION['user'] = $userSerialized; 
+                header("Location: /dashboard");
+                exit();
+            } else {
+                $errorsLogin[] = 'Email ou mot de passe incorrect';
             }
-            $view = new View("Security/login", "front");
         }
+        $view = new View("Security/login", "front");
         $view->assign("form", $form->build());
         $view->assign("errorsForm", $errorsLogin);
         $view->assign("successForm", $successLogin);
@@ -58,11 +42,13 @@ class Security{
 
     public function logout(): void
     {
-        session_start();
-        $_SESSION = array();
-        session_destroy();
-        header("Location: /login");
-        exit();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
+            session_start();
+            $_SESSION = array();
+            session_destroy();
+            header("Location: /login");
+            exit();
+        }
     }
 
     public function register(): void
@@ -71,48 +57,38 @@ class Security{
         $errors = [];
         $success = [];
 
-        $roles = new RoleModel();
-        $role = $roles->getOneBy(["role"=>"user"], 'object');
-        $roleId = $role->getId();
-        $security = new CoreSecurity();
-        if ($security->isLogged()){
-            $view = new View("Security/already-login", "front");
-        } else {
-            if( $form->isSubmitted() && $form->isValid() )
-            {
-                $user = new User();
-                $formattedDate = date('Y-m-d H:i:s');
-                if ($user->emailExists($_POST["email"])) {
-                    $errors[] = "L'email est déjà utilisé par un autre compte.";
-                } else {
-                    $user->setLastname($_POST["lastname"]);
-                    $user->setFirstname($_POST["firstname"]);
-                    $user->setEmail($_POST["email"]);
-                    $user->setRole($roleId);
-                    $user->setPassword($_POST["password"]);
-                    $user->setCreationDate($formattedDate);
-                    $user->setModificationDate($formattedDate);  
-                    $user->setModificationDate($formattedDate); 
-                    $user->setStatus(0);
-                    $user->setSlug();
-                    $activationToken = bin2hex(random_bytes(16));
-                    $user->setActivationToken($activationToken);
-                    $user->save();
-                    $success[] = "Votre compte a bien été créé";
-                    $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
-    
-                    if (isset($emailResult['success'])) {
-                        $success[] = $emailResult['success'];
-                    } elseif (isset($emailResult['error'])) {
-                        $errors[] = $emailResult['error'];
-                    }
-    
-                    header("Location: /register?message=checkmail");
-                    exit; 
+        if( $form->isSubmitted() && $form->isValid() )
+        {
+            $user = new User();
+            $formattedDate = date('Y-m-d H:i:s');
+            if ($user->emailExists($_POST["email"])) {
+                $errors[] = "L'email est déjà utilisé par un autre compte.";
+            } else {
+                $user->setLastname($_POST["lastname"]);
+                $user->setFirstname($_POST["firstname"]);
+                $user->setEmail($_POST["email"]);
+                $user->setpassword($_POST["password"]);
+                $user->setCreationDate($formattedDate);
+                $user->setModificationDate($formattedDate);  
+                $user->setStatus(0);
+                $activationToken = bin2hex(random_bytes(16));
+                $user->setActivationToken($activationToken);
+                $user->save();
+                $success[] = "Votre compte a bien été créé";
+                $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
+
+                if (isset($emailResult['success'])) {
+                    $success[] = $emailResult['success'];
+                } elseif (isset($emailResult['error'])) {
+                    $errors[] = $emailResult['error'];
                 }
+
+                header("Location: /register?message=checkmail");
+                exit; 
+
             }
-            $view = new View("Security/register", "front");
         }
+        $view = new View("Security/register", "front");
         $view->assign("form", $form->build());
         $view->assign("errorsForm", $errors);
         $view->assign("successForm", $success);
@@ -152,7 +128,7 @@ class Security{
                 $errors[] = 'Cet email n\'est pas associé à un compte existant.';
             }
         }
-        $view = new View("Security/request-password", "front");
+        $view = new View("Security/requestPassword", "front");
         $view->assign("form", $form->build());
         $view->assign("errorsForm", $errors);
         $view->assign("successForm", $success);
@@ -160,48 +136,50 @@ class Security{
     }
 
     private function sendResetEmail($email, $resetToken) {
-        $phpmailer = new PHPMailer(); 
+        $mail = new PHPMailer(true); 
+
         try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 587;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPAuth = true; 
+            $mail->Username = 'melina.terrier@gmail.com'; 
+            $mail->Password = 'London88project!'; 
+            $mail->setFrom('melina.terrier@gmail.com', 'Support cms');
+            $mail->addAddress($email);
+            $mail->Subject = 'Recuperation du mot de passe';
 
-            $phpmailer->isSMTP();
-            $phpmailer->Host = 'sandbox.smtp.mailtrap.io';
-            $phpmailer->SMTPAuth = true;
-            $phpmailer->Port = 2525;
-            $phpmailer->Username = '634e887ab334e4';
-            $phpmailer->Password = '24453e62a4f0b3';
-            $phpmailer->setFrom('melina.terrier@gmail.com', 'Support cms');
-            $phpmailer->addAddress($email);
-            $phpmailer->Subject = 'Recuperation du mot de passe';
-
-            $resetLink = "http://localhost/reset-password?token=" . $resetToken;
-            $phpmailer->Body = 'Cliquez sur ce lien pour réinitialiser votre mot de passe: ' . $resetLink;
-            $phpmailer->send();
+            $resetLink = "http://cms.fr/reset-password?token=" . $resetToken;
+            $mail->Body = 'Cliquez sur ce lien pour réinitialiser votre mot de passe: ' . $resetLink;
+            $mail->send();
             return ['success' => 'Le lien de recuperation de mot de passe a été envoyé par mail.'];
         } catch (Exception $e) {
-            return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$phpmailer->ErrorInfo}"];
+            return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$mail->ErrorInfo}"];
         }
     }
 
     private function sendActivationEmail($email, $activationToken) {
-        $phpmailer = new PHPMailer(true); 
+        $mail = new PHPMailer(true); 
         try {
-            $phpmailer->isSMTP();
-            $phpmailer->Host = 'sandbox.smtp.mailtrap.io';
-            $phpmailer->SMTPAuth = true;
-            $phpmailer->Port = 2525;
-            $phpmailer->Username = '634e887ab334e4';
-            $phpmailer->Password = '24453e62a4f0b3';
-            $phpmailer->setFrom('melina.terrier@gmail.com', 'Support cms');
-            $phpmailer->addAddress($email);
-            $phpmailer->Subject = 'Activation de votre compte cms';
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 465;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPAuth = true; 
+            $mail->Username = 'melina.terrier@gmail.com'; 
+            $mail->Password = 'London88project'; 
+            $mail->setFrom('melina.terrier@gmail.com', 'Support cms');
+            $mail->addAddress($email);
+            $mail->Subject = 'Activation de votre compte cms';
 
-            $activationLink = "http://localhost/activate-account?token=" . $activationToken;
-            $phpmailer->Body = 'Veuillez cliquer sur ce lien pour activer votre compte: ' . $activationLink;
+            $activationLink = "http://cms.fr/activate-account?token=" . $activationToken;
+            $mail->Body = 'Veuillez cliquer sur ce lien pour activer votre compte: ' . $activationLink;
 
-            $phpmailer->send();
-            return ['success' => 'Le lien d\'activation du compte a été envoyé'];
+            $mail->send();
+            return ['success' => 'Le lien de recuperation de mot de passe a été envoyé par mail.'];
         } catch (Exception $e) {
-            return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$phpmailer->ErrorInfo}"];
+            return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$mail->ErrorInfo}"];
         }
     }
 
@@ -209,12 +187,14 @@ class Security{
     {
         $form = new Form("ResetPassword");
         $token = $_GET['token'] ?? '';
-        $config = $form->setField('token', $token);
+        $config = $formInitPass->getConfig($token);
+
         $errors = [];
         $success = [];
 
         if( $form->isSubmitted() && $form->isValid() ) {
             $token = $_REQUEST['token'] ?? '';
+
             if (empty($token)) {
                 $errors[] = "Le token de réinitialisation est manquant.";
             } else {
@@ -223,18 +203,18 @@ class Security{
                 if (!$user || strtotime($user['reset_expires']) < time()) {
                     $errors[] = "Le token de réinitialisation est invalide ou a expiré.";
                 } else {
-                    $pwd = $_POST['password'];
+                    $pwd = $_POST['password'] ?? '';
                     $userModel->setDataFromArray($user);
                     $userModel->setPassword($pwd);
                     $userModel->setResetToken(null);
                     $userModel->setResetExpires(null);
-
                     $userModel->save();
                     $success[] = "Votre mot de passe a été réinitialisé avec succès.";
                 }
             }
         }
-        $view = new View("Security/reset-password", "front");
+
+        $view = new View("Security/resetPassword", "front");
         $view->assign("form", $form->build());
         $view->assign("errorsForm", $errors);
         $view->assign("successForm", $success);
@@ -250,44 +230,22 @@ class Security{
             $errors[] = "Le token d'activation est manquant.";
             return;
         }
+
         $user = new User();
         $userModel = $user->getOneBy(['activation_token' => $token]);
         $user->setDataFromArray($userModel);
         if ($user) {
-            $user->setStatus(1);
+            $user->setIsActive(1);
             $user->setActivationToken(null);
             $user->save();
             $success[] = "Votre compte a été activé avec succès.";
         } else {
             $errors[] = "Le token d'activation est invalide.";
         }
-        $view = new View("Security/activate-account", "front"); 
+        $view = new View("Security/activateAccount", "front"); 
+        $view->assign("form", $form->build());
         $view->assign("errors", $errors);
         $view->assign("success", $success);
         $view->render();
-    }
-
-    public function sendCreateAccount($email, $activationToken) {
-        print_r('true');
-        $phpmailer = new PHPMailer(true); 
-        try {
-            $phpmailer->isSMTP();
-            $phpmailer->Host = 'sandbox.smtp.mailtrap.io';
-            $phpmailer->SMTPAuth = true;
-            $phpmailer->Port = 2525;
-            $phpmailer->Username = '634e887ab334e4';
-            $phpmailer->Password = '24453e62a4f0b3';
-            $phpmailer->setFrom('melina.terrier@gmail.com', 'Support cms');
-            $phpmailer->addAddress($email);
-            $phpmailer->Subject = 'Activation de votre compte';
-
-            $activationLink = "http://localhost/reset-password?token=" . $activationToken;
-            $phpmailer->Body = 'Bonjour, un compte a été créer avec votre adresse email. Merci de suivre ce lien pour créer votre mot de passe : ' . $activationLink;
-
-            $phpmailer->send();
-            return ['success' => 'Le lien d\'activation du compte a été envoyé'];
-        } catch (Exception $e) {
-            return ['error' => "Le lien n'a pas pu être envoyé. Mailer Error: {$phpmailer->ErrorInfo}"];
-        }
     }
 }
