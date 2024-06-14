@@ -2,7 +2,6 @@
 namespace App\Controllers;
 use App\Core\Form;
 use App\Core\View;
-use App\Models\User as UserModel;
 use App\Models\Media as MediaModel;
 use App\Core\SQL;
 
@@ -40,10 +39,14 @@ class Media{
               } else {
                 $errors[] = "Erreur lors du téléchargement du média.";
               }
+            $sql = new SQL();
+            $status = $sql->getDataId("published");
+
             $media->setTitle($_POST['title']);
             $media->setDescription($_POST['description']);
             $media->setCreationDate($formattedDate);
             $media->setModificationDate($formattedDate);
+            $media->setStatus($status);
             $media->setUser($userId);
             $media->save();
             $success[] = "Le média a été ajouté";
@@ -61,75 +64,11 @@ class Media{
     public function allMedias(): void
     {
         $media = new MediaModel();
-        $medias = $media->getAllData("array");
-        $errors = [];
-        $success = [];
-        $userModel = new UserModel();
-            
-        if (isset($_GET['action']) && isset($_GET['id'])) {
-            if ($_GET['action'] === "delete") {
-                $media->delete(['id' => (int)$_GET['id']]);
-                header('Location: /dashboard/medias?message=delete-success');
-                exit;
-            }
-        }
-        
-        foreach ($medias as &$media) {
-            $userId = $media['user_id'];
-            $media['user_name'] ='';
-            if ($userId) {
-                $user = $userModel->getOneBy(['id' => $userId], 'object');
-                if ($user || $status) {
-                    $media['user_name'] = $user->getUserName();
-                }
-            }
-        }
+        $medias = $media->getAllData("object");
+
         $view = new View("Media/medias-list", "back");
         $view->assign("medias", $medias);
-        $view->assign("errors", $errors);
-        $view->assign("success", $success);
         $view->render();
     }
 
-    public function editMedia(){
-        $errors = [];
-        $success = [];
-        
-        $media = new MediaModel();
-        if (isset($_GET['id']) && $_GET['id']) {
-            $mediaId = $_GET['id'];
-            $selectedMedia = $media->getOneBy(['id' => $mediaId], 'object');
-            if ($selectedMedia) {
-                $form = new Form("EditMedia");
-                $form->setField('title', $selectedMedia->getTitle());
-                $form->setField('description', $selectedMedia->getDescription());
-                $formattedDate = date('Y-m-d H:i:s');
-                $userSerialized = $_SESSION['user'];
-                $user = unserialize($userSerialized);
-                $userId = $user->getId();
-                
-                if( $form->isSubmitted() && $form->isValid() )
-                {
-                    $media->setId($selectedMedia->getId());
-                    $media->setTitle($_POST['title']);
-                    $media->setUrl($selectedMedia->getUrl());
-                    $media->setDescription($_POST['description']);
-                    $media->setCreationDate($selectedMedia->getCreationDate());
-                    $media->setName($selectedMedia->getName());
-                    $media->setSize($selectedMedia->getSize());
-                    $media->setType($selectedMedia->getType());
-                    $media->setModificationDate($formattedDate);
-                    $media->setUser($userId);
-                    $media->save();
-                    header("Location: /dashboard/medias?message=update-success");
-                    exit; 
-                }
-            }
-        }
-        $view = new View("Media/add-media", "back");
-        $view->assign("form", $form->build());
-        $view->assign("errorsForm", $errors);
-        $view->assign("successForm", $success);
-        $view->render();
-    }
 }

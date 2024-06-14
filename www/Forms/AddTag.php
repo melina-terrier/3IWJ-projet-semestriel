@@ -23,12 +23,10 @@ class AddTag
                 "slug"=>[
                     "type"=>"text",
                     "label"=>"Slug",
-                    "max"=>255,
                 ],
                 "description"=>[
                     "type"=>"textarea",
                     "label"=>"Description",
-                    "max"=>2000,
                 ]
             ]
         ];

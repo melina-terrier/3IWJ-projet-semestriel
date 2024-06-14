@@ -15,8 +15,8 @@ class Project extends SQL
     protected $modification_date;
     protected $publication_date;
     protected $user_id;
-    // protected $tag_id;
-
+    protected $tag_id;
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -64,7 +64,6 @@ class Project extends SQL
 
     public function setSlug($slug): void
     {
-        $slug = strtolower(preg_replace('/\s+|[^\w-]/', '-', $slug));
         $this->slug = $slug;
     }
 
@@ -108,15 +107,15 @@ class Project extends SQL
         $this->user_id = $user_id;
     }
 
-    // public function getTag()
-    // {
-    //     return $this->tag_id;
-    // }
+    public function getTag()
+    {
+        return $this->tag_id;
+    }
 
-    // public function setTag($tag_id): void
-    // {
-    //     $this->tag_id = $tag_id;
-    // }
+    public function setTag($tag_id): void
+    {
+        $this->tag_id = $tag_id;
+    }
 
     public function getNbElements() {
         return $this->countElements();

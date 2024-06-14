@@ -15,7 +15,7 @@ class Security{
     {
         session_start();
         $form = new Form("Login");
-        $errorsLogin = [];
+        $errorsLogin = [];git
         $successLogin = [];
 
         $security = new CoreSecurity();

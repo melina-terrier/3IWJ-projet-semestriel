@@ -4,6 +4,9 @@ use App\Core\SQL;
 
 class SiteSetting extends SQL{
 
+<<<<<<< HEAD
+}
+=======
     protected ?int $id = null;
     protected $icon;
     protected $title;
@@ -113,3 +116,4 @@ class SiteSetting extends SQL{
 
 }
 
+>>>>>>> 0bb330b08f695036374413d2d62504ce35a61b0d

@@ -19,7 +19,7 @@ class AddComment
             $config["inputs"]["comment"] = [
                 "type"=>"textarea",
                 "min"=>2,
-                "max"=>4000,
+                "max"=>1000,
                 "label"=>"Laisser un commentaire",
                 "required"=>true,
                 "error"=>"Votre commentaire doit faire entre 2 et 1000 caractères"
@@ -28,7 +28,7 @@ class AddComment
             $config["inputs"]["comment"] = [
                 "type"=>"textarea",
                 "min"=>2,
-                "max"=>4000,
+                "max"=>1000,
                 "label"=>"Laisser un commentaire",
                 "required"=>true,
                 "error"=>"Votre commentaire doit faire entre 2 et 1000 caractères"
@@ -44,10 +44,10 @@ class AddComment
             $config["inputs"]["name"] = [
                 "type"=>"text",
                 "min"=>2,
-                "max"=>100,
+                "max"=>50,
                 "label"=>"Nom et prénom",
                 "required"=>true,
-                "error"=>"Le nom et le prénom doit faire entre 2 et 100 caractères"
+                "error"=>"Le nom et le prénom doit faire entre 2 et 50 caractères"
             ];
         }
         return $config;

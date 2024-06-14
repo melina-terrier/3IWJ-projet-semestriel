@@ -30,11 +30,6 @@ class AddPage
                     "type"=>"text",
                     "label"=>"Slug",
                 ],
-                "submit-draft"=>[
-                    "label"=>"Enregistrer en tant que brouillon",
-                    "type"=>"submit",
-                    "value"=>"Sauvegarder", 
-                ],
             ]
         ];
     }

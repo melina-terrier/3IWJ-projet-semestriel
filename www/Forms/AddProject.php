@@ -60,11 +60,6 @@ class AddProject
                     "label"=>"Catégorie du projet",
                     "option"=>$formattedTags, 
                 ],
-                "submit-draft"=>[
-                    "label"=>"Enregistrer en tant que brouillon",
-                    "type"=>"submit",
-                    "value"=>"Sauvegarder", 
-                ],
             ],
         ];
     }
