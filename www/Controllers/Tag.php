@@ -13,7 +13,7 @@ class Tag{
     public function allTags(): void
     {
         $tag = new TagModel();
-        $tags = $tag->getAllData("object");
+        $tags = $tag->getAllData();
         $errors = [];
         $success = [];
         if (isset($_GET['action']) && isset($_GET['id'])) {
@@ -23,7 +23,7 @@ class Tag{
                 exit;
             }
         }
-        $projectCounts = []; // Use plural for clarity (storing multiple counts)
+        $projectCounts = [];
         // foreach ($tags as $tag) {
         //     $tagId = $tag->getId();
         //     if ($tagId !== null) {
@@ -35,7 +35,7 @@ class Tag{
         $view = new View("Tag/tags-list", "back");
         $view->assign("errors", $errors);
         $view->assign("projectCounts", $projectCounts);
-        $view->assign("success", $success);
+        $view->assign("successes", $success);
         $view->assign("tags", $tags);
         $view->render();
     }

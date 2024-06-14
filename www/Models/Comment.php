@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+
 use App\Core\SQL;
 
 class Comment extends SQL
@@ -12,8 +13,8 @@ class Comment extends SQL
     protected $name;
     protected $status;
     protected int $project_id;
-    protected $creation_date;
-    protected $modification_date;
+    protected ?string $creation_date;
+    protected ?string $modification_date;
 
     public function getId()
     {

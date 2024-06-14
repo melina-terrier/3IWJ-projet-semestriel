@@ -6,12 +6,11 @@ use App\Controllers\Error;
 use App\Controllers\Main;
 use App\Controllers\Security;
 use App\Models\User;
+use App\Models\Setting;
 
 use App\Controllers\Page;
 use App\Controllers\Project;
 use App\Controllers\User as UserController;
-
-date_default_timezone_set('Europe/Paris');
 
 //Autoloader
 spl_autoload_register("App\myAutoloader");
@@ -37,7 +36,16 @@ function myAutoloader($class){
     }
 }
 
-
+$setting = new Setting();
+$setting = $setting->getOneBy(['id'=>1]);
+if ($setting){
+    $timezone = $setting['tmezone'];
+    if ($timezone){
+        date_default_timezone_set($timezone);
+    }
+} else {
+    date_default_timezone_set('Europe/paris');
+}
 
 
 // if (!file_exists('./config.php')) {

@@ -30,6 +30,24 @@ class Setting
             ];
         }
 
+        $timezones = \DateTimeZone::listIdentifiers();
+        $timezone = [];
+        $timezone[] = ["id"=>"défaut", "name"=>"Défaut"];
+        if (!empty($timezones)) {
+        foreach ($timezones as $singleTimezone) {
+            $timezone[] = [
+            "id" => strtolower($singleTimezone),
+            "name" => $singleTimezone,
+            ];
+        }
+        } else {
+        $timezone[] = [
+            "id" => '0',
+            "name" => 'Aucune timezone',
+            "selected" => true,
+        ];
+        }
+
         return [
             "config" => [
                 "action" => "",
@@ -37,85 +55,79 @@ class Setting
                 "submit" => "Enregistrer"
             ],
             "inputs" => [
-                "icon" => [
-                    "type" => "file",
-                    "label" => "",
-                    "required" => true,
-                    "error" => ""
-                ],
                 "title" => [
                     "type" => "text",
                     "min" => 2,
-                    "max" => 50,
+                    "max" => 255,
                     "label" => "Titre du site",
                     "required" => true,
-                    "error" => ""
+                    "error" => "Le nom du site est requis et dois faire entre 2 et 255 caractères",
+                    "part" => "Information du site web"
                 ],
                 "slogan" => [
                     "type" => "text",
                     "min" => 2,
-                    "max" => 50,
-                    "label" => "Slogan du site",
-                    "required" => true,
-                    "error" => ""
-                ],
-                "description" => [
-                    "type" => "textarea",
-                    "min" => 2,
-                    "max" => 255,
-                    "label" => "Description du site",
-                    "required" => true,
-                    "error" => ""
-                ],
-                "logo" => [
-                    "type" => "file",
-                    "label" => "Logo du site",
-                    "required" => false,
-                    "error" => ""
+                    "max" => 500,
+                    "label" => "Slogan",
+                    "error" => "Le slogan doit faire entre 2 et 500 caractères"
                 ],
                 "timezone" => [
                     "type" => "select",
-                    "label" => "choisir le Fuseau horaire",
-                    "options" => \DateTimeZone::listIdentifiers(),
-                    "required" => true,
-                    "error" => ""
+                    "label" => "Fuseau horaire",
+                    "option" => $timezone,
                 ], 
                 "homepage" => [
                     "type" => "select",
-                    "label" => "Sélectionner la page d'accueil",
+                    "label" => "Page d'accueil",
                     "required" => true,
                     "option" => $formattedPages,
+                    "error" => "La page d'accueil est requise"
+                ],
+                "icon" => [
+                    "type" => "file",
+                    "label" => "Favicon",
+                    "accept"=>  "image/png, image/jpeg, image/svg",
+                    "error" => "Le format du fichier n'est pas pris en compte", 
+                    "part" => "Apparence du site web"
+                ],
+                "logo" => [
+                    "type" => "file",
+                    "label" => "Logo",
                     "error" => ""
                 ],
                 "primary_color" => [
                     "type" => "color",
-                    "label" => "Sélectionner la couleur principale",
-                    "error" => ""
+                    "label" => "Couleur principale",
                 ],
                 "secondary_color" => [
                     "type" => "color",
-                    "label" => "Sélectionner une deuxième couleur",
-                    "error" => ""
+                    "label" => "Couleur secondaire",
                 ],
                 "accent_color" => [
                     "type" => "color",
-                    "label" => "Sélectionner une couleur accentué",
-                    "error" => ""
+                    "label" => "Couleur d'accentuation",
                 ],
                 "primary_font" => [
                     "type" => "select",
-                    "label" => "Choisir la police pour les titres",
+                    "label" => "Police des titres",
                     "options" => "",
-                    "required" => true,
-                    "error" => ""
                 ], 
                 "secundary_font" => [
                     "type" => "select",
-                    "label" => "Choisir la police pour le texte",
+                    "label" => "Police du texte",
                     "options" => "",
-                    "required" => true,
-                    "error" => ""
                 ], 
+                "menu" => [
+                    "type" => "text",
+                    "label" => "Menu principal",
+                    "required" => true,
+                    "error" => "Le menu principal est requis",
+                    "part" => "Menus du site web"
+                ],
+                "footer" => [
+                    "type" => "text",
+                    "label" => "Footer",
+                ],
             ]
         ];
     }

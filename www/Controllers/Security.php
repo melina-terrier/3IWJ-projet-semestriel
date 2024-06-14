@@ -49,7 +49,6 @@ class Security{
                         $roleModel = new RoleModel();
                         $role = $roleModel->getOneBy(['role' => 'admin'], 'object');
                         $roleId = $role->getId();
-
                         if ($user->getRole() === $roleId) {
                             header("Location: /dashboard");
                         } else {
@@ -85,11 +84,6 @@ class Security{
         $form = new Form("Register");
         $errors = [];
         $success = [];
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 416b98d (Intégration des pages)
         $roles = new RoleModel();
         $role = $roles->getOneBy(["role"=>"user"], 'object');
         $roleId = $role->getId();

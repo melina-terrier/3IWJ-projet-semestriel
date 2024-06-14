@@ -4,7 +4,7 @@ namespace App\Controllers;
 use App\Core\View;
 use App\Core\SQL;
 use App\Core\Form;
-use App\Models\Project;
+use App\Models\Project as ProjectModel;
 use App\Models\Media;
 use App\Models\Comment;
 use App\Models\Page;
@@ -75,7 +75,7 @@ class User
         $view = new View("User/users-list", "back");
         $view->assign("users", $allUsers);
         $view->assign("errors", $errors);
-        $view->assign("success", $success);
+        $view->assign("successes", $success);
         $view->render();
     }
 
@@ -154,6 +154,9 @@ class User
         $success = [];
 
         $userSerialized = null;
+
+        session_start();
+
         if (isset($_SESSION['user'])) {
             $userSerialized = unserialize($_SESSION['user']);
         }
@@ -162,6 +165,9 @@ class User
             $errors[] = "Utilisateur non trouvé.";
         }
 
+        $userId = $userSerialized->getId();
+        $userModel = $user->getOneBy(['id' => $userId]);
+        
         $form = new Form("EditUser");
         $form->setField('firstname', $userSerialized->getFirstname());
         $form->setField('lastname', $userSerialized->getLastname());
@@ -169,19 +175,52 @@ class User
         
         if( $form->isSubmitted() && $form->isValid() )
         {
+            $user->setDataFromArray($userModel);
             $formattedDate = date('d/m/Y H:i:s');
             $user->setLastname($_POST["lastname"]);
             $user->setFirstname($_POST["firstname"]);
             $user->setEmail($_POST["email"]);
-            // $user->setRole($_POST["role"]);
+
+            $media = new Media();
+            if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+                $mediaFile = $_FILES['photo'];
+                $fileName = $mediaFile['name']; 
+                $fileSize = $mediaFile['size'];
+                $fileType = $mediaFile['type']; 
+                $tmpName = $mediaFile['tmp_name'];                
+                $destinationPath = '../Public/uploads/users/' . $fileName;
+                if (move_uploaded_file($tmpName, $destinationPath)) {
+                    $media->setType($fileType);
+                    $media->setSize($fileSize);
+                    $media->setName($fileName);
+                    $media->setUrl('/uploads/users/'. $fileName); 
+                } else {
+                    $errors[] = "Erreur lors du téléchargement du média.";
+                }
+                $media->setTitle($fileName);
+                $media->setDescription('Photo de profil de l\'utilisateur');
+                $media->setCreationDate($formattedDate);
+                $media->setModificationDate($formattedDate);
+                $media->setUser($userId);
+                $media->save();
+                $user->setPhoto('/uploads/users/'. $fileName);
+            }
+            $user->setBirthday($_POST["birthday"]);
+            $user->setOccupation($_POST["occupation"]);
+            $user->setCountry($_POST["country"]);
+            $user->setCity($_POST["city"]);
+            $user->setWebsite($_POST["website"]);
+            $user->setLink($_POST["link"]);
+            $user->setDescription($_POST["description"]);
+            $user->setExperience($_POST["experience"]);
+            $user->setStudy($_POST["study"]);
+            $user->setCompetence($_POST["competence"]);
+            $user->setInterest($_POST["interest"]);
             $user->setModificationDate($formattedDate);
-            $user->setStatus(0);
-            $user->setCreationDate($userSerialized->getCreationDate());
-            // $user->setActivationToken($userData->getActivationToken());
             $user->save();
             // Redirect after successful creation (optional success message)
-            header("Location: /dashboard/users?message=update-success");
-            exit; 
+            // header("Location: /dashboard/users?message=update-success");
+            // exit; 
             
         }
         $view = new View("User/edit-user", "back");
@@ -209,13 +248,27 @@ class User
             }
 
             if ($routeFound) {
+                $project = new ProjectModel();
+                $media = new Media();
+                $projects = $project->getAllDataWithWhere(['user_id'=>$user['id']]);
+                $medias = $media->getOneBy(['url'=>$user['photo']]);
                 $view = new View("Main/user", "front");
                 $view->assign("user", $user);
+                $view->assign("media", $medias);
+                $view->assign("projects", $project);
                 $view->render(); 
             }
         } else if($requestUrl === '/profiles' || $requestUrl === '/profiles//') {
-            $users = $db->getAllData();      
+            $users = $db->getAllDataWithWhere(['status'=>1]);      
             $view = new View("Main/users", "front");
+            $media = new Media();
+            foreach ($users as &$user){
+                $user['photoDescription'] ='';
+                $medias = $media->getOneBy(['url'=>$user['photo']]);
+                if($medias){
+                    $user['photoDescription'] = $medias['description'];
+                }
+            }
             $view->assign("users", $users);
             $view->render();
         }else {

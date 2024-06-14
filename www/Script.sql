@@ -20,9 +20,9 @@ CREATE TABLE {prefix}_status (
 );
 
 INSERT INTO {prefix}_status (status) VALUES
-  ('published'),
-  ('deleted'),
-  ('draft');
+  ('Publié'),
+  ('Supprimé'),
+  ('Brouillon');
 
 
 CREATE SEQUENCE {prefix}_role_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
@@ -33,8 +33,8 @@ CREATE TABLE {prefix}_role (
 );
 
 INSERT INTO {prefix}_role (role) VALUES
-  ('admin'),
-  ('user');
+  ('Administrateur'),
+  ('Editeur');
 
 CREATE SEQUENCE {prefix}_user_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE {prefix}_user (
@@ -56,7 +56,6 @@ CREATE TABLE {prefix}_user (
 	CONSTRAINT fk_user_role FOREIGN KEY (id_role) REFERENCES {prefix}_role(id)
 );
 
-
 CREATE SEQUENCE {prefix}_tag_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE {prefix}_tag (
 	id INTEGER DEFAULT nextval('{prefix}_tag_id_seq') NOT NULL,
@@ -69,9 +68,6 @@ CREATE TABLE {prefix}_tag (
 	PRIMARY KEY (id),
 	CONSTRAINT fk_tag_user FOREIGN KEY (user_id) REFERENCES {prefix}_user(id)
 );
-
-
-
 
 CREATE SEQUENCE {prefix}_media_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE {prefix}_media (
@@ -105,8 +101,6 @@ CREATE TABLE {prefix}_project (
 	CONSTRAINT fk_project_status FOREIGN KEY (status_id) REFERENCES {prefix}_status(id)
 );
 
-
-
 CREATE SEQUENCE {prefix}_comment_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE {prefix}_comment (
 	id					INTEGER DEFAULT nextval('{prefix}_comment_id_seq') NOT NULL,
@@ -137,4 +131,24 @@ CREATE TABLE {prefix}_page (
 	PRIMARY KEY (id),
 	CONSTRAINT fk_page_user FOREIGN KEY (user_id) REFERENCES {prefix}_user(id),
 	CONSTRAINT fk_page_status FOREIGN KEY (status_id) REFERENCES {prefix}_status(id)
+)
+
+CREATE SEQUENCE {prefix}_setting_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
+CREATE TABLE {prefix}_setting
+(
+    id 						Integer DEFAULT nextval('{prefix}_setting_id_seq') NOT NULL,
+    icon 					VARCHAR(255),
+    title 					VARCHAR(255) NOT NULL,
+	slogan 					TEXT,
+    logo 					VARCHAR(255),
+	timezone 				VARCHAR(255),
+	homepage 				VARCHAR(255),
+	primary_color 			VARCHAR(255),
+	secondary_color 		VARCHAR(255),
+	accent_color 			VARCHAR(255),
+	primary_font 			VARCHAR(255),
+	secundary_font 			VARCHAR(255),
+    modification_date		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    PRIMARY KEY (id)
 )

@@ -1,21 +1,22 @@
-<?php if (!empty($errors)): ?>
-    <div class="error">
-        <?php foreach ($errors as $error): ?>
-            <p class="text"><?php echo htmlspecialchars($error); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+<header>
 
-<?php if (!empty($success)): ?>
-    <div class="success">
-        <?php foreach ($success as $message): ?>
-            <p class="text"><?php echo htmlspecialchars($message); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+    <?php
+    if ($errors) {
+      echo "<ul>"; 
+      foreach ($errors as $error){
+          echo "<li>$error</li>";
+      }
+      echo "</ul>";
+    } else if ($successes) {
+      echo "<ul>"; 
+      foreach ($successes as $success){
+          echo "<li>$success</li>";
+      }
+      echo "</ul>";
+    }
+    ?>
 
-
-    <h3>Catégories</h3>
+    <h1>Catégories</h1>
 
     <?php
     if (isset($_GET['message']) && $_GET['message'] === 'success') {
@@ -29,79 +30,62 @@
 
     <a href="/dashboard/add-tag">Ajouter une catégorie</a>
 
-    <section>
-        <table id="tagTable">
-            <thead>
+</header>
+
+<section>
+
+  <table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Slug</th>
+            <th>Description</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        if ($tags) {
+          foreach ($tags as $tag) {
+            $tagId = $tag['id'];
+            $tagName = $tag['name'];
+            $tagDescription = $tag['description'];
+            $tagSlug = $tag['slug'];
+            $projectCount = "";
+
+            foreach($projectCounts as $project){
+              if ($tagId == $project['id']){
+                $projectCount = $project["projectCount"];
+              }
+            }
+                                              
+            echo "
                 <tr>
-                    <th>Nom</th>
-                    <th>Slug</th>
-                    <th>Description</th>
-                    <th>Total</th>
-                    <th>Actions</th>
+                    <td>$tagName</td>
+                    <td>$tagSlug</td>
+                    <td>$tagDescription</td>
+                    <td>$projectCount</td>
+                    <td>
+                        <a href='/dashboard/edit-tag?id=$tagId'>Modifier</a>
+                        <a href='/dashboard/tags?action=delete&id=$tagId' onclick='return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');'>
+                            Supprimer
+                        </a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php
-                    if (isset($this->data['tags'])) {
-                        foreach ($this->data['tags'] as $tag) {
-                            
-                                $tagId = $tag->getId();
-                                $tagName = $tag->getName();
-                                $tagDescription = $tag->getDescription();
-                                $tagSlug = $tag->getSlug();
-                                $projectCount = "";
-
-                                foreach($projectCounts as $project){
-                                  if ($tagId == $project['id']){
-                                    $projectCount = $project["projectCount"];
-                                  }
-                                }
-                                                               
-                                echo "
-                                    <tr>
-                                        <td>$tagName</td>
-                                        <td>$tagSlug</td>
-                                        <td>$tagDescription</td>
-                                        <td>$projectCount</td>
-                                        <td>
-                                            <a href='/dashboard/edit-tag?id=$tagId'>Modifier</a>
-                                            <a href='/dashboard/tags?action=delete&id=$tagId' onclick='return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');'>
-                                                Supprimer
-                                            </a>
-                                        </td>
-                                    </tr>
-                                ";
-                        }
-                    }
-                    ?>
-            </tbody>
-        </table>
-    </section>
-
-
-    
-<script>
-
-$(document).ready(function() {
-    // Initialize DataTables for published table
-    var publishedTable = $('#tagTable').DataTable({
-      "rowCallback": function(row, data, index) {
-        if (index % 2 === 0) {
-          $(row).css("background-color", "white");
-        } else {
-          $(row).css("background-color", "");
-        }
-      },
-      "drawCallback": function(settings) {
-        var rows = publishedTable.rows({ page: 'current' }).nodes();
-        $(rows).each(function(index) {
-          if (index % 2 === 0) {
-            $(this).css("background-color", "white");
-          } else {
-            $(this).css("background-color", "");
+            ";
           }
-        });
-      }
-    });
+        }
+        ?>
+    </tbody>
+  </table>
+</section>
+ 
+<script>
+$(document).ready( function () {
+  $('table').DataTable({
+    order: [[ 3, 'desc' ], [ 0, 'asc' ]],
+    pagingType: 'simple_numbers'
+  });
 });
 </script>

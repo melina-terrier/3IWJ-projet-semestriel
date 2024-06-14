@@ -7,14 +7,46 @@ use App\Models\Media;
 use App\Models\Comment;
 use App\Models\Project;
 use App\Models\Tag;
+use App\Models\Setting;
+use App\Models\Status;
 class Main
 {
     public function home()
     {
-        //Appeler un template Front et la vue Main/Home
-        $view = new View("Main/home", "front");
-        //$view->setView("Main/Home");
-        //$view->setTemplate("Front");
+        $view = new View("Main/page", "front");
+        $setting = new Setting();
+        $settingId = $setting->getOneBy(['id' => 1], 'object');
+        if ($settingId){
+            $homepageId = $settingId->getHomepage();
+            $page = new Page();
+            $homepage = $page->getOneBy(['id' => $homepageId]);
+            if (!empty($homepage)) {
+                $title = $homepage["title"];
+                $content = $homepage["content"];
+            } 
+            $view->assign("content", $content);
+            $view->assign("title", $title);
+        } else {
+            $project = new Project();
+            $statusModel = new Status();
+            $userModel = new User();
+            $status = $statusModel->getOneBy(["status" => "published"], 'object');
+            $publishedStatusId = $status->getId();
+            $projects = $project->getAllDataWithWhere(['status_id' => $publishedStatusId]);
+            foreach ($projects as &$project) {
+                $userId = $project['user_id'];
+                $project['username'] ='';
+                $project['userSlug'] ='';
+                if ($userId) {
+                    $user = $userModel->getOneBy(['id' => $userId], 'object');
+                    if ($user) {
+                        $project['username'] = $user->getUserName();
+                        $project['userSlug'] = $user->getSlug();
+                  }
+                }
+              }
+            $view->assign("projects", $projects);
+        }
         $view->render();
     }
 

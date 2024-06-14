@@ -25,7 +25,6 @@ class AddPage
                     "id"=>"content",
                     "label"=>"Contenu",
                     "min"=>2,
-                    "required"=>true,
                     "error"=>"Le contenu est requis et doit avoir au minimum 2 caractères",
                 ],
                 "slug"=>[

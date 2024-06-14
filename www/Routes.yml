@@ -11,11 +11,12 @@
 
 /edit-user:
   Controller: "User"
-  Action: "updateUser"
+  Action: "editUser"
 
 /show-user:
   Controller: "User"
   Action: "showUser"
+
 # USER
 /dashboard/users:
   Controller: "User"
@@ -162,7 +163,6 @@
 /activate-account:
   Controller: "Security"
   Action: "activateAccount"
-
 
 /logout:
   Controller: "Security"

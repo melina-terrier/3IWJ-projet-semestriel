@@ -187,7 +187,7 @@ class Project{
         $view = new View("Project/projects-list", "back");
         $view->assign("projects", $allProjects);
         $view->assign("errors", $errors);
-        $view->assign("success", $success);
+        $view->assign("successes", $success);
         $view->render();
     }
 
@@ -227,14 +227,12 @@ class Project{
                     $tagName = $tagId->getName(); 
                 }
 
-                $formattedDate = date('Y-m-d H:i:s');
+                // $formattedDate = date('Y-m-d H:i:s');
                 if( $form->isSubmitted() && $form->isValid() )
                 {
                     $comment = new CommentModel();
 
                     $comment->setComment($_POST['comment']);
-                    $comment->setCreationDate($formattedDate);
-                    $comment->setModificationDate($formattedDate);
                     $comment->setProject($project['id']);
                     $comment->setStatus(0);
 
@@ -285,24 +283,46 @@ class Project{
             $description = $tag['description'];
 
             $projects = $db->getAllDataWithWhere(['tag_id'=>$tag['id']]);
-
-            $view = new View('Main/tag', 'front');
+            $userModel = new UserModel();
+            foreach ($projects as &$project) {
+                $userId = $project['user_id'];
+                $project['username'] ='';
+                $project['userSlug'] ='';
+                if ($userId) {
+                    $user = $userModel->getOneBy(['id' => $userId], 'object');
+                    if ($user) {
+                        $project['username'] = $user->getUserName();
+                        $project['userSlug'] = $user->getSlug();
+                  }
+                }
+            }
+            $view = new View('Main/all-projects', 'front');
             $view->assign("title", $title);
             $view->assign("description", $description);
             $view->assign("projects", $projects);
             $view->render();  
         } else if($requestUrl === '/projects' || $requestUrl === '/projects//') {
             $projects = $db->getAllDataWithWhere(['status_id' => $publishedStatusId]);
-            // Loop through projects and fetch category name for each
+            $userModel = new UserModel();
             foreach ($projects as &$project) {
-              $tagId = $project['tag_id'];
-              $project['category_name'] ='';
-              if ($tagId) {
-                $tag = $tags->getOneBy(['id' => $tagId], 'object');
-                if ($tag) {
-                  $project['category_name'] = $tag->getName(); // Add category name to project data
+            //   $tagId = $project['tag_id'];
+                $userId = $project['user_id'];
+                $project['category_name'] ='';
+                $project['username'] ='';
+                $project['userSlug'] ='';
+                if ($userId) {
+                    $user = $userModel->getOneBy(['id' => $userId], 'object');
+                    if ($user) {
+                        $project['username'] = $user->getUserName();
+                        $project['userSlug'] = $user->getSlug();
+                  }
                 }
-              }
+            //   if ($tagId) {
+            //     $tag = $tags->getOneBy(['id' => $tagId], 'object');
+            //     if ($tag) {
+            //       $project['category_name'] = $tag->getName(); // Add category name to project data
+            //     }
+            //   }
             }
         
             $view = new View("Main/all-projects", "front");

@@ -48,8 +48,13 @@ class AddProject
                     "min"=>2,
                     "id"=>"content",
                     "label"=>"Contenu",
-                    "required"=>true,
                     "error"=>"Le contenu est requis et doit avoir au minimum 2 caractères",
+                ],
+                "image"=>[
+                    "type"=>"file",
+                    "label"=>"Image mise en avant",
+                    "accept"=>"image/png, image/jpeg, image/svg",
+                    "error"=>"Le format du fichier n'est pas pris en compte"
                 ],
                 "slug"=>[
                     "type"=>"text",

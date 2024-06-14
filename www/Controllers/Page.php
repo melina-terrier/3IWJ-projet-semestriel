@@ -64,7 +64,7 @@ class Page
         $view = new View("Page/pages-list", "back");
         $view->assign("pages", $allPages);
         $view->assign("errors", $errors);
-        $view->assign("success", $success);
+        $view->assign("successes", $success);
         $view->render();
     }
 

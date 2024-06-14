@@ -7,16 +7,19 @@ class EditUser
     {
         return [
             "config"=>[
+                "enctype"=>"multipart/form-data",
                 "action"=>"",
                 "method"=>"POST",
-                "submit"=>"Sauvegarder"
+                "submit"=>"Sauvegarder",
             ],
             "inputs"=>[
                 "photo"=>[
                     "type"=>"file",
+                    "required"=>true,
                     "label"=>"Photo de profil",
                     "accept"=>"image/png, image/jpeg",
-                    "error"=>"Le format du fichier n'est pas pris en compte"
+                    "error"=>"Le format du fichier n'est pas pris en compte",
+                    "part"=>"Information de base"
                 ],
                 "lastname"=>[
                     "type"=>"text",
@@ -42,13 +45,24 @@ class EditUser
                     "max"=>320,
                     "error"=>"Veuillez entrer une adresse email valide",
                 ],
-
-                
+                "occupation"=>[
+                    "type"=>"text",
+                    "label" => "Profession",
+                    "min"=>2,
+                    "max"=>500,
+                    "error"=>"",
+                ],
                 "birthday"=>[
                     "type"=>"date",
                     "label"=>"Votre date de naissance",
                     "required"=>true,
                     "error"=>"Ce champ ne doit pas etre vide",
+                ],
+                "country"=>[
+                    "type"=>"select",
+                    "label"=>"Zone géographique",
+                    "option"=>[["id"=>"", "name"=>"Tous les pays"], ["id"=>"France", "name"=>"France"], ["id"=>"Etats-Unis", "name"=>"Etats-Unis"], ["id"=>"Belgique", "name"=>"Belgique"], ["id"=>"Allemagne", "name"=>"Allemagne"]],
+                    "error"=>"Votre pays doit faire entre 2 et 50 caractères",
                 ],
                 "city"=>[
                     "type"=>"text",
@@ -58,64 +72,56 @@ class EditUser
                     "required"=>true,
                     "error"=>"Votre ville doit faire entre 2 et 50 caractères",
                 ],
-                "country"=>[
+                "website"=>[
                     "type"=>"text",
                     "min"=>2,
-                    "max"=>50,
-                    "label"=>"Pays",
+                    "max"=>255,
+                    "label"=>"Lien vers votre portfolio personnel",
                     "required"=>true,
-                    "error"=>"Votre pays doit faire entre 2 et 50 caractères",
-                ],
-                "occupation"=>[
-                    "type"=>"text",
-                    "label" => "Profession",
-                    "min"=>2,
-                    "max"=>500,
-                    "error"=>"",
-                ],
-                "description"=>[
-                    "type"=>"text",
-                    "min"=>2,
-                    "max"=>1000,
-                    "label"=>"Description",
-                    "error"=>"Ce champ doit faire entre 2 et 1000 caractères",
+                    "error"=>"Votre ville doit faire entre 2 et 50 caractères",
+                    "part"=>"Sur le web",
                 ],
                 "link"=>[
                     "type"=>"text",
                     "min"=>2,
                     "max"=>255,
-                    "label"=>"Votre parcours académique",
+                    "label"=>"Lien vers vos réseaux sociaux",
                     "required"=>true,
                     "error"=>"ce champ doit faire entre 2 et 255 caractères",
                 ],
-                "experience"=>[
-                    "type"=>"text",
+
+                "description"=>[
+                    "type"=>"textarea",
                     "min"=>2,
-                    "max"=>255,
+                    "label"=>"Description",
+                    "part"=>"A propos de vous",
+                    "error"=>"Ce champ doit faire entre 2 et 1000 caractères",
+                ],
+                
+                "experience"=>[
+                    "type"=>"textarea",
+                    "min"=>2,
                     "label"=>"Votre expérience professionnelle",
                     "required"=>true,
                     "error"=>"ce champ doit faire entre 2 et 255 caractères",
                 ],
                 "study"=>[
-                    "type"=>"text",
+                    "type"=>"textarea",
                     "min"=>2,
-                    "max"=>255,
                     "label"=>"Votre parcours académique",
                     "required"=>true,
                     "error"=>"ce champ doit faire entre 2 et 255 caractères",
                 ],
                 "competence"=>[
-                    "type"=>"text",
+                    "type"=>"textarea",
                     "min"=>2,
-                    "max"=>255,
                     "label"=>"Vos compétences",
                     "required"=>true,
                     "error"=>"ce champ doit faire entre 2 et 255 caractères",
                 ],  
                 "interest"=>[
-                    "type"=>"text",
+                    "type"=>"textarea",
                     "min"=>2,
-                    "max"=>255,
                     "label"=>"Vos intérets",
                     "required"=>true,
                     "error"=>"ce champ doit faire entre 2 et 255 caractères",

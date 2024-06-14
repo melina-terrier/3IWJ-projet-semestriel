@@ -12,20 +12,14 @@ class Comment{
     public function allComments(): void
     {
         $comment = new CommentModel();
-        $comments = $comment->getAllData("object");
-
-        $projects = []; // Initialize as an empty array
-        foreach ($comments as $comment) {
-            $projectId = $comment->getProject(); // Assuming a method to get project ID
-            $projectModel = new ProjectModel();
-            $project = $projectModel->getOneBy(['id' => $projectId], 'object');
-            $projectName = $project->getTitle();
-            $projects[] = ["id" => $projectId, "title" => $projectName];
-        }
+        $comments = $comment->getAllData();
+        $successes = [];
+        $errors = [];
 
         if (isset($_GET['action']) && isset($_GET['id'])) {
             if ($_GET['action'] === "delete") {
                 $currentComment = $comment->getOneBy(['id' => $_GET['id']], 'object');
+                print_r($currentComment);
                 $currentComment->setStatus(-2);
                 $currentComment->save();
                 header('Location: /dashboard/comments?message=delete-success');
@@ -34,7 +28,7 @@ class Comment{
                 $currentComment = $comment->getOneBy(['id' => $_GET['id']], 'object');
                 $currentComment->setStatus(1);
                 $currentComment->save();
-                header('Location: /dashboard/comments?message=approuved-succes');
+                header('Location: /dashboard/comments?message=approuved-success');
                 exit;
             } else if ($_GET['action'] === "disapprouved") {
                 $currentComment = $comment->getOneBy(['id' => $_GET['id']], 'object');
@@ -54,9 +48,20 @@ class Comment{
                 exit;
             }
         }
+
+        foreach ($comments as &$comment) {
+            $comment['project'] = '';
+            $projectId = $comment['project_id'];
+            $projectModel = new ProjectModel();
+            $project = $projectModel->getOneBy(['id' => $projectId], 'object');
+            $projectName = $project->getTitle();
+            $comment['project'] = $projectName;
+        }
+
         $view = new View("Comment/comments-list", "back");
         $view->assign("comments", $comments);
-        $view->assign("projects", $projects);
+        $view->assign("errors", $errors);
+        $view->assign("successes", $successes);
         $view->render();
     }
 }
