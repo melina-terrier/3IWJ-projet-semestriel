@@ -1,19 +1,37 @@
-<h2>Se connecter</h2>
 
-<?= $form ?>
+<section>
+    <header>
+        <h1>Connexion</h1>
+    </header>
 
-<?php if ($errorsForm): ?>
-    <ul class="error-messages">  <?php foreach ($errorsForm as $errorMessage): ?>
-            <li><?= $errorMessage; ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+    <article>
+        <?php
 
-<?php if ($successForm): ?>
-    <ul class="success-messages">  <?php foreach ($successForm as $successMessage): ?>
-            <li><?= $errorMessage; ?></li> <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+            if($successes){
+                echo "<ul>"; 
+                foreach ($successes as $success){
+                    echo "<li>$success</li>";
+                }
+                echo "</ul>";
+            }
 
-<p class="text">Pas encore de compte ? <a href="/register">Inscrivez-vous</a></p>
-<p class="text">Mot de passe oublié ? <a href="/request-password">Cliquez ici</a></p>
+            echo $form;
+
+            if ($errors) {
+                echo "<ul>"; 
+                foreach ($errors as $error){
+                    echo "<li>$error</li>";
+                }
+                echo "</ul>";
+            } 
+
+        ?>
+        <a href="/request-password">Mot de passe oublié ?</a>
+        </article>
+        
+    <footer>
+        <p>Vous êtes un nouvel utilisateur ?</p>
+        <a href="/register">Créez un compte</a>
+    </footer>
+
+</section>

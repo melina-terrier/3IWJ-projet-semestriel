@@ -9,16 +9,16 @@ class RequestPassword
             "config"=>[
                 "action"=>"",
                 "method"=>"POST",
-                "submit"=>"Envoyer le lien"
+                "submit"=>"Recevoir le lien de réinitialisation"
             ],
             "inputs"=>[
                 "email"=>[
                     "type"=>"email",
                     "min"=>8,
                     "max"=>320,
-                    "label"=>"Email",
+                    "label"=>"Adresse e-mail",
                     "required"=>true,
-                    "error"=>"Le format de l'email est incorrect"
+                    "error"=>"Le format de l'adresse e-mail est incorrect"
                 ]
             ]
         ];

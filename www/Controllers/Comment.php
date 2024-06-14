@@ -19,6 +19,7 @@ class Comment{
         if (isset($_GET['action']) && isset($_GET['id'])) {
             if ($_GET['action'] === "delete") {
                 $currentComment = $comment->getOneBy(['id' => $_GET['id']], 'object');
+                print_r($currentComment);
                 $currentComment->setStatus(-2);
                 $currentComment->save();
                 header('Location: /dashboard/comments?message=delete-success');

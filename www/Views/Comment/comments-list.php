@@ -84,6 +84,14 @@ function displayComments($statusName, $comments, $id) {
   
     echo "<h2>$statusName</h2>";
 
+<<<<<<< HEAD
+=======
+function displayComments($statusName, $comments, $id) {
+  echo "<section id=\"$statusName\">";
+  
+    echo "<h2>$statusName</h2>";
+
+>>>>>>> FEATURE/view
     echo "<table id=\"{$id}Comments\">";
       echo "<thead>";
         echo "<tr>";

@@ -32,4 +32,9 @@
         }
     ?>
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> FEATURE/view
 </section>

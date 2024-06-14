@@ -8,9 +8,17 @@
     <link rel="stylesheet" type="text/css" href="/Views/styles/dist/css/mainFront.css">
 </head>
 <body>
-<h3>FRONT</h3>
-<main>
-<?php include "../Views/".$this->view.".php";?>
-</main>
+
+    <header>
+
+    </header>
+
+    <main>
+        <?php include "../Views/".$this->view.".php";?>
+    </main>
+
+    <footer>
+
+    </footer>
 </body>
 </html>

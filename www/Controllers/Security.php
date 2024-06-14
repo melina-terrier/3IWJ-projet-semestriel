@@ -226,6 +226,10 @@ class Security{
         $view->assign("successes", $success);
         $view->render();
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> FEATURE/view
 
     public function sendCreateAccount($email, $activationToken) {
         $phpmailer = new PHPMailer(true); 

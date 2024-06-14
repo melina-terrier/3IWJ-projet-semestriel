@@ -99,7 +99,6 @@ function displayUsers($users) {
                 default:
                     $statusText = "Inconnu";
             }
-
             echo "
             <tr>
                 <td>$userName</td>
@@ -126,4 +125,3 @@ $(document).ready( function () {
     pagingType: 'simple_numbers'
   });
 });
-</script>

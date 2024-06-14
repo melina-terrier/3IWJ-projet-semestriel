@@ -180,6 +180,10 @@ class Form
                 $this->errors[] = $this->config["inputs"][$name]["error"];
             }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> FEATURE/view
             if (isset($this->config['inputs'][$name]['label'])){
                 if ($this->config['inputs'][$name]['label']=="Laisser un commentaire" && preg_match('/(https?|ftp):\/\/([^\s]+)/i', $dataSent)) {
                     $this->errors[] = "Les URL ne sont pas autorisés dans le commentaire.";

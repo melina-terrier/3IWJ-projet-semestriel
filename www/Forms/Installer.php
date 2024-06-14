@@ -10,16 +10,25 @@ class Installer
             "config"=> [
                 "method"=>"POST",
                 "action"=>"",
-                "submit"=>"Installer le site",
+                "submit"=>"Installer",
             ],
             "inputs"=>[
+                "site_title"=>[
+                    "type"=>"text",
+                    "min"=>2,
+                    "max"=>50,
+                    "label"=>"Titre du site",
+                    "required"=>true,
+                    "error"=>"Le titre doit faire entre 2 et 50 caractères"
+                ],
                 "lastname"=>[
                     "type"=>"text",
                     "min"=>2,
                     "max"=>50,
                     "label"=>"Nom",
                     "required"=>true,
-                    "error"=>"Votre nom doit faire entre 2 et 50 caractères"
+                    "error"=>"Votre nom doit faire entre 2 et 50 caractères",
+                    "part"=>"Création de votre compte d'administrateur"
                 ],
                 "firstname"=>[
                     "type"=>"text",
@@ -33,58 +42,60 @@ class Installer
                     "type"=>"email",
                     "min"=>8,
                     "max"=>320,
-                    "label"=>"Email",
+                    "label"=>"Adresse e-mail",
                     "required"=>true,
-                    "error"=>"Le format de l'email est incorrect"
+                    "error"=>"Cette adresse e-mail n'est pas valide"
                 ],
                 "password"=>[
                     "type"=>"password",
                     "label"=>"Mot de passe",
+                    "min"=>8, 
+                    "max"=>64,
                     "required"=>true,
                     "error"=>"Votre mot de passe doit faire au minimum 8 caractères avec des lettres minscules, majuscules et des chiffres"
                 ],
                 "passwordConfirm"=>[
                     "type"=>"password",
+                    "min"=>8,
+                    "max"=>64,
                     "label"=>"Confirmation du mot de passe",
                     "required"=>true,
                     "confirm"=>"password",
-                    "error"=>"Le mot de passe ne correspond pas"
+                    "error"=>"La confirmation de votre mot de passe ne correspond pas au mot de passe."
                 ],
                 "dbname"=>[
                     "type"=>"text",
-                    "min"=>"",
-                    "max"=>"",
-                    "label" => "Nom de la base de données",
+                    "min"=>2,
+                    "max"=>64,
+                    "label"=> "Nom de la base de données",
                     "required"=>true,
-                    "error"=>"Veuillez entrer le nom de la base de données",
-
+                    "error"=>"Le nom de la base de données est requis et doit faire entre 2 et 64 caractères",
+                    "part"=>"Information de la base de donnée",
                 ],
                 "dbuser"=>[
                     "type"=>"text",
-                    "min"=>"",
-                    "max"=>"",
-                    "label" => "Utilisateur de la base de données",
+                    "min"=>2,
+                    "max"=>32,
+                    "label" => "Identifiant",
                     "required"=>true,
-                    "error"=>"Veuillez entrer l'utilisateur de la base de données",
-
+                    "error"=>"L'identifiant est requis et doit faire entre 2 et 32 caractères",
                 ],
                 "dbpwd"=>[
-                    "type"=>"password",
-                    "min"=>"",
-                    "max"=>"",
-                    "label" => "Mot de passe de la base de données",
+                    "type"=>"text",
+                    "min"=>2,
+                    "max"=>64,
+                    "label" => "Mot de passe",
                     "required"=>true,
-                    "error"=>"Veuillez entrer le mot de passe de la base de données",
-
+                    "error"=>"Le mot de passe de la base de données est requis et doit faire entre 2 et 64 caractères",
                 ],
-                // "table_prefix"=>[
-                //     "type"=>"text",
-                //     "min"=>"",
-                //     "max"=>"",
-                //     "label" => "Préfixe pour les tables (ex: mysite_)",
-                //     "required"=>true,
-                //     "error"=>"Veuillez entrer un préfixe pour les tables de la base de données",
-                // ],
+                "table_prefix"=>[
+                    "type"=>"text",
+                    "min"=>2,
+                    "max"=>25,
+                    "label"=>"Préfixe des tables",
+                    "required"=>true,
+                    "error"=>"Le préfixe est requis et doit faire entre 2 et 25 caractères",
+                ],
             ]
         ];
     }
