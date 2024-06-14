@@ -8,19 +8,27 @@ class User extends SQL
     protected string $firstname;
     protected string $lastname;
     protected string $email;
-    protected string $password;
+    protected ?string $password = null;
+    protected INT $id_role;
+    protected $slug;
     protected int $status;
     protected ?string $reset_token = null;
     protected ?string $reset_expires = null;
-    protected ?string $activation_Token = null;
+    protected ?string $activation_token = null;
     protected ?string $photo = null;
+    protected $occupation;
+    protected $birthday;
+    protected $country;
+    protected $city;
+    protected $website;
+    protected $link;
+    protected $description;
+    protected $experience;
+    protected $study;
+    protected $competence;
+    protected $interest;
     protected $creation_date;
     protected $modification_date;
-
-    public function __construct()
-    {
-        parent::__construct(); // Appel du constructeur de la classe parente SQL
-    }
 
     public function getUserName()
     {
@@ -81,6 +89,16 @@ class User extends SQL
         $this->password = $password;
     }
 
+    public function getRole(): int
+    {
+        return $this->id_role;
+    }
+
+    public function setRole($id_role): void
+    {
+        $this->id_role = $id_role;
+    }
+
     public function getStatus(): int
     {
         return $this->status;
@@ -90,8 +108,7 @@ class User extends SQL
     {
         $this->status = $status;
     }
-
-    public function getResetToken(): ?string
+    public function getResetToken(): string
     {
         return $this->reset_token;
     }
@@ -101,27 +118,26 @@ class User extends SQL
         $this->reset_token = $reset_token;
     }
 
-    public function getResetExpires(): ?string
+    public function getResetExpires(): string
     {
         return $this->reset_expires;
     }
 
-    public function setResetExpires(?string $reset_expires): void
-    {
+    public function setResetExpires(?string $reset_expires): void {
         $this->reset_expires = $reset_expires;
     }
 
-    public function getActivationToken(): ?string
+    public function getActivationToken(): string
     {
-        return $this->activation_Token;
+        return $this->activation_token;
     }
 
-    public function setActivationToken(?string $activationToken): void
+    public function setActivationToken(?string $activationtoken): void
     {
-        $this->activation_Token = $activationToken;
+        $this->activation_token = $activationtoken;
     }
-
-    public function getPhoto(): ?string
+    
+    public function getPhoto(): string
     {
         return $this->photo;
     }
@@ -150,6 +166,129 @@ class User extends SQL
     {
         $this->modification_date = $modification_date;
     }
+
+    public function setSlug()
+    {
+        $fullName = $this->getUserName();
+        $slug = mb_strtolower(preg_replace('/\s+/', '-', trim($fullName)));
+        $slug = preg_replace('/[^a-zA-Z0-9-]/', '', $slug);
+        $this->slug = $slug;
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    public function getOccupation(): string
+    {
+        return $this->occupation;
+    }
+
+    public function setOccupation(?string $occupation): void
+    {
+        $this->occupation = $occupation;
+    }
+    public function getBirthday(): string
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday(?string $birthday): void
+    {
+        $this->birthday = $birthday;
+    }
+
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): void
+    {
+        $this->country = $country;
+    }
+
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): void
+    {
+        $this->city = $city;
+    }
+
+    public function getWebsite(): string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): void
+    {
+        $this->website = $website;
+    }
+
+    public function getLink(): string
+    {
+        return $this->link;
+    }
+
+    public function setLink(?string $link): void
+    {
+        $this->link = $link;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getExperience(): string
+    {
+        return $this->experience;
+    }
+
+    public function setExperience(?string $experience): void
+    {
+        $this->experience = $experience;
+    }
+
+    public function getStudy(): string
+    {
+        return $this->study;
+    }
+
+    public function setStudy(?string $study): void
+    {
+        $this->study = $study;
+    }
+
+    public function getCompetence(): string
+    {
+        return $this->competence;
+    }
+
+    public function setCompetence(?string $competence): void
+    {
+        $this->competence = $competence;
+    }
+
+    public function getInterest(): string
+    {
+        return $this->interest;
+    }
+
+    public function setInterest(?string $interest): void
+    {
+        $this->interest = $interest;
+    }
+
 
     public function getUsers()
     {

@@ -9,6 +9,14 @@
   Security: true
   # Role: [admin]
 
+/edit-user:
+  Controller: "User"
+  Action: "editUser"
+
+/show-user:
+  Controller: "User"
+  Action: "showUser"
+
 # USER
 /dashboard/users:
   Controller: "User"
@@ -22,13 +30,19 @@
   Security: true
   # Role: [admin]
 
-/dashboard/profile:
+/dashboard/view-user:
   Controller: "User"
   Action: "viewUser"
   Security: true
   # Role: [admin]
 
 /dashboard/edit-user:
+  Controller: "User"
+  Action: "addUser"
+  Security: true
+  # Role: [user, admin]
+
+/profile:
   Controller: "User"
   Action: "editUser"
   Security: true
@@ -47,10 +61,22 @@
   Security: true
   # Role: [admin]
 
+/dashboard/edit-project:
+  Controller: "Project"
+  Action: "editProject"
+  Security: true
+  # Role: [admin]
+
 # PAGE
 /dashboard/add-page:
   Controller: "Page"
   Action: "addPage"
+  Security: true
+  # Role: [admin]
+
+/dashboard/edit-page:
+  Controller: "Page"
+  Action: "editPage"
   Security: true
   # Role: [admin]
 
@@ -66,9 +92,9 @@
   Security: true
   # Role: [admin]
 
-/dashboard/add-comment:
-  Controller: "Comment"
-  Action: "addComment"
+# /dashboard/add-comment:
+#   Controller: "Comment"
+#   Action: "addComment"
   # Security: true
   # Role: "admin"
 
@@ -78,6 +104,11 @@
   Action: "addTag"
   Security: true
   # Role: "admin"
+
+/dashboard/edit-tag:
+  Controller: "Tag"
+  Action: "editTag"
+  Security: true
 
 /dashboard/tags:
   Controller: "Tag"
@@ -98,6 +129,11 @@
   Security: true
   # Role: "admin"
 
+/dashboard/edit-media:
+  Controller: "Media"
+  Action: "editMedia"
+  Security: true
+  # Role: "admin"
 
 # SETTING
 /dashboard/settings:
@@ -106,12 +142,10 @@
   Security: true
   # Role: [admin]
 
-
 # INSTALLER
 /install:
   Controller: "Installer"
   Action: "Install"
-
 
 
 # USER
@@ -127,8 +161,8 @@
   Controller: "Security"
   Action: "activateAccount"
 
-
 /logout:
+  Controller: "Security"
   Action: "logout"
 
 /reset-password:
@@ -138,4 +172,3 @@
 /request-password:
   Controller: "Security"
   Action: "requestPassword"
-

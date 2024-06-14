@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Ceci est mon back</title>
-        <meta name="description" content="">
+        <title>dashboard</title>
+        <meta name="description" content="Dashboard du CMS">
 
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="https://cdn.tiny.cloud/1/stqcjxqqgksnn9nkz2g0l1zda7dcsz9o5smv1jpbkbydtlis/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
@@ -12,12 +12,20 @@
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
         
     </head>
-    <body>
-        
+    <body>        
         <header id="header" class="back-office-header">
+
             <nav>
                 <ul>
-                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="">Mes notifications</a></li>
+                    <li><a href="/dashboard/profile">Mon profil</a></li>
+                    <li><a href="/logout">Se déconnecter</a></li>
+                </ul>
+            </nav>
+
+            <nav>
+                <ul>
+                    <li><a href="/dashboard">Accueil</a></li>
                     <li><a href="#">Pages</a>
                         <ul>
                             <li><a href="/dashboard/pages">Toutes les pages </a></li>
@@ -28,12 +36,12 @@
                         <ul>
                             <li><a href="/dashboard/projects">Tous les projets </a></li>
                             <li><a href="/dashboard/add-project">Ajouter un projet</a></li>
-                            <li><a href="/dashboard/tags">Catégorie du projet</a></li>
+                            <li><a href="/dashboard/tags">Catégories</a></li>
                         </ul>
                     </li>
                     <li><a href="#">Médias</a>
                         <ul>
-                            <li><a href="/dashboard/medias">Tout les médias </a></li>
+                            <li><a href="/dashboard/medias">Médiathèque </a></li>
                             <li><a href="/dashboard/add-media">Ajouter un média</a></li>
                         </ul>
                     </li>
@@ -54,5 +62,6 @@
         <main>
             <?php include "../Views/".$this->view.".php";?>
         </main>
+
     </body>
 </html>

@@ -1,14 +1,17 @@
 <?php
 namespace App\Controllers;
 
-use App\Core\View;
 use App\Core\SQL;
+use App\Models\StatUser;
+use App\Core\View;
 use App\Models\User;
 use App\Models\Page;
 use App\Models\Media;
-use App\Models\StatUser;
 use App\Models\Comment;
 use App\Models\Project;
+use App\Models\Tag;
+use App\Models\Setting;
+use App\Models\Status;
 
 class Main
 {
@@ -19,7 +22,40 @@ class Main
     }
 
     public function home() {
-        $view = new View("Main/home", "front");
+        $view = new View("Main/page", "front");
+        $setting = new Setting();
+        $settingId = $setting->getOneBy(['id' => 1], 'object');
+        if ($settingId){
+            $homepageId = $settingId->getHomepage();
+            $page = new Page();
+            $homepage = $page->getOneBy(['id' => $homepageId]);
+            if (!empty($homepage)) {
+                $title = $homepage["title"];
+                $content = $homepage["content"];
+            } 
+            $view->assign("content", $content);
+            $view->assign("title", $title);
+        } else {
+            $project = new Project();
+            $statusModel = new Status();
+            $userModel = new User();
+            $status = $statusModel->getOneBy(["status" => "published"], 'object');
+            $publishedStatusId = $status->getId();
+            $projects = $project->getAllDataWithWhere(['status_id' => $publishedStatusId]);
+            foreach ($projects as &$project) {
+                $userId = $project['user_id'];
+                $project['username'] ='';
+                $project['userSlug'] ='';
+                if ($userId) {
+                    $user = $userModel->getOneBy(['id' => $userId], 'object');
+                    if ($user) {
+                        $project['username'] = $user->getUserName();
+                        $project['userSlug'] = $user->getSlug();
+                  }
+                }
+              }
+            $view->assign("projects", $projects);
+        }
         $view->render();
     }
 
@@ -28,55 +64,36 @@ class Main
     }
 
     public function dashboard() {
-       
-
         $user = new User();
         $page = new Page();
         $media = new Media();
         $project = new Project();
         $comment = new Comment();
+        $tag = new Tag();
 
-        $nombre_utilisateurs_inscrits = $user->getNbElements();
         $elementsCount = [
             'users' => $user->getNbElements(),
+            'pages' => $page->getNbElements(),
             'medias' => $media->getNbElements(),
             'projects' => $project->getNbElements(),
             'comments' => $comment->getNbElements(),
-            'pages' => $page->getNbElements(),
+            'tags'=>$tag->getNbElements(),
         ];
 
-        if (isset($_SESSION['user'])) {
-            $userSerialized = $_SESSION['user'];
-            $user = unserialize($userSerialized);
-            $lastname = $user->getLastname();
-            $firstname = $user->getFirstname();
-        } else {
-            $lastname = '';
-            $firstname = '';
-        }
+        $comments = $comment->getAllData();
 
-        // Initialiser le compteur si nécessaire
         if (!isset($_SESSION['nombre_visiteurs_non_inscrits'])) {
             $_SESSION['nombre_visiteurs_non_inscrits'] = 0;
         }
 
-        // Vérifier si le cookie 'visiteur_unique' n'existe pas
         if (!isset($_COOKIE['visiteur_unique'])) {
-            // Incrémenter le compteur de visiteurs non inscrits dans la session
             $_SESSION['nombre_visiteurs_non_inscrits'] += 1;
-
-            // Définir le cookie pour une durée de 30 jours
             $cookie_value = uniqid();
             setcookie('visiteur_unique', $cookie_value, time() + 3600 * 24 * 30, "/");
             $_COOKIE['visiteur_unique'] = $cookie_value; // Pour assurer que $_COOKIE contient la valeur actuelle
         }
 
-        // Récupérer le compteur depuis la session
         $nombre_visiteurs_non_inscrits = $_SESSION['nombre_visiteurs_non_inscrits'];
-
-        // var_dump($_SESSION);
-        // var_dump($_COOKIE);
-        // var_dump($nombre_visiteurs_non_inscrits);
 
         $sql = new SQL();
         $usersProjects = $sql->sql_users_projects();
@@ -88,18 +105,12 @@ class Main
             $data[] = (int)$userProject['project_count'];
         }
 
-        // Initialiser l'objet View avant de l'utiliser
         $view = new View("Main/dashboard", "back");
-
-        // Assigner les variables à la vue
         $view->assign("labels", $labels);
         $view->assign("data", $data);
+        $view->assign("comments", $comments);
         $view->assign("elementsCount", $elementsCount);
-        $view->assign("lastname", $lastname);
-        $view->assign("firstname", $firstname);
-        $view->assign("nombreUtilisateursInscrits", $nombre_utilisateurs_inscrits);
         $view->assign("nombreVisiteursNonInscrits", $nombre_visiteurs_non_inscrits);
-
         $view->render();
     }
 }
