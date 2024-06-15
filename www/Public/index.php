@@ -6,21 +6,12 @@ use App\Controllers\Error;
 use App\Controllers\Main;
 use App\Controllers\Security;
 use App\Models\User;
-<<<<<<< HEAD
-use App\Core\PageBuilder;
 use App\Models\Setting;
-=======
-use App\Models\Setting;
-
->>>>>>> FEATURE/view
 use App\Controllers\Page;
 use App\Controllers\Project;
+use App\Controllers\Install;
 
-<<<<<<< HEAD
-// Autoloader
-=======
 //Autoloader
->>>>>>> FEATURE/view
 spl_autoload_register("App\myAutoloader");
 
 function myAutoloader($class){
@@ -54,16 +45,12 @@ if ($setting){
 } else {
     date_default_timezone_set('Europe/paris');
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> FEATURE/view
-
-// if (!file_exists('./config.php')) {
-//     $controller = new App\Controller\Install();
-//     $controller->run();
-//     die();
-// }
+if (!file_exists('../config.php')) {
+    $controller = new Install();
+    $controller->install();
+    die();
+}
 
 $uri = $_SERVER["REQUEST_URI"];
 if(strlen($uri) > 1)

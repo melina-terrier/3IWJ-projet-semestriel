@@ -12,7 +12,6 @@ use App\Models\Project;
 use App\Models\Tag;
 use App\Models\Setting;
 use App\Models\Status;
-<<<<<<< HEAD
 
 class Main
 {
@@ -23,12 +22,6 @@ class Main
     }
 
     public function home() {
-=======
-class Main
-{
-    public function home()
-    {
->>>>>>> FEATURE/view
         $view = new View("Main/page", "front");
         $setting = new Setting();
         $settingId = $setting->getOneBy(['id' => 1], 'object');
@@ -46,7 +39,7 @@ class Main
             $project = new Project();
             $statusModel = new Status();
             $userModel = new User();
-            $status = $statusModel->getOneBy(["status" => "published"], 'object');
+            $status = $statusModel->getOneBy(["status" => "Publié"], 'object');
             $publishedStatusId = $status->getId();
             $projects = $project->getAllDataWithWhere(['status_id' => $publishedStatusId]);
             foreach ($projects as &$project) {
@@ -89,7 +82,6 @@ class Main
 
         $comments = $comment->getAllData();
 
-<<<<<<< HEAD
         if (!isset($_SESSION['nombre_visiteurs_non_inscrits'])) {
             $_SESSION['nombre_visiteurs_non_inscrits'] = 0;
         }
@@ -113,18 +105,12 @@ class Main
             $data[] = (int)$userProject['project_count'];
         }
 
-=======
->>>>>>> FEATURE/view
         $view = new View("Main/dashboard", "back");
         $view->assign("labels", $labels);
         $view->assign("data", $data);
         $view->assign("comments", $comments);
         $view->assign("elementsCount", $elementsCount);
-<<<<<<< HEAD
         $view->assign("nombreVisiteursNonInscrits", $nombre_visiteurs_non_inscrits);
-=======
-        $view->assign("comments", $comments);
->>>>>>> FEATURE/view
         $view->render();
     }
 }

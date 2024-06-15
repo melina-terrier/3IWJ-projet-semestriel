@@ -289,27 +289,16 @@ class User extends SQL
         $this->interest = $interest;
     }
 
-<<<<<<< HEAD
-
     public function getUsers()
     {
         return $this->getAllData();
     }
 
-    public function getNbElements()
-    {
-        return $this->countElements();
-    }
-
-    public function __sleep()
-    {
-=======
     public function getNbElements() {
         return $this->countElements();
     }
 
     public function __sleep() {
->>>>>>> FEATURE/view
         return array_diff(array_keys(get_object_vars($this)), array('pdo'));
     }
 

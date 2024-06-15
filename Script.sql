@@ -8,7 +8,6 @@ DROP TABLE IF EXISTS msnu_project;
 DROP TABLE IF EXISTS msnu_tag;
 DROP TABLE IF EXISTS msnu_comment;
 
--- Define the msnu_status table
 CREATE TABLE msnu_status (
 	id SERIAL PRIMARY KEY,
   	status VARCHAR(255) NOT NULL UNIQUE
@@ -18,7 +17,6 @@ INSERT INTO msnu_status (status) VALUES
   ('Publié'),
   ('Supprimé'),
   ('Brouillon');
-
 
 CREATE SEQUENCE msnu_role_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE msnu_role (

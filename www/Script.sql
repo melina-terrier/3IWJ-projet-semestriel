@@ -13,6 +13,8 @@ DROP SEQUENCE IF EXISTS {prefix}_tag_id_seq CASCADE;
 DROP TABLE IF EXISTS {prefix}_tag CASCADE;
 DROP SEQUENCE IF EXISTS {prefix}_comment_id_seq CASCADE;
 DROP TABLE IF EXISTS {prefix}_comment CASCADE;
+DROP SEQUENCE IF EXISTS {prefix}_setting_id_seq CASCADE;
+DROP TABLE IF EXISTS {prefix}_setting CASCADE;
 
 CREATE TABLE {prefix}_status (
 	id SERIAL PRIMARY KEY,
@@ -43,6 +45,7 @@ CREATE TABLE {prefix}_user (
 	lastname                  VARCHAR(50) NOT NULL,
 	email                     VARCHAR(320),
 	password                  VARCHAR(255),
+	slug 						VARCHAR(255),
 	creation_date       	  TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modification_date         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	status                    INTEGER DEFAULT 0,
@@ -51,7 +54,17 @@ CREATE TABLE {prefix}_user (
     reset_token               VARCHAR(255),
     reset_expires             TIMESTAMP,
     activation_token          VARCHAR(255),
-	slug 						VARCHAR(255),
+	occupation					TEXT,
+	birthday					TIMESTAMP,
+	country						VARCHAR(255),
+	city 						VARCHAR(255),
+	website						VARCHAR(255),
+	link						VARCHAR(255),
+	description					TEXT,
+	experience					TEXT,
+	study					TEXT,
+	competence					TEXT,
+	interest					TEXT,
 	PRIMARY KEY (id),
 	CONSTRAINT fk_user_role FOREIGN KEY (id_role) REFERENCES {prefix}_role(id)
 );
@@ -131,7 +144,7 @@ CREATE TABLE {prefix}_page (
 	PRIMARY KEY (id),
 	CONSTRAINT fk_page_user FOREIGN KEY (user_id) REFERENCES {prefix}_user(id),
 	CONSTRAINT fk_page_status FOREIGN KEY (status_id) REFERENCES {prefix}_status(id)
-)
+);
 
 CREATE SEQUENCE {prefix}_setting_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE {prefix}_setting

@@ -87,7 +87,6 @@ class SQL
     }
 
     public function getAllData(string $return = "array")
-
     {
         $sql = "SELECT * FROM " . $this->table;
         $queryPrepared = $this->pdo->prepare($sql);
@@ -104,12 +103,42 @@ class SQL
         return $queryPrepared->fetchAll();
     }
 
-    public function getDataObject(): array //pour récupérer les données de l'objet
+    public function getAllDataWithWhere(array $whereClause = null, string $return = "array") {
+        $sql = "SELECT * FROM " . $this->table;
+
+        if ($whereClause) {
+          $sql .= " WHERE ";
+          $conditions = []; 
+          foreach ($whereClause as $column => $value) {
+            $conditions[] = "$column = :$column";
+          }
+          $whereClauseString = implode(' AND ', $conditions);
+          $sql .= $whereClauseString;
+        }
+      
+        $queryPrepared = $this->pdo->prepare($sql);
+        if ($whereClause) {
+          $parameters = array_combine(array_keys($whereClause), array_values($whereClause)); // Assuming $whereClause is an associative array
+          $queryPrepared->execute($parameters);
+        } else {
+          $queryPrepared->execute();
+        }
+      
+        if ($return == "object") {
+          $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+        } else {
+          $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
+        }
+        return $queryPrepared->fetchAll();
+    }
+      
+
+    public function getDataObject(): array
     {
         return array_diff_key(get_object_vars($this), get_class_vars(get_class())); //mettre dans un tableau les données de l'objet
     }
 
-    public function setDataFromArray(array $data): void //pour mettre à jour les données de l'objet
+    public function setDataFromArray(array $data): void 
     {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
@@ -130,7 +159,6 @@ class SQL
         return null;
     }
     
-
     public function delete(array $data)
     {
         $recordToDelete = $this->getOneBy($data);
@@ -162,36 +190,37 @@ class SQL
         return $queryPrepared->fetchColumn();
     }
 
+    // A revoir
     public function sql_users_projects()
-{
-    $query = 'SELECT u.firstname, u.lastname, COUNT(p.id) AS project_count
-              FROM msnu_user u
-              LEFT JOIN msnu_project p ON u.id = p.user_id
-              GROUP BY u.firstname, u.lastname
-              ORDER BY project_count DESC';
-    $stmt = $this->pdo->prepare($query);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    {
+        $query = 'SELECT u.firstname, u.lastname, COUNT(p.id) AS project_count
+                FROM msnu_user u
+                LEFT JOIN msnu_project p ON u.id = p.user_id
+                GROUP BY u.firstname, u.lastname
+                ORDER BY project_count DESC';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-public function getAllUsers() {
-    $stmt = $this->pdo->query('SELECT * FROM users');
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    public function getAllUsers() {
+        $stmt = $this->pdo->query('SELECT * FROM users');
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-public function getUserStats($userId) {
-    $stmt = $this->pdo->prepare('
-        SELECT
-            (SELECT COUNT(*) FROM pages WHERE user_id = :id) as pages_count,
-            (SELECT COUNT(*) FROM categories WHERE user_id = :id) as categories_count,
-            (SELECT COUNT(*) FROM comments WHERE user_id = :id) as comments_count
-        FROM users WHERE id = :id
-    ');
-    $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
-    $stmt->execute();
-    
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+    public function getUserStats($userId) {
+        $stmt = $this->pdo->prepare('
+            SELECT
+                (SELECT COUNT(*) FROM pages WHERE user_id = :id) as pages_count,
+                (SELECT COUNT(*) FROM categories WHERE user_id = :id) as categories_count,
+                (SELECT COUNT(*) FROM comments WHERE user_id = :id) as comments_count
+            FROM users WHERE id = :id
+        ');
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     
 
   

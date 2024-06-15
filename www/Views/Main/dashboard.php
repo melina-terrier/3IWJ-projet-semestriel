@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
@@ -91,46 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <h3>Commentaires</h3>
         <p><?php echo $elementsCount['comments']; ?></p>
     </article>
-=======
-<h1>Tableau de bord</h1>
-
-<section>
-
-	<article>
-		<h3>Pages</h3>
-		<p><?php echo $elementsCount['pages']; ?></p>
-	</article>
-
-	<article>
-		<h3>Projets</h3>
-		<p><?php echo $elementsCount['projects']; ?></p>
-	</article>
-
-	<article>
-		<h3>Tags</h3>
-		<p><?php echo $elementsCount['tags']; ?></p>
-	</article>
-		
-	<article>
-		<h3>Médias</h3>
-		<p><?php echo $elementsCount['medias']; ?></p>
-	</article>
-
-	<article>
-		<h3>Utilisateurs</h3>
-		<p><?php echo $elementsCount['users']; ?></p>
-	</article>
-
-	<article>
-		<h3>Commentaires</h3>
-		<p><?php echo $elementsCount['comments']; ?></p>
-	</article>
->>>>>>> FEATURE/view
 
 </section>
 
 <section>
-<<<<<<< HEAD
     <h2>Commentaires en attentes de validation</h2>
     <?php 
         foreach ($comments as $comment) {
@@ -145,9 +108,8 @@ document.addEventListener("DOMContentLoaded", () => {
 </section>
 
 <section>
-    
-	<p>Nombre d'utilisateurs inscrits : <?php echo htmlspecialchars($nombreUtilisateursInscrits); ?></p>
-    <p>Nombre de visiteurs non inscrits : <?php echo htmlspecialchars($nombreVisiteursNonInscrits); ?></p>
+	<p>Nombre d'utilisateurs inscrits : <?php echo $elementsCount['users']; ?></p>
+    <p>Nombre de visiteurs non inscrits : <?php echo $nombreVisiteursNonInscrits; ?></p>
 
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
 </section>
@@ -164,17 +126,3 @@ document.addEventListener("DOMContentLoaded", () => {
         <?php endif; ?>
     </ul>
 </div>
-=======
-	<h2>Commentaires en attentes de validation</h2>
-	<?php 
-		foreach ($comments as $comment) {
-			if($comment['status'] == 0){
-				echo '<article>
-					<p>'.$comment["name"].'</p>
-					<p>'.$comment["comment"].'<p>
-				</article>';
-			}
-		}
-	?>
-</section>
->>>>>>> FEATURE/view

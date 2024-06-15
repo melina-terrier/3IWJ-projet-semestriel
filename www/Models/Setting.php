@@ -2,12 +2,7 @@
 namespace App\Models;
 use App\Core\SQL;
 
-<<<<<<< HEAD
-class SiteSetting extends SQL{
-=======
 class Setting extends SQL{
-
->>>>>>> FEATURE/view
     protected ?int $id = null;
     protected $icon;
     protected $title;
@@ -107,9 +102,6 @@ class Setting extends SQL{
         return $this->secondary_color;
     }
 
-<<<<<<< HEAD
-}
-=======
     public function setSecondaryColor($secondary_color): void
     {
         $this->secondary_color = $secondary_color;
@@ -165,5 +157,3 @@ class Setting extends SQL{
         $this->modification_date = $modification_date;
     }
 }
-
->>>>>>> FEATURE/view

@@ -1,4 +1,14 @@
 <?php
+namespace App\Controllers;
+
+use App\Core\Form;
+use App\Core\View;
+use App\Models\User;
+use App\Models\Role as RoleModel;
+use App\Core\Security as CoreSecurity;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 class Security{
 
@@ -226,10 +236,6 @@ class Security{
         $view->assign("successes", $success);
         $view->render();
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> FEATURE/view
 
     public function sendCreateAccount($email, $activationToken) {
         $phpmailer = new PHPMailer(true); 

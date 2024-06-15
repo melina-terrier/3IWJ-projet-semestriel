@@ -7,10 +7,11 @@ use App\Core\Form;
 use App\Models\User;
 use App\Models\Role as RoleModel;
 use App\Controllers\Security;
+
 use PDO;
 use PDOException;
 
-class Installer
+class Install
 {
     public function install()
     {
@@ -40,16 +41,16 @@ class Installer
             $configContent .= "define('DB_PASSWORD', '" . addslashes($dbpassword) . "');\n";
             $configContent .= "define('TABLE_PREFIX', '" . addslashes($tablePrefix) . "');\n";
 
-            $myfile = fopen("config.php", "w");
+            $myfile = fopen("../config.php", "w");
             fwrite($myfile, $configContent);
             fclose($myfile);
-            $envPath = __DIR__ . '/../.env';
+            $envPath = '../.env';
 
             $envContent = "POSTGRES_USER={$dbuser}\n";
             $envContent .= "POSTGRES_PASSWORD={$dbpassword}\n";
             $envContent .= "POSTGRES_DB={$dbname}\n";
 
-            $myenv = fopen(".env", "w");
+            $myenv = fopen("../.env", "w");
             fwrite($myenv, $envContent);
             fclose($myenv);
 
@@ -78,7 +79,7 @@ class Installer
             $user->setEmail($email);
             $user->setPassword($password);
             $roleModel = new RoleModel();
-            $role = $roleModel->getOneBy(['role' => 'admin'], 'object');
+            $role = $roleModel->getOneBy(['role' => 'Administrateur'], 'object');
             $roleId = $role->getId();
             $user->setRole($roleId);
             $user->setCreationDate($formattedDate);

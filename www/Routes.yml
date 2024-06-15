@@ -142,11 +142,6 @@
   Security: true
   # Role: [admin]
 
-# INSTALLER
-/install:
-  Controller: "Installer"
-  Action: "Install"
-
 
 # USER
 /login:
