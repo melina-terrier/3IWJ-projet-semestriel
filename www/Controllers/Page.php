@@ -7,27 +7,24 @@ use App\Core\View;
 use App\Models\Media;
 use App\Models\User;
 use App\Controllers\Error;
-use App\Models\User as UserModel;
-use App\Models\Status as StatusModel;
+use App\Models\Status;
+use App\Models\PageHistory;
 use App\Models\Page as PageModel;
 
-class Page
-{
-
+class Page {
     public function allPages(): void
     {
         $errors = [];
         $success = [];
         $pageModel = new PageModel();
         $allPages = $pageModel->getAllData("array"); 
-        $statusModel = new StatusModel();
-        $userModel = new UserModel();
+        $statusModel = new Status();
+        $userModel = new User();
 
-    
         if (isset($_GET['action']) && isset($_GET['id'])) {
             $currentPage = $pageModel->getOneBy(['id' => $_GET['id']], 'object');
             if ($_GET['action'] === "delete") {
-                $status = $statusModel->getOneBy(["status"=>"deleted"], 'object');
+                $status = $statusModel->getOneBy(["status"=>"Supprimé"], 'object');
                 $statusId = $status->getId();
                 $currentPage->setStatus($statusId);
                 $currentPage->save();
@@ -38,7 +35,7 @@ class Page
                 header('Location: /dashboard/pages?message=permanent-delete-success');
                 exit;
             } else if ($_GET['action'] === "restore") {
-                $status = $statusModel->getOneBy(["status"=>"draft"], 'object');
+                $status = $statusModel->getOneBy(["status"=>"Brouillon"], 'object');
                 $statusId = $status->getId();
                 $currentPage->setStatus($statusId);
                 $currentPage->save();
@@ -87,11 +84,13 @@ class Page
         $form = new Form("AddPage");
         $errors = [];
         $success = [];
-
+        
         $formattedDate = date('Y-m-d H:i:s');
         $userSerialized = $_SESSION['user'];
         $user = unserialize($userSerialized);
         $userId = $user->getId();
+        
+        $historyEntry = new PageHistory();
         
         if (isset($_GET['id']) && $_GET['id']) {
             $pageId = $_GET['id'];
@@ -110,6 +109,18 @@ class Page
         if( $form->isSubmitted() && $form->isValid() )
         {   
             if(isset($_GET['id']) && $_GET['id']){
+
+                if ($selectedPage->getTitle() !== $_POST['title'] ||
+                $selectedPage->getContent() !== $_POST['content'] |
+                $selectedPage->getSlug() !== $_POST['slug']) {
+                    $historyEntry->setPageId($pageId);
+                    $historyEntry->setTitle($selectedPage->getTitle());
+                    $historyEntry->setContent($selectedPage->getContent());
+                    $historyEntry->setSlug($selectedPage->getSlug());
+                    $historyEntry->setCreationDate($formattedDate);
+                    $historyEntry->save();
+                }
+                  
                 $page->setId($selectedPage->getId());
                 $page->setModificationDate($formattedDate);
                 $page->setCreationDate($selectedPage->getCreationDate());
@@ -159,21 +170,38 @@ class Page
             $page->setTitle($_POST['title']);
             $page->setContent(strip_tags(stripslashes($_POST['content']), $allowedTags));
             $page->setUser($userId);
-            $statusModel = new StatusModel();
+            $statusModel = new Status();
             if (isset($_POST['submit-draft'])) {
-                $statusId = $statusModel->getOneBy(["status"=>"draft"], 'object');
+                $statusId = $statusModel->getOneBy(["status"=>"Brouillon"], 'object');
                 $status = $statusId->getId();
                 $page->setStatus($status);
                 $success[] = "Votre projet a été enregistré en brouillon";
             } else {
-                $statusId = $statusModel->getOneBy(["status"=>"published"], 'object');
+                $statusId = $statusModel->getOneBy(["status"=>"Publié"], 'object');
                 $status = $statusId->getId();
                 $page->setPublicationDate($formattedDate);
                 $page->setStatus($status);
                 $success[] = "Votre projet a été publié";  
             }
+            if ($_POST['history']){
+                $selectedHistoryId = $_POST['history'];
+                $selectedHistoryEntry = $historyEntry->getOneBy(['id' => $selectedHistoryId], 'object');
+                if ($selectedHistoryEntry) {
+                    $page->setId($selectedPage->getId());
+                    $page->setTitle($selectedHistoryEntry->getTitle());
+                    $page->setContent($selectedHistoryEntry->getContent());
+                    $page->setSlug($selectedHistoryEntry->getSlug());
+                    $page->setCreationDate($selectedHistoryEntry->getCreationDate());
+                    $page->setModificationDate(date('Y-m-d H:i:s')); 
+                    $page->setUser($userId);
+                    $success[] = "La page a été restaurée avec succès";
+                } else {
+                    $errors[] = "Historique introuvable";
+                }
+            }
             $page->save();
         }
+
         $view = new View("Page/add-page", "back");
         $view->assign("form", $form->build());
         $view->assign("mediasList", $mediasList ?? []);
@@ -184,8 +212,8 @@ class Page
 
     public function showPage($slug){
         $db = new PageModel();
-        $statusModel = new StatusModel();
-        $status = $statusModel->getOneBy(["status" => "published"], 'object');
+        $statusModel = new Status();
+        $status = $statusModel->getOneBy(["status" => "Publié"], 'object');
         $publishedStatusId = $status->getId();
 
         $slugTrim = str_replace('/', '', $slug);

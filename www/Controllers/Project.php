@@ -31,7 +31,6 @@ class Project{
         }
 
         $form = new Form("AddProject");
-        // $mediaForm = new Form("AddMedia");
         $errors = [];
         $success = [];
 
@@ -131,7 +130,6 @@ class Project{
         }
         $view = new View("Project/add-project", "back");
         $view->assign("form", $form->build());
-        // $view->assign("mediaForm", $mediaForm->build());
         $view->assign("mediasList", $mediasList ?? []);
         $view->assign("errorsForm", $errors);
         $view->assign("successForm", $success);

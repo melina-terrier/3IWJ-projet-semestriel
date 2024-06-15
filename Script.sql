@@ -259,3 +259,14 @@ CREATE TABLE msnu_project_tags (
 	FOREIGN KEY (project_id) REFERENCES msnu_project(id),
 	FOREIGN KEY (tag_id) REFERENCES msnu_tag(id)
 );
+
+CREATE SEQUENCE msnu_pagehistory_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
+CREATE TABLE msnu_pagehistory (
+  id Integer DEFAULT nextval('msnu_pagehistory_id_seq') NOT NULL,
+  page_id INT NOT NULL,
+  creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  title VARCHAR(255),
+  content text,
+  slug VARCHAR(255),
+  FOREIGN KEY (page_id) REFERENCES msnu_page(id)
+);

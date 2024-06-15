@@ -1,10 +1,31 @@
 <?php
 namespace App\Forms;
 
+use App\Models\PageHistory;
 class AddPage
 {
     public static function getConfig(): array
     {
+
+        $history = new PageHistory();
+        $histories = $history->getAllDataWithWhere(['page_id'=>$_GET['id']], 'object');
+
+        $historyPage = [];
+        if (!empty($histories)) {
+            foreach ($histories as $page) {
+              $historyPage[] = [
+                "id" => $page->getId(),
+                "name" => $page->getCreationDate(),
+              ];
+            }
+        } else {
+            $historyPage[] = [
+                "id" => '',
+                "name" => '',
+                "selected" => true,
+            ];
+        }
+
         return [
             "config"=>[
                 "action"=>"",
@@ -32,6 +53,12 @@ class AddPage
                     "label"=>"Slug",
                     "max"=>255,
                     "error"=>"Le slug doit avoir au moins 255 caractères."
+                ],
+                "history"=>[
+                    "type"=>"select",
+                    "name"=>"history",
+                    "label"=>"Ancienne version de la page",
+                    "option"=>$historyPage, 
                 ],
             ]
         ];
