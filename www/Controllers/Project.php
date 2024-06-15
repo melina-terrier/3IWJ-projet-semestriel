@@ -4,13 +4,13 @@ namespace App\Controllers;
 use App\Core\Form;
 use App\Core\View;
 use App\Core\SQL;
-use App\Models\Status as StatusModel;
-use App\Models\Media;
 use App\Controllers\Error;
-use App\Models\Tag as TagModel;
-use App\Models\Comment as CommentModel;
+use App\Models\Media;
+use App\Models\Status;
+use App\Models\Tag;
+use App\Models\Comment;
 use App\Models\Project as ProjectModel;
-use App\Models\User as UserModel;
+use App\Models\User;
 
 class Project{
 
@@ -31,6 +31,7 @@ class Project{
         }
 
         $form = new Form("AddProject");
+        // $mediaForm = new Form("AddMedia");
         $errors = [];
         $success = [];
 
@@ -111,7 +112,9 @@ class Project{
                 $project->setTag($_POST['tag']);
             }
 
-            $statusModel = new StatusModel();
+            $project->setFeaturedImage($_POST['featured_image']);
+
+            $statusModel = new Status();
             if (isset($_POST['submit-draft'])) {
                 $statusId = $statusModel->getOneBy(["status"=>"Brouillon"], 'object');
                 $status = $statusId->getId();
@@ -128,6 +131,7 @@ class Project{
         }
         $view = new View("Project/add-project", "back");
         $view->assign("form", $form->build());
+        // $view->assign("mediaForm", $mediaForm->build());
         $view->assign("mediasList", $mediasList ?? []);
         $view->assign("errorsForm", $errors);
         $view->assign("successForm", $success);
@@ -140,8 +144,8 @@ class Project{
         $success = [];
         $project = new ProjectModel();
         $allProjects = $project->getAllData("array");
-        $statusModel = new StatusModel();
-        $userModel = new UserModel();
+        $statusModel = new Status();
+        $userModel = new User();
 
         if (isset($_GET['action']) && isset($_GET['id'])) {
             $currentProject = $project->getOneBy(['id' => $_GET['id']], 'object');
@@ -192,15 +196,15 @@ class Project{
         $slugParts = explode('/', $slug);
         $slug = end($slugParts);
         $db = new ProjectModel();
-        $statusModel = new StatusModel();
-        $status = $statusModel->getOneBy(["status" => "published"], 'object');
+        $statusModel = new Status();
+        $status = $statusModel->getOneBy(["status" => "Publié"], 'object');
         $publishedStatusId = $status->getId();
 
         $slugTrim = str_replace('/', '', $slug);
         $arraySlug = ["slug" => $slugTrim];
         $project = $db->getOneBy($arraySlug);
         
-        $tags = new TagModel();
+        $tags = new Tag();
         $tag = $tags->getOneBy($arraySlug);
         $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         
@@ -227,7 +231,7 @@ class Project{
                 // $formattedDate = date('Y-m-d H:i:s');
                 if( $form->isSubmitted() && $form->isValid() )
                 {
-                    $comment = new CommentModel();
+                    $comment = new Comment();
 
                     $comment->setComment($_POST['comment']);
                     $comment->setProject($project['id']);
@@ -256,7 +260,7 @@ class Project{
                     }
                 }
 
-                $commentModel = new CommentModel();
+                $commentModel = new Comment();
                 $comments = $commentModel->getAllData();
                 $filteredComments = [];
                 foreach ($comments as $comment) {
@@ -280,7 +284,7 @@ class Project{
             $description = $tag['description'];
 
             $projects = $db->getAllDataWithWhere(['tag_id'=>$tag['id']]);
-            $userModel = new UserModel();
+            $userModel = new User();
             foreach ($projects as &$project) {
                 $userId = $project['user_id'];
                 $project['username'] ='';
@@ -300,7 +304,7 @@ class Project{
             $view->render();  
         } else if($requestUrl === '/projects' || $requestUrl === '/projects//') {
             $projects = $db->getAllDataWithWhere(['status_id' => $publishedStatusId]);
-            $userModel = new UserModel();
+            $userModel = new User();
             foreach ($projects as &$project) {
             //   $tagId = $project['tag_id'];
                 $userId = $project['user_id'];

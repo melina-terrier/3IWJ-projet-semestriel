@@ -1,7 +1,8 @@
 <?php
 namespace App\Forms;
 
-use App\Models\Tag as  TagModel;
+use App\Models\Tag;
+use App\Models\Media;
 use App\Core\SQL;
 
 class AddProject
@@ -9,7 +10,7 @@ class AddProject
 
     public static function getConfig(): array
     {
-        $tag = new TagModel();
+        $tag = new Tag();
         $tags = $tag->getAllData('object');
 
         $formattedTags = [];
@@ -28,6 +29,23 @@ class AddProject
             ];
         }
 
+        $media = new Media();
+        $medias = $media->getAllData('object');
+        $arrayMedias = [];
+        if (!empty($medias)) {
+            foreach ($medias as $mediaObject) {
+              $arrayMedias[] = [
+                "id" => $mediaObject->getUrl(),
+                "name" => $mediaObject->getName(),
+              ];
+            }
+        } else {
+            $arrayMedias[] = [
+                "id" => '',
+                "name" => 'Aucune image disponible',
+                "selected" => true,
+            ];
+        }
         return [
             "config"=>[
                 "action"=>"",
@@ -50,10 +68,10 @@ class AddProject
                     "label"=>"Contenu",
                     "error"=>"Le contenu est requis et doit avoir au minimum 2 caractères",
                 ],
-                "image"=>[
-                    "type"=>"file",
+                "featured_image"=>[
+                    "type"=>"checkbox",
+                    "option"=>$arrayMedias,
                     "label"=>"Image mise en avant",
-                    "accept"=>"image/png, image/jpeg, image/svg",
                     "error"=>"Le format du fichier n'est pas pris en compte"
                 ],
                 "slug"=>[

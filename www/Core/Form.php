@@ -71,7 +71,7 @@ class Form
                 if (isset($input["option"]) && is_array($input["option"])) {
                   foreach ($input["option"] as $option) {
                     $html .= "
-                      <label for='{$option['id']}'>{$option['name']}</label>
+                      <label for='{$option['id']}'><img src='{$option['id']}'></label>
                       <input type='checkbox' name='$name' value='{$option['id']}'><br>";
                   }
                 }

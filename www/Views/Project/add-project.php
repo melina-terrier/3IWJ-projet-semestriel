@@ -66,7 +66,6 @@
 <section>
     <h1>Ajouter un nouveau projet</h1>
     <?= $form ?>
-
     <?php if (!empty($errorsForm)): ?>
         <div>
             <?php foreach ($errorsForm as $error): ?>

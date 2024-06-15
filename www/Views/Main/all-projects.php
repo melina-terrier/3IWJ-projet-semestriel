@@ -17,8 +17,8 @@ echo '<section>';
     foreach ($projects as $project) {
     echo '<article>
         <a href="/projects/' . $project['slug'] . '">
-        <h4>' . $project['title'] . '</h4>
-        <img href="" alt="">';
+        <img src="' . $project['featured_image'] . '" alt="">
+        <h4>' . $project['title'] . '</h4>';
     if ($project['category_name']) {
         echo '<p>' . $project['category_name'] . '</p>';
     }
