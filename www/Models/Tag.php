@@ -10,7 +10,6 @@ class Tag extends SQL
     protected $description;
     protected $creation_date;
     protected $modification_date;
-    protected $status_id;
     protected $user_id;
 
     public function getId()
@@ -40,6 +39,8 @@ class Tag extends SQL
 
     public function setSlug($slug): void
     {
+        $slug = mb_strtolower(preg_replace('/\s+/', '-', trim($slug)));
+        $slug = preg_replace('/[^a-zA-Z0-9-]/', '', $slug);
         $this->slug = $slug;
     }
 
@@ -71,16 +72,6 @@ class Tag extends SQL
     public function setModificationDate($modification_date): void
     {
         $this->modification_date = $modification_date;
-    }
-
-    public function getStatus()
-    {
-        return $this->status_id;
-    }
-
-    public function setStatus($status_id): void
-    {
-        $this->status_id = $status_id;
     }
 
     public function getUserId()

@@ -48,7 +48,6 @@ class SQL
             return $this->getId();
         }
         return $this->pdo->lastInsertId($this->table."_id_seq");
-
     }
 
     public function emailExists($email): bool {
@@ -222,6 +221,13 @@ class SQL
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
-
-  
+    public function generateId($sequenceName) {
+        $query = "SELECT nextval(:sequenceName)"; 
+        $statement = $this->pdo->prepare($query);
+        $statement->bindValue(':sequenceName', $sequenceName);
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        $generatedId = $result['nextval'];
+        return $generatedId;
+    }
 }

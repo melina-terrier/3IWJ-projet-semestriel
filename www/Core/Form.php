@@ -43,11 +43,19 @@ class Form
                       <label for='" . $name . "'>" . $input["label"] . "</label><br>
                     ";
                   }
-                $html .= "<select name='$name' " . (isset($input["required"]) ? "required" : "") . " aria-label=''>";
+                $html .= "<select name='" . (isset($input["name"]) ? $input["name"] : "") . "' " . (isset($input["required"]) ? "required" : "") . " aria-label='". $input["label"]."' ". (isset($input["multiple"]) ? "multiple" : "") .">";
                               
                 if (isset($input["option"]) && is_array($input["option"])) {
                     foreach ($input["option"] as $option) {
-                        $selected = $value == $option['id'] ? 'selected' : '';
+                        $selected = '';
+                        if ($value){
+                            foreach ($value as $select) {
+                                if ($select == $option['id']){
+                                    $selected = "selected";
+                                }
+                            }
+                        }
+
                         $html .= "<option value='{$option['id']}' " . (isset($option["disabled"]) ? "disabled" : "") . " $selected>{$option['name']}</option>";
                     }
                 }

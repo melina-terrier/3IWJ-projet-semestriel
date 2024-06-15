@@ -20,6 +20,8 @@
 
   <?php
   if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
+    echo "<p>Le projet a été publié.</p>";
+  } else if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
     echo "<p>Le projet a été supprimé.</p>";
   } else if (isset($_GET['message']) && $_GET['message'] === 'permanent-delete-success'){
       echo "<p>Le projet a été définitivement supprimé.</p>";

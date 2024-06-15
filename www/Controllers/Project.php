@@ -107,26 +107,24 @@ class Project{
             $project->setTitle($_POST['title']);
             $project->setContent(strip_tags(stripslashes($_POST['content']),  $allowedTags));
             $project->setUser($userId);
-            // if ($_POST['tag'] == 0) {
-            //     $project->setTag(null);
-            // } else {
-            //     $project->setTag($_POST['tag']);
-            // }
+            if (!empty($_POST['tag'])) {
+                $project->setTag($_POST['tag']);
+            }
 
             $statusModel = new StatusModel();
             if (isset($_POST['submit-draft'])) {
-                $statusId = $statusModel->getOneBy(["status"=>"draft"], 'object');
+                $statusId = $statusModel->getOneBy(["status"=>"Brouillon"], 'object');
                 $status = $statusId->getId();
                 $project->setStatus($status);
                 $success[] = "Votre projet a été enregistré en brouillon";
             } else {
-                $statusId = $statusModel->getOneBy(["status"=>"published"], 'object');
+                $statusId = $statusModel->getOneBy(["status"=>"Publié"], 'object');
                 $status = $statusId->getId();
                 $project->setPublicationDate($formattedDate);
                 $project->setStatus($status);
-                $success[] = "Votre projet a été publié";  
             }
             $project->save();
+            header("Location: /dashboard/projects?&&message=success");
         }
         $view = new View("Project/add-project", "back");
         $view->assign("form", $form->build());

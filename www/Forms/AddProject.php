@@ -64,8 +64,10 @@ class AddProject
                 ],
                 "tag"=>[
                     "type"=>"select",
+                    "name"=>'tag[]',
                     "label"=>"Catégorie du projet",
                     "option"=>$formattedTags, 
+                    "multiple"=>true,
                 ],
             ],
         ];

@@ -15,6 +15,8 @@ DROP SEQUENCE IF EXISTS {prefix}_comment_id_seq CASCADE;
 DROP TABLE IF EXISTS {prefix}_comment CASCADE;
 DROP SEQUENCE IF EXISTS {prefix}_setting_id_seq CASCADE;
 DROP TABLE IF EXISTS {prefix}_setting CASCADE;
+DROP SEQUENCE IF EXISTS {prefix}_tag_project_id_seq CASCADE;
+DROP TABLE IF EXISTS {prefix}_tag_project CASCADE;
 
 CREATE TABLE {prefix}_status (
 	id SERIAL PRIMARY KEY,
@@ -109,6 +111,7 @@ CREATE TABLE {prefix}_project (
 	publication_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	status_id				INTEGER NOT NULL,
 	user_id 				INTEGER,
+	tag_id 					INTEGER,
 	PRIMARY KEY (id),
 	CONSTRAINT fk_project_user FOREIGN KEY (user_id) REFERENCES {prefix}_user(id),
 	CONSTRAINT fk_project_status FOREIGN KEY (status_id) REFERENCES {prefix}_status(id)
@@ -165,3 +168,13 @@ CREATE TABLE {prefix}_setting
 	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (id)
 )
+
+CREATE SEQUENCE {prefix}_project_tags_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
+CREATE TABLE {prefix}_project_tags (
+	id					Integer DEFAULT nextval('{prefix}_project_tags_id_seq') NOT NULL,
+	id_tag				INTEGER,
+	id_project          INTEGER,
+	PRIMARY KEY (id),
+	FOREIGN KEY (id_project) REFERENCES {prefix}_project(id),
+	FOREIGN KEY (id_tag) REFERENCES {prefix}_media(id)
+);

@@ -48,7 +48,7 @@ class Security{
                         $userSerialized = serialize($user);
                         $_SESSION['user'] = $userSerialized;
                         $roleModel = new RoleModel();
-                        $role = $roleModel->getOneBy(['role' => 'admin'], 'object');
+                        $role = $roleModel->getOneBy(['role' => 'Administrateur'], 'object');
                         $roleId = $role->getId();
                         if ($user->getRole() === $roleId) {
                             header("Location: /dashboard");

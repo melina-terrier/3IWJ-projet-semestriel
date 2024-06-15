@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\SQL;
+use App\Models\Project_Tags;
 
 class Project extends SQL
 {
@@ -15,7 +16,6 @@ class Project extends SQL
     protected $modification_date;
     protected $publication_date;
     protected $user_id;
-    protected $tag_id;
     
     public function getId(): ?int
     {
@@ -24,7 +24,14 @@ class Project extends SQL
 
     public function setId(?int $id): void
     {
-        $this->id = $id;
+        if (is_null($id) || empty($id)) {
+            $sql = new SQL();
+            $sequenceName = 'msnu_project_id_seq';
+            $generatedId = $sql->generateId($sequenceName);
+            $this->id = $generatedId;
+        } else {
+            $this->id = $id;
+        }
     }
 
     public function getTitle()
@@ -109,13 +116,33 @@ class Project extends SQL
 
     public function getTag()
     {
-        return $this->tag_id;
+        $projectId = $this->getId();
+        $tags = [];
+        $projectTag = new Project_Tags();
+        $tagArray = $projectTag->getAllDataWithWhere(['project_id'=>$projectId]);
+        foreach ($tagArray as $tag) {
+            $tags[] = $tag['tag_id'];
+        }
+        return $tags;
     }
 
-    public function setTag($tag_id): void
+    public function setTag(array $tag_ids): void
     {
-        $this->tag_id = $tag_id;
+        $projectTag = new Project_Tags();
+        $existingTags = $projectTag->getAllDataWithWhere(['project_id' => $this->getId()]);
+        if ($existingTags) {
+            foreach ($existingTags as $tag) {
+                $projectTag->delete($tag);
+            }
+        }
+        foreach ($tag_ids as $tag_id) {
+            $projectTag = new Project_Tags();
+            $projectTag->setProjectId($this->getId());
+            $projectTag->setTagId($tag_id);
+            $projectTag->save();
+        }
     }
+
 
     public function getNbElements() {
         return $this->countElements();

@@ -115,6 +115,7 @@ CREATE TABLE msnu_project (
 	publication_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	status_id				INTEGER NOT NULL,
 	user_id 				INTEGER,
+	tag_id 					INTEGER,
 	PRIMARY KEY (id),
 	CONSTRAINT fk_project_user FOREIGN KEY (user_id) REFERENCES msnu_user(id),
 	CONSTRAINT fk_project_status FOREIGN KEY (status_id) REFERENCES msnu_status(id)
@@ -247,4 +248,14 @@ CREATE TABLE msnu_setting
     modification_date		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (id)
-)
+);
+
+CREATE SEQUENCE msnu_project_tags_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
+CREATE TABLE msnu_project_tags (
+	id					Integer DEFAULT nextval('msnu_project_tags_id_seq') NOT NULL,
+	tag_id				INTEGER,
+	project_id          INTEGER,
+	PRIMARY KEY (id),
+	FOREIGN KEY (project_id) REFERENCES msnu_project(id),
+	FOREIGN KEY (tag_id) REFERENCES msnu_tag(id)
+);
