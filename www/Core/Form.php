@@ -61,7 +61,7 @@ class Form
                 }
               
                 $html .= "</select>";
-            }else if ($input["type"] === "checkbox") {
+            } else if ($input["type"] === "checkbox") {
                 if (isset($input["label"]) && !empty($input["label"])) {
                     $html .= "
                       <label for='" . $name . "'>" . $input["label"] . "</label><br>
@@ -74,6 +74,20 @@ class Form
                       <label for='{$option['id']}'><img src='{$option['id']}'></label>
                       <input type='checkbox' name='$name' value='{$option['id']}'><br>";
                   }
+                }
+            } else if ($input["type"] === "custom") {
+                if (isset($input["label"]) && !empty($input["label"])) {
+                    $html .= "
+                      <label for='" . $name . "'>" . $input["label"] . "</label><br>
+                    ";
+                  }
+                if (isset($input["option"]) && is_array($input["option"])) {
+                    $html .= "<ul id='menu-container'>"; 
+                    foreach ($input["option"] as $option) {
+                        $html .= "
+                        <li draggable='true' class='menu-item' id='{$option['id']}'>".$option['name']."</li>";
+                    }
+                    $html .= "</ul>";
                 }
             } else if ($input["type"] === "textarea") {
                 if (isset($input["label"]) && !empty($input["label"])) {
@@ -112,8 +126,7 @@ class Form
                     type='" . $input["type"] . "' 
                     name='" . $name . "' 
                     " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
-                    " . (isset($input["required"]) ? "required" : "") . "
-                    value='" . htmlentities($value) . "'
+                    " . (isset($input["required"]) ? "required" : "") . "'
                 >";
             }
             $html .= "<br>";

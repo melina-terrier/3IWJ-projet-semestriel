@@ -2,6 +2,7 @@
 namespace App\Forms;
 
 use App\Models\Page as PageModel;
+use App\Models\Tag as TagModel;
 use App\Models\Status as StatusModel;
 class SetSetting
 {
@@ -12,21 +13,26 @@ class SetSetting
         $status = $statusModel->getOneBy(["status"=>"Publié"], 'object');
         $statusId = $status->getId();
         $pages = $page->getAllDataWithWhere(["status_id"=>$statusId], 'object');
-
         $formattedPages = [];
+        $formattedPages[] = ["id"=>"Projetcs", "name"=>"Tous les projets"];
+        $formattedPages[] = ["id"=>"Users", "name"=>"Tous les utilisateurs"];
         if (!empty($pages)) {
             foreach ($pages as $page) {
-                    $formattedPages[] = [
-                      "id" => $page->getId(),
-                      "name" => $page->getTitle(),
-                    ];
+                $formattedPages[] = [
+                    "id" => $page->getId(),
+                    "name" => $page->getTitle(),
+                ];
             }
-        } else {
-            $formattedPages[] = [
-                "id" => '0',
-                "name" => 'Aucune page disponible',
-                "selected" => true,
-            ];
+        }
+        $tag = new TagModel();
+        $tags = $tag->getAllData('object');
+        if (!empty($tags)) {
+            foreach ($tags as $tag) {
+                $formattedPages[] = [
+                    "id" => $tag->getId(),
+                    "name" => $tag->getName(),
+                ];
+            }
         }
 
         $timezones = \DateTimeZone::listIdentifiers();
@@ -116,31 +122,6 @@ class SetSetting
                     "label" => "Police du texte",
                     "options" => "",
                 ], 
-                "menu" => [
-                    "type" => "text",
-                    "label" => "Menu principal",
-                    "required" => true,
-                    "error" => "Le menu principal est requis",
-                    "part" => "Menus du site web"
-                ],
-                "menu_structure" => [
-                    "type" => "custom", 
-                    "label" => "Structure du menu",
-                ],
-                "menu_layout" => [
-                    "type" => "select", 
-                    "label" => "Disposition",
-                    "option" => [['id'=>"horizontal", "name"=>"Horizontal"], ['id'=>"vertical ", "name"=>"Vertical "], ['id'=>"dropdown ", "name"=>"Dropdown"]]
-                ],
-                "menu_alignement" => [
-                    "type" => "select", 
-                    "label" => "Alignement",
-                    "option" => [['id'=>"left", "name"=>"A gauche"], ['id'=>"right", "name"=>"A droite"], ['id'=>"center", "name"=>"Centrer"]]
-                ],
-                "footer" => [
-                    "type" => "text",
-                    "label" => "Footer",
-                ],
             ]
         ];
     }

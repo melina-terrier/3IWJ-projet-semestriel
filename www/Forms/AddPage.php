@@ -8,7 +8,9 @@ class AddPage
     {
 
         $history = new PageHistory();
-        $histories = $history->getAllDataWithWhere(['page_id'=>$_GET['id']], 'object');
+        if (isset($_GET['id'])){
+            $histories = $history->getAllDataWithWhere(['page_id'=>$_GET['id']], 'object');
+        }
 
         $historyPage = [];
         if (!empty($histories)) {

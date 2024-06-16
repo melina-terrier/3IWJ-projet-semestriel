@@ -5,8 +5,8 @@
         <title>dashboard</title>
         <meta name="description" content="Dashboard du CMS">
 
-        <link rel="stylesheet" href="Assets/Style/dist/css/style.css">
-        <script type="text/javascript" src="Assets/Style/dist/js/main.js"></script>
+        <link rel="stylesheet" href="../Assets/Style/dist/css/style.css">
+        <script type="text/javascript" src="../Assets/Style/dist/js/main.js"></script>
 
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="https://cdn.tiny.cloud/1/stqcjxqqgksnn9nkz2g0l1zda7dcsz9o5smv1jpbkbydtlis/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>

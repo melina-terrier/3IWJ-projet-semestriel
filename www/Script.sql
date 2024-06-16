@@ -15,12 +15,12 @@ DROP SEQUENCE IF EXISTS {prefix}_comment_id_seq CASCADE;
 DROP TABLE IF EXISTS {prefix}_comment CASCADE;
 DROP SEQUENCE IF EXISTS {prefix}_setting_id_seq CASCADE;
 DROP TABLE IF EXISTS {prefix}_setting CASCADE;
-DROP SEQUENCE IF EXISTS {prefix}_tag_project_id_seq CASCADE;
-DROP TABLE IF EXISTS {prefix}_tag_project CASCADE;
+DROP SEQUENCE IF EXISTS {prefix}_project_tags_id_seq CASCADE;
+DROP TABLE IF EXISTS {prefix}_project_tags CASCADE;
 
 CREATE TABLE {prefix}_status (
 	id SERIAL PRIMARY KEY,
-  	status VARCHAR(255) NOT NULL UNIQUE
+  	status VARCHAR(255) NOT NULL
 );
 
 INSERT INTO {prefix}_status (status) VALUES
@@ -167,7 +167,7 @@ CREATE TABLE {prefix}_setting
     modification_date		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (id)
-)
+);
 
 CREATE SEQUENCE {prefix}_project_tags_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE {prefix}_project_tags (
