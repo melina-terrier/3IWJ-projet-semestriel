@@ -7,135 +7,116 @@
   Controller: "Main"
   Action: "dashboard"
   Security: true
-  # Role: [admin]
-
-/edit-user:
-  Controller: "User"
-  Action: "editUser"
-
-/show-user:
-  Controller: "User"
-  Action: "showUser"
+  Role: ["Administrateur"]
 
 # USER
 /dashboard/users:
   Controller: "User"
   Action: "allUsers"
   Security: true
-  # Role: [admin]
+  Role: ["Administrateur"]
 
 /dashboard/add-user:
   Controller: "User"
   Action: "addUser"
   Security: true
-  # Role: [admin]
-
-/dashboard/view-user:
-  Controller: "User"
-  Action: "viewUser"
-  Security: true
-  # Role: [admin]
+  Role: ["Administrateur"]
 
 /dashboard/edit-user:
   Controller: "User"
   Action: "addUser"
   Security: true
-  # Role: [user, admin]
-
-/profile:
-  Controller: "User"
-  Action: "editUser"
-  Security: true
-  # Role: [user, admin]
+  Role: ["Administrateur"]
 
 # PROJECT
 /dashboard/add-project:
   Controller: "Project"
   Action: "addProject"
   Security: true
-  # Role: [admin]
+  Role: ["Administrateur", "Utilisateur"]
 
 /dashboard/projects:
   Controller: "Project"
   Action: "allProjects"
   Security: true
-  # Role: [admin]
+  Role: ["Administrateur"]
 
 /dashboard/edit-project:
   Controller: "Project"
   Action: "editProject"
   Security: true
-  # Role: [admin]
+  Role: ["Administrateur"]
 
 # PAGE
 /dashboard/add-page:
   Controller: "Page"
   Action: "addPage"
   Security: true
-  # Role: [admin]
+  Role: ["Administrateur"]
 
 /dashboard/edit-page:
   Controller: "Page"
   Action: "editPage"
   Security: true
-  # Role: [admin]
+  Role: ["Administrateur"]
 
 /dashboard/pages:
   Controller: "Page"
   Action: "allPages"
   Security: true
-  # Role: [admin]
+  Role: ["Administrateur"]
 
+# Comments
 /dashboard/comments:
   Controller: "Comment"
   Action: "allComments"
   Security: true
-  # Role: [admin]
+  Role: ["Administrateur"]
 
 # TAGS
 /dashboard/add-tag:
   Controller: "Tag"
   Action: "addTag"
   Security: true
-  # Role: "admin"
+  Role: ["Administrateur"]
 
 /dashboard/edit-tag:
   Controller: "Tag"
   Action: "editTag"
   Security: true
+  Role: ["Administrateur"]
 
 /dashboard/tags:
   Controller: "Tag"
   Action: "allTags"
   Security: true
-  # Role: [admin]
+  Role: ["Administrateur"]
 
 # MEDIAS
 /dashboard/medias:
   Controller: "Media"
   Action: "allMedias"
   Security: true
-  # Role: [admin]
+  Role: ["Administrateur"]
 
 /dashboard/add-media:
   Controller: "Media"
   Action: "addMedia"
   Security: true
-  # Role: "admin"
+  Role: ["Administrateur"]
 
 /dashboard/edit-media:
   Controller: "Media"
   Action: "editMedia"
   Security: true
-  # Role: "admin"
+  Role: ["Administrateur"]
 
 # SETTING
 /dashboard/settings:
   Controller: "Settings"
   Action: "setSetting"
   Security: true
-  # Role: [admin]
-
+  Role: ["Administrateur"]
 
 # USER
 /login:

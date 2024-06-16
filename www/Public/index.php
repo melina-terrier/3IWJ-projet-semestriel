@@ -7,6 +7,7 @@ use App\Controllers\Main;
 use App\Controllers\User as UserController;
 use App\Controllers\Security;
 use App\Models\User;
+use App\Models\Role;
 use App\Models\Setting;
 use App\Controllers\Page;
 use App\Controllers\Project;
@@ -36,16 +37,16 @@ function myAutoloader($class){
     }
 }
 
-$setting = new Setting();
-$setting = $setting->getOneBy(['id'=>1]);
-if ($setting){
-    $timezone = $setting['tmezone'];
-    if ($timezone){
-        date_default_timezone_set($timezone);
-    }
-} else {
-    date_default_timezone_set('Europe/paris');
-}
+// $setting = new Setting();
+// if ($setting){
+//     $setting = $setting->getOneBy(['id'=>1]);
+//     $timezone = $setting['tmezone'];
+//     if ($timezone){
+//         date_default_timezone_set($timezone);
+//     }
+// } else {
+//     date_default_timezone_set('Europe/paris');
+// }
 
 if (!file_exists('../config.php')) {
     $controller = new Install();
@@ -54,11 +55,11 @@ if (!file_exists('../config.php')) {
 }
 
 $uri = $_SERVER["REQUEST_URI"];
-if(strlen($uri) > 1)
+if(strlen($uri) > 1) {
     $uri = rtrim($uri, "/");
-$uriExploded = explode("?",$uri);
-$uri = $uriExploded[0];
-
+    $uriExploded = explode("?",$uri);
+    $uri = $uriExploded[0];
+}
 if(file_exists("../Routes.yml")) {
     $listOfRoutes = yaml_parse_file("../Routes.yml");
 }else{
@@ -79,8 +80,10 @@ if( !empty($listOfRoutes[$uri]) ) {
 
     if (!empty($listOfRoutes[$uri]['Role'])) {
         $user = unserialize($_SESSION['user']);
-
-        if (!in_array($user->getRoles(), $listOfRoutes[$uri]['Role'])) {
+        $roleId = $user->getRole();
+        $role = new Role(); 
+        $roleName = $role->getOneBy(['id'=>$roleId]);
+        if (!in_array($roleName['role'], $listOfRoutes[$uri]['Role'])) {
             $error = new Error();
             $error->page403();
             die();

@@ -87,6 +87,14 @@ class Installer
                     "required"=>true,
                     "error"=>"Le mot de passe de la base de données est requis et doit faire entre 2 et 64 caractères",
                 ],
+                "dbhost"=>[
+                    "type"=>"text",
+                    "min"=>2,
+                    "max"=>255,
+                    "label"=>"Hôte de la base de donnée",
+                    "required"=>true,
+                    "error"=>"L'hôte de la base de donnée est requis et doit faire entre 2 et 255 caractères",
+                ],
                 "table_prefix"=>[
                     "type"=>"text",
                     "min"=>2,

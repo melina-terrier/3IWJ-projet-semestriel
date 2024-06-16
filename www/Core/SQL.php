@@ -8,14 +8,22 @@ class SQL
 
     public function __construct()
     {
+        if (file_exists('../config.php')){
+            require_once '../config.php';
+            $dbHost = DB_HOST;
+            $dbName = DB_NAME;
+            $dbUser = DB_USER;
+            $dbPassword = DB_PASSWORD;
+            $dbport = DB_PORT;
+            $tablePrefix = TABLE_PREFIX;
+        }
         try{
-            $this->pdo = new PDO("pgsql:host=postgres;dbname=esgi;port=5432","esgi","esgipwd");
+            $this->pdo = new PDO("pgsql:host=$dbHost;dbname=$dbName;port=$dbport","$dbUser","$dbPassword");
         }catch (\Exception $e){
             die("Erreur SQL : ".$e->getMessage());
         }
-
         $classChild = get_called_class();
-        $this->table = "msnu_".strtolower(str_replace("App\\Models\\","",$classChild));
+        $this->table = $tablePrefix."_".strtolower(str_replace("App\\Models\\","",$classChild));
     }
 
     public function save()
@@ -98,7 +106,6 @@ class SQL
             // pour récupérer un tableau associatif
             $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
         }
-
         return $queryPrepared->fetchAll();
     }
 
@@ -217,5 +224,12 @@ class SQL
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $generatedId = $result['nextval'];
         return $generatedId;
+    }
+
+    public static function populate(int $id): object
+    {
+        $class = get_called_class();
+        $object = new $class();
+        return $object->getOneBy(["id"=>$id], "object");
     }
 }
