@@ -7,7 +7,7 @@
         var data = google.visualization.arrayToDataTable([
             ['Catégorie', 'Nombre'],
             ['Visiteurs', <?php echo $nombreVisiteursNonInscrits; ?>],
-            ['Abonnés', <?php echo $nombreUtilisateursInscrits; ?>],
+            ['Abonnés', <?php echo $elementsCount['users']; ?>],
             ['Auteurs', 0 ] // Remplacez par votre valeur
         ]);
 
@@ -26,34 +26,6 @@
         var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
         chart.draw(data, options);
     }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    var data = <?php echo isset($data) ? json_encode($data) : '[]'; ?>;
-    var labels = <?php echo isset($labels) ? json_encode($labels) : '[]'; ?>;
-    if (data.length > 0 && labels.length > 0) {
-        new ApexCharts(document.querySelector("#donutChart"), {
-            series: data,
-            chart: {
-                height: 350,
-                type: 'donut',
-                toolbar: {
-                    show: true
-                }
-            },
-            labels: labels,
-            dataLabels: {
-                enabled: true,
-                formatter: function (val) {
-                    return val.toFixed(0);
-                }
-            }
-        }).render();
-    } else {
-        document.querySelector("#donutChart").innerText = "Aucune donnée disponible pour afficher le graphique";
-    }
-});
 </script>
 
 
@@ -108,8 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
 </section>
 
 <section>
-	<p>Nombre d'utilisateurs inscrits : <?php echo $elementsCount['users']; ?></p>
-    <p>Nombre de visiteurs non inscrits : <?php echo $nombreVisiteursNonInscrits; ?></p>
+	<p>Nombre d'utilisateurs inscrits : <?php echo htmlspecialchars($elementsCount['users']); ?></p>
+    <p>Nombre de visiteurs non inscrits : <?php echo htmlspecialchars($nombreVisiteursNonInscrits); ?></p>
 
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
 </section>
@@ -126,3 +98,34 @@ document.addEventListener("DOMContentLoaded", () => {
         <?php endif; ?>
     </ul>
 </div>
+<div id="donutChart"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    var data = <?php echo isset($data) ? json_encode($data) : '[]'; ?>;
+    var labels = <?php echo isset($labels) ? json_encode($labels) : '[]'; ?>;
+    if (data.length > 0 && labels.length > 0) {
+        new ApexCharts(document.querySelector("#donutChart"), {
+            series: data,
+            chart: {
+                height: 350,
+                type: 'donut',
+                toolbar: {
+                    show: true
+                }
+            },
+            labels: labels,
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    return val.toFixed(0);
+                }
+            }
+        }).render();
+    } else {
+        document.querySelector("#donutChart").innerText = "Aucune donnée disponible pour afficher le graphique";
+    }
+});
+</script>

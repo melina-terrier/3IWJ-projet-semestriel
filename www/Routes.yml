@@ -92,12 +92,6 @@
   Security: true
   # Role: [admin]
 
-# /dashboard/add-comment:
-#   Controller: "Comment"
-#   Action: "addComment"
-  # Security: true
-  # Role: "admin"
-
 # TAGS
 /dashboard/add-tag:
   Controller: "Tag"
