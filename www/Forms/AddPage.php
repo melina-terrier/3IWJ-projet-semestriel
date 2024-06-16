@@ -60,6 +60,11 @@ class AddPage
                     "label"=>"Ancienne version de la page",
                     "option"=>$historyPage, 
                 ],
+                "submit-draft"=>[
+                    "label"=>"Enregistrer en tant que brouillon",
+                    "type"=>"submit",
+                    "value"=>"Sauvegarder", 
+                ],
             ]
         ];
     }
