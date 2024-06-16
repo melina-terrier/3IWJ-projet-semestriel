@@ -1,1 +1,13 @@
-(function(t){typeof define=="function"&&define.amd?define(t):t()})(function(){"use strict";console.log("test"),window.onload=()=>{document.querySelectorAll(".navbar__toggle").forEach(t=>{t.addEventListener("click",l=>{console.log("click");const n=l.target;n.classList.toggle("active");const e=n.closest(".navbar");e.classList.toggle("toggled");const o=e.querySelector(".navbar__toggle-content");e.classList.contains("toggled")?o.style.maxHeight=o.scrollHeight+"px":o.style.maxHeight="0"})})},console.log("test")});
+window.onload = () => {
+  document.querySelectorAll(".navbar__toggle").forEach((l) => {
+    l.addEventListener("click", (c) => {
+      console.log("click");
+      const o = c.target;
+      o.classList.toggle("active");
+      const t = o.closest(".navbar");
+      t.classList.toggle("toggled");
+      const e = t.querySelector(".navbar__toggle-content");
+      t.classList.contains("toggled") ? e.style.maxHeight = e.scrollHeight + "px" : e.style.maxHeight = "0";
+    });
+  });
+};
