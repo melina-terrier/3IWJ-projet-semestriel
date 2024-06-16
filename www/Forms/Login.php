@@ -16,15 +16,17 @@ class Login
                     "type"=>"email",
                     "min"=>8,
                     "max"=>320,
-                    "label"=>"Email",
+                    "label"=>"Adresse e-mail",
                     "required"=>true,
-                    "error"=>"Le format de l'email est incorrect"
+                    "error"=>"Le format de l'adresse e-mail est incorrect"
                 ],
                 "password"=>[
                     "type"=>"password",
                     "label"=>"Mot de passe",
                     "required"=>true,
-                    "error"=>"Votre mot de passe doit faire au minimum 8 caractères avec des lettres et des chiffres"
+                    "min"=>8,
+                    "max"=>64,
+                    "error"=>"Ce mot de passe n'est pas correct. Veuillez réessayer"
                 ]
             ]
         ];

@@ -1,60 +1,70 @@
-<h2>Mes médias</h2>
+<header>
 
-<div class="media-page">
-    <section class="section1-status-tab">
-        <table class="status-tab">
-            <thead>
-            <tr class="tab">
-                <th class="tab-item active"><a href="#">Tous</a></th>
-                <th class="tab-item"><a href="#">Publiées</a></th>
-                <th class="tab-item"><a href="#">Brouillon</a></th>
+    <?php
+    if ($errors) {
+        echo "<ul>"; 
+        foreach ($errors as $error){
+            echo "<li>$error</li>";
+        }
+        echo "</ul>";
+    } else if ($successes) {
+        echo "<ul>"; 
+        foreach ($successes as $success){
+            echo "<li>$success</li>";
+        }
+        echo "</ul>";
+    }
+    ?>
+
+    <h1>Médias</h1>
+
+    <?php
+        if (isset($_GET['message']) && $_GET['message'] === 'success') {
+        echo "<p>Le média a été ajouté.</p>";
+        } else if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
+        echo "<p>Le média a été supprimé.</p>";
+        }
+    ?>
+
+    <a href="/dashboard/add-media">Ajouter un média</a>
+
+</header>
+
+<section>
+    <table>
+        <thead>
+            <tr>
+                <th>Fichier</th>
+                <th>Auteur</th>
+                <th>Date</th>
+                <th>Téléversé sur</th>
+                <th>Actions</th>
             </tr>
-            </thead>
-        </table>
-    </section>
-    <section class="section2-search-bar">
-        <div class="block-line-search">
-            <label for="input-name"></label>
-            <input type="text" id="input-name" class="search-input" placeholder="Rechercher..."/>
-        </div>
-    </section>
-    <section class="section3-information-page">
-        <table class="status-tab">
-            <thead>
-            <tr class="tab">
-                <th class="tab-item active">Titre</th>
-                <th class="tab-item">Description</th>
-                <th class="tab-item">Date</th>
-                <th class="tab-item">Modifier</th>
-            </tr>
-            </thead>
-            <?php
-            if (isset($this->data['medias'])) {
-                foreach ($this->data['medias'] as $media) {
-                    $mediaId = $media->getId();
-                    $title = $media->getTitle();
-                    $desc = $media->getDescription() ?? '';
-                    $createdAt = (new DateTime($media->getCreationDate()))->format('Y-m-d');
-                    echo "
+        </thead>
+        <?php
+        if ($medias) {
+            foreach ($medias as $media) {
+                $mediaId = $media['id'];
+                $path = $media['url'];
+                $user_id = $media['user_name'];
+                $title = $media['title'];
+                $filename = $media['name'];
+                $date = $media['creation_date'];
+                echo "
                     <tr class='tab-page'>
-                        <td>$title</td>
-                        <td>$desc</td>
-                        <td>$createdAt</td>
+                        <td><img style='width:10%' src='".$path."'><p>$title</p><p>$filename</p></td>
+                        <td>$user_id</td>
+                        <td>$date</td>
                         <td>
-                            <button class='button button-primary'>
-                                <a href='/bo/medias/media?id=$mediaId' class='add-content'>Modifier</a>
-                            </button>
+                            <a href='/dashboard/edit-media?id=$mediaId'>Modifier</a>
+                            <a href='/dashboard/medias?action=delete&id=$mediaId' onclick='return confirm('Êtes-vous sûr de vouloir supprimer cet média définitivement ?');'>Supprimer définitivement</a>
+                            <a href='".$path."'>Voir</a>
+                            <a href='".$path."' download='".$path."'>Télécharger le fichier</a>   
                         </td>
                     </tr>
-                    ";
-                }
+                ";
             }
-            ?>
-        </table>
-    </section>
-    <section class="section4-add">
-        <a href="/bo/medias/media" class="add-content">
-            <button class="button button-primary">Ajouter</button>
-        </a>
-    </section>
-</div>
+        }
+    ?>
+    </table>
+</section>  

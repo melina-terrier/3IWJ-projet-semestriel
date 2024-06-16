@@ -4,15 +4,15 @@ namespace App;
 
 use App\Controllers\Error;
 use App\Controllers\Main;
+use App\Controllers\User as UserController;
 use App\Controllers\Security;
 use App\Models\User;
-use App\Core\PageBuilder;
-use App\Controllers\VisitorController;
-use PDO;
+use App\Models\Setting;
+use App\Controllers\Page;
+use App\Controllers\Project;
+use App\Controllers\Install;
 
-date_default_timezone_set('Europe/Paris');
-
-// Autoloader
+//Autoloader
 spl_autoload_register("App\myAutoloader");
 
 function myAutoloader($class){
@@ -34,6 +34,23 @@ function myAutoloader($class){
     if(file_exists("../vendor/phpmailer/phpmailer/src/".$class.".php")){
         include_once "../vendor/phpmailer/phpmailer/src/".$class.".php";
     }
+}
+
+$setting = new Setting();
+$setting = $setting->getOneBy(['id'=>1]);
+if ($setting){
+    $timezone = $setting['tmezone'];
+    if ($timezone){
+        date_default_timezone_set($timezone);
+    }
+} else {
+    date_default_timezone_set('Europe/paris');
+}
+
+if (!file_exists('../config.php')) {
+    $controller = new Install();
+    $controller->install();
+    die();
 }
 
 $uri = $_SERVER["REQUEST_URI"];
@@ -79,16 +96,6 @@ if( !empty($listOfRoutes[$uri]) ) {
             if (class_exists($controller)) { 
                 $objetController = new $controller();
                 if (method_exists($controller, $action)) {
-                    // Connexion à la base de données
-                    try {
-                        $pdo = new PDO("pgsql:host=postgres;dbname=esgi;port=5432", "esgi", "esgipwd");
-                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    } catch (PDOException $e) {
-                        echo "Erreur de connexion à la base de données : " . $e->getMessage();
-                        exit();
-                    }              
-
-                    // Appeler la méthode du contrôleur
                     $objetController->$action();
 
                 } else {
@@ -107,8 +114,16 @@ if( !empty($listOfRoutes[$uri]) ) {
 }
 else if($uri){
     session_start();
-    $pageBuilder = new PageBuilder();
-    $pageBuilder->build($uri);
+    if (strpos($uri, 'projects') !== false) {
+        $projectBuilder = new Project();
+        $projectBuilder->showProject($uri);
+    } else if (strpos($uri, 'profiles') !== false) {
+        $userBuilder = new UserController();
+        $userBuilder->showUser($uri);
+    } else {
+        $pageBuilder = new Page();
+        $pageBuilder->showPage($uri);
+    }
 }
 else{
     header("Status 404 Not Found", true, 404);

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset>
+  <url>
+    <loc>https://locallhost/test-de-page</loc>
+    <lastmod>2024-06-15 14:37:59</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Test de projet avec plusieurs catégories</loc>
+    <lastmod>2024-06-15 09:25:09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/test catégories</loc>
+    <lastmod>2024-06-15 09:53:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/test catégories-2</loc>
+    <lastmod>2024-06-15 09:54:32</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/test catégories-3</loc>
+    <lastmod>2024-06-15 09:57:11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/test catégories-4</loc>
+    <lastmod>2024-06-15 10:04:44</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Id générer</loc>
+    <lastmod>2024-06-15 10:13:46</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Id</loc>
+    <lastmod>2024-06-15 10:13:55</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Test de l'id</loc>
+    <lastmod>2024-06-15 10:39:05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Test de projet sans catégorie</loc>
+    <lastmod>2024-06-15 10:52:58</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Test de l'id-2</loc>
+    <lastmod>2024-06-15 10:57:08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Test de l'id-3</loc>
+    <lastmod>2024-06-15 10:57:15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Test de l'id-4</loc>
+    <lastmod>2024-06-15 10:58:13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Test redirection</loc>
+    <lastmod>2024-06-15 10:58:53</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Test redirection-2</loc>
+    <lastmod>2024-06-15 10:59:21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Test redirection-3</loc>
+    <lastmod>2024-06-15 10:59:40</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/Test de projet avec une image</loc>
+    <lastmod>2024-06-15 11:31:21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/test-de-projet-avec-un-slug</loc>
+    <lastmod>2024-06-15 13:29:32</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

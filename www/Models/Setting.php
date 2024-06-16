@@ -2,20 +2,21 @@
 namespace App\Models;
 use App\Core\SQL;
 
-class SiteSetting extends SQL{
-
-<<<<<<< HEAD
-}
-=======
+class Setting extends SQL{
     protected ?int $id = null;
     protected $icon;
     protected $title;
-    protected $description;
+    protected $slogan;
     protected $logo;
-    protected $user_id;
-    protected $status_id;
-    protected $created_at;
-    protected $updated_at;
+    protected $timezone;
+    protected $homepage;
+    protected $primary_color;
+    protected $secondary_color;
+    protected $accent_color;
+    protected $primary_font;
+    protected $secundary_font;
+    protected $creation_date;
+    protected $modification_date;
 
     public function getId(): ?int
     {
@@ -47,16 +48,6 @@ class SiteSetting extends SQL{
         $this->title = $title;
     }
 
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    public function setDescription($description): void
-    {
-        $this->description = $description;
-    }
-
     public function getLogo()
     {
         return $this->logo;
@@ -66,54 +57,103 @@ class SiteSetting extends SQL{
     {
         $this->logo = $logo;
     }
-
-    public function getUser()
+    public function getSlogan()
     {
-        return $this->user_id;
+        return $this->slogan;
     }
 
-    public function setUser($user_id): void
+    public function setSlogan($slogan): void
     {
-        $this->user_id = $user_id;
+        $this->slogan = $slogan;
     }
 
-    public function getStatus()
+    public function getTimezone()
     {
-        return $this->status_id;
+        return $this->timezone;
     }
 
-    public function setStatus($status_id): void
+    public function setTimezone($timezone): void
     {
-        $this->status_id = $status_id;
+        $this->timezone = $timezone;
     }
 
-    public function getCreated_at()
+    public function getHomepage()
     {
-        return $this->created_at;
+        return $this->homepage;
     }
 
-    public function setCreated_at($creation_date): void
+    public function setHomepage($homepage): void
     {
-        $this->created_at = $created_at;
+        $this->homepage = $homepage;
     }
 
-    public function getUpdated_at()
+    public function getPrimaryColor()
     {
-        return $this->updated_at;
+        return $this->primary_color;
     }
 
-    public function setUpdated_at($updated_at): void
+    public function setPrimaryColor($primary_color): void
     {
-        $this->updated_at = $updated_at;
+        $this->primary_color = $primary_color;
     }
 
-
-   
-
-    public function getNbElements() {
-        return $this->countElements();
+    public function getSecondaryColor()
+    {
+        return $this->secondary_color;
     }
 
+    public function setSecondaryColor($secondary_color): void
+    {
+        $this->secondary_color = $secondary_color;
+    }
+
+    public function getAccentColor()
+    {
+        return $this->accent_color;
+    }
+
+    public function setAccentColor($accent_color): void
+    {
+        $this->accent_color = $accent_color;
+    }
+
+    public function getPrimaryFont()
+    {
+        return $this->primary_font;
+    }
+
+    public function setPrimaryFont($primary_font): void
+    {
+        $this->primary_font = $primary_font;
+    }
+
+    public function getSecundaryFont()
+    {
+        return $this->secundary_font;
+    }
+
+    public function setSecundaryFont($secundary_font): void
+    {
+        $this->secundary_font = $secundary_font;
+    }
+
+    public function getCreationDate()
+    {
+        return $this->creation_date;
+    }
+
+    public function setCreationDate($creation_date): void
+    {
+        $this->creation_date = $creation_date;
+    }
+
+    public function getModificationDate()
+    {
+        return $this->modification_date;
+    }
+
+    public function setModificationDate($modification_date): void
+    {
+        $this->modification_date = $modification_date;
+    }
 }
-
->>>>>>> 0bb330b08f695036374413d2d62504ce35a61b0d

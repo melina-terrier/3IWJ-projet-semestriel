@@ -1,7 +1,5 @@
-<section class="error-404">
-    <div class="container">
-        <h1>Oops!</h1>
-        <p>The page you're looking for was not found.</p>
-        <a href="/" class="Button Primary">Go Home</a>
-    </div>
+<section>
+    <h1>Page introuvable</h1>
+    <p>La page n'existe pas. Vous pouvez vérifier le lien ou faire une recherche ci-dessus pour trouver ce que vous cherchez.</p>
+    <a href="/" class="Button Primary">Retour à la page d'accueil</a>
 </section>

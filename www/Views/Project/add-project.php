@@ -3,8 +3,8 @@
     const imgLists = [<?php
         if (!empty($this->data['mediasList'])) {
             foreach ($this->data['mediasList'] as $media) {
-                $title = $media['title'];
-                $value = $media['value'];
+                $title = htmlentities($media['title']);
+                $value = htmlentities($media['value']);
                 echo "{title: '$title', value: '$value'},";
             }
         }
