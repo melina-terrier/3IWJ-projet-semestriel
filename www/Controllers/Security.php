@@ -86,7 +86,7 @@ class Security{
         $errors = [];
         $success = [];
         $roles = new RoleModel();
-        $role = $roles->getOneBy(["role"=>"user"], 'object');
+        $role = $roles->getOneBy(['role'=>'Utilisateur'], 'object');
         $roleId = $role->getId();
         $security = new CoreSecurity();
         if ($security->isLogged()){

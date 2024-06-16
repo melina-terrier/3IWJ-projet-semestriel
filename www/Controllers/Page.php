@@ -10,6 +10,7 @@ use App\Controllers\Error;
 use App\Models\Status;
 use App\Models\PageHistory;
 use App\Models\Page as PageModel;
+use App\Core\Sitemap;
 
 class Page {
     public function allPages(): void
@@ -22,6 +23,7 @@ class Page {
         $userModel = new User();
 
         if (isset($_GET['action']) && isset($_GET['id'])) {
+            $sitemap = new Sitemap();
             $currentPage = $pageModel->getOneBy(['id' => $_GET['id']], 'object');
             if ($_GET['action'] === "delete") {
                 $status = $statusModel->getOneBy(["status"=>"Supprimé"], 'object');
@@ -29,10 +31,12 @@ class Page {
                 $currentPage->setStatus($statusId);
                 $currentPage->save();
                 header('Location: /dashboard/pages?message=delete-success');
+                $sitemap->renderSiteMap();
                 exit;
             } else if ($_GET['action'] === "permanent-delete") {
                 $pageModel->delete(['id' => (int)$_GET['id']]);
                 header('Location: /dashboard/pages?message=permanent-delete-success');
+                $sitemap->renderSiteMap();
                 exit;
             } else if ($_GET['action'] === "restore") {
                 $status = $statusModel->getOneBy(["status"=>"Brouillon"], 'object');
@@ -40,6 +44,7 @@ class Page {
                 $currentPage->setStatus($statusId);
                 $currentPage->save();
                 header('Location: /dashboard/pages?message=restore-success');
+                $sitemap->renderSiteMap();
                 exit;
             }
         }
@@ -199,6 +204,8 @@ class Page {
                     $errors[] = "Historique introuvable";
                 }
             }
+            $sitemap = new Sitemap();
+            $sitemap->renderSiteMap();
             $page->save();
         }
 

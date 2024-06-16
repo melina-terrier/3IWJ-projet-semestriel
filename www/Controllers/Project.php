@@ -11,6 +11,7 @@ use App\Models\Tag;
 use App\Models\Comment;
 use App\Models\Project as ProjectModel;
 use App\Models\User;
+use App\Core\Sitemap;
 
 class Project{
 
@@ -126,6 +127,8 @@ class Project{
                 $project->setStatus($status);
             }
             $project->save();
+            $sitemap = new Sitemap();
+            $sitemap->renderSiteMap();
             header("Location: /dashboard/projects?&&message=success");
         }
         $view = new View("Project/add-project", "back");
@@ -144,6 +147,7 @@ class Project{
         $allProjects = $project->getAllData("array");
         $statusModel = new Status();
         $userModel = new User();
+        $sitemap = new Sitemap();
 
         if (isset($_GET['action']) && isset($_GET['id'])) {
             $currentProject = $project->getOneBy(['id' => $_GET['id']], 'object');
@@ -152,10 +156,12 @@ class Project{
                 $statusId = $status->getId();
                 $currentProject->setStatus($statusId);
                 $currentProject->save();
+                $sitemap->renderSiteMap();
                 header('Location: /dashboard/projects?message=delete-success');
                 exit;
             } else if ($_GET['action'] === "permanent-delete") {
                 $project->delete(['id' => (int)$_GET['id']]);
+                $sitemap->renderSiteMap();
                 header('Location: /dashboard/projects?message=permanent-delete-success');
                 exit;
             } else if ($_GET['action'] === "restore") {
@@ -163,6 +169,7 @@ class Project{
                 $statusId = $status->getId();
                 $currentProject->setStatus($statusId);
                 $currentProject->save();
+                $sitemap->renderSiteMap();
                 header('Location: /dashboard/projects?message=restore-success');
                 exit;
             }

@@ -1,12 +1,24 @@
-
-DROP TABLE IF EXISTS msnu_role;
-DROP TABLE IF EXISTS msnu_status;
-DROP TABLE IF EXISTS msnu_user;
-DROP TABLE IF EXISTS msnu_media;
-DROP TABLE IF EXISTS msnu_page;
-DROP TABLE IF EXISTS msnu_project;
-DROP TABLE IF EXISTS msnu_tag;
-DROP TABLE IF EXISTS msnu_comment;
+DROP SEQUENCE IF EXISTS msnu_role_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_role CASCADE;
+DROP TABLE IF EXISTS msnu_status CASCADE;
+DROP SEQUENCE IF EXISTS msnu_user_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_user CASCADE;
+DROP SEQUENCE IF EXISTS msnu_media_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_media CASCADE;
+DROP SEQUENCE IF EXISTS msnu_page_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_page CASCADE;
+DROP SEQUENCE IF EXISTS msnu_project_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_project CASCADE;
+DROP SEQUENCE IF EXISTS msnu_tag_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_tag CASCADE;
+DROP SEQUENCE IF EXISTS msnu_comment_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_comment CASCADE;
+DROP SEQUENCE IF EXISTS msnu_setting_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_setting CASCADE;
+DROP SEQUENCE IF EXISTS msnu_tag_project_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_tag_project CASCADE;
+DROP SEQUENCE IF EXISTS msnu_tag_project_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_tag_project CASCADE;
 
 CREATE TABLE msnu_status (
 	id SERIAL PRIMARY KEY,
@@ -27,7 +39,7 @@ CREATE TABLE msnu_role (
 
 INSERT INTO msnu_role (role) VALUES
   ('Administrateur'),
-  ('Editeur');
+  ('Utilisateur');
 
 CREATE SEQUENCE msnu_user_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 -- Define the msnu_user table

@@ -4,6 +4,7 @@ namespace App;
 
 use App\Controllers\Error;
 use App\Controllers\Main;
+use App\Controllers\User as UserController;
 use App\Controllers\Security;
 use App\Models\User;
 use App\Models\Setting;

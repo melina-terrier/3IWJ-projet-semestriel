@@ -137,7 +137,7 @@
 
 # SETTING
 /dashboard/settings:
-  Controller: "Setting"
+  Controller: "Settings"
   Action: "setSetting"
   Security: true
   # Role: [admin]
