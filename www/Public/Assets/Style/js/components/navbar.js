@@ -1,6 +1,4 @@
 // Logique du composant navbar
-console.log('test');
-
 window.onload = () => {
 	document.querySelectorAll(".navbar__toggle").forEach((elem) => {
 		elem.addEventListener("click", (e) => {
