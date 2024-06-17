@@ -38,6 +38,7 @@ CREATE TABLE {prefix}_role (
 
 INSERT INTO {prefix}_role (role) VALUES
   ('Administrateur'),
+  ('Utilisateur'),
   ('Editeur');
 
 CREATE SEQUENCE {prefix}_user_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;

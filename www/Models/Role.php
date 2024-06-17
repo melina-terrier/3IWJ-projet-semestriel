@@ -19,11 +19,8 @@ class Role extends SQL
         $this->id = $id;
     }
 
-    public function getName($user)
+    public function getName()
     {
-        $roleId = $user->getRole();
-        $role = new Role(); 
-        $roleName = $role->getOneBy(['id'=>$roleId]);
         return $this->role;
     }
 

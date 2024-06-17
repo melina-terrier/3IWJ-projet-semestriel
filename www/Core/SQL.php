@@ -16,14 +16,14 @@ class SQL
             $dbPassword = DB_PASSWORD;
             $dbport = DB_PORT;
             $tablePrefix = TABLE_PREFIX;
+            try{
+                $this->pdo = new PDO("pgsql:host=$dbHost;dbname=$dbName;port=$dbport","$dbUser","$dbPassword");
+            }catch (\Exception $e){
+                die("Erreur SQL : ".$e->getMessage());
+            }
+            $classChild = get_called_class();
+            $this->table = $tablePrefix."_".strtolower(str_replace("App\\Models\\","",$classChild));
         }
-        try{
-            $this->pdo = new PDO("pgsql:host=$dbHost;dbname=$dbName;port=$dbport","$dbUser","$dbPassword");
-        }catch (\Exception $e){
-            die("Erreur SQL : ".$e->getMessage());
-        }
-        $classChild = get_called_class();
-        $this->table = $tablePrefix."_".strtolower(str_replace("App\\Models\\","",$classChild));
     }
 
     public function save()
@@ -164,6 +164,7 @@ class SQL
             $sql .= " " . $column . "=:" . $column . " AND";
         }
         $sql = substr($sql, 0, -3);
+        print_r($sql);
         $queryPrepared = $this->pdo->prepare($sql);
         $queryPrepared->execute($data);
         return $queryPrepared->rowCount() > 0;

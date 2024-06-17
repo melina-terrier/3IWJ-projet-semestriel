@@ -15,12 +15,6 @@ use App\Models\Status;
 
 class Main
 {
-    private $statUser;
-
-    public function __construct() {
-        $this->statUser = new StatUser();
-    }
-
     public function home() {
         $view = new View("Main/page", "front");
         $setting = new Setting();
@@ -59,10 +53,6 @@ class Main
         $view->render();
     }
 
-    public function displayDashboard() {
-        return $this->statUser->getAllUserStats();
-    }
-
     public function dashboard() {
         $user = new User();
         $page = new Page();
@@ -82,35 +72,9 @@ class Main
 
         $comments = $comment->getAllData();
 
-        if (!isset($_SESSION['nombre_visiteurs_non_inscrits'])) {
-            $_SESSION['nombre_visiteurs_non_inscrits'] = 0;
-        }
-
-        if (!isset($_COOKIE['visiteur_unique'])) {
-            $_SESSION['nombre_visiteurs_non_inscrits'] += 1;
-            $cookie_value = uniqid();
-            setcookie('visiteur_unique', $cookie_value, time() + 3600 * 24 * 30, "/");
-            $_COOKIE['visiteur_unique'] = $cookie_value; // Pour assurer que $_COOKIE contient la valeur actuelle
-        }
-
-        $nombre_visiteurs_non_inscrits = $_SESSION['nombre_visiteurs_non_inscrits'];
-
-        $sql = new SQL();
-        $usersProjects = $sql->sql_users_projects();
-
-        $labels = [];
-        $data = [];
-        foreach ($usersProjects as $userProject) {
-            $labels[] = $userProject['firstname'] . ' ' . $userProject['lastname'];
-            $data[] = (int)$userProject['project_count'];
-        }
-
         $view = new View("Main/dashboard", "back");
-        $view->assign("labels", $labels);
-        $view->assign("data", $data);
         $view->assign("comments", $comments);
         $view->assign("elementsCount", $elementsCount);
-        $view->assign("nombreVisiteursNonInscrits", $nombre_visiteurs_non_inscrits);
         $view->render();
     }
 }

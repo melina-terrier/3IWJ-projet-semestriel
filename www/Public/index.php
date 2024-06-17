@@ -37,16 +37,16 @@ function myAutoloader($class){
     }
 }
 
-// $setting = new Setting();
-// if ($setting){
-//     $setting = $setting->getOneBy(['id'=>1]);
-//     $timezone = $setting['tmezone'];
-//     if ($timezone){
-//         date_default_timezone_set($timezone);
-//     }
-// } else {
-//     date_default_timezone_set('Europe/paris');
-// }
+$setting = new Setting();
+if ($setting && file_exists('../config.php')){
+    $setting = $setting->getOneBy(['id'=>1]);
+    $timezone = $setting['timezone'];
+    if ($timezone){
+        date_default_timezone_set($timezone);
+    }
+} else {
+    date_default_timezone_set('Europe/paris');
+}
 
 if (!file_exists('../config.php')) {
     $controller = new Install();
@@ -76,18 +76,18 @@ if( !empty($listOfRoutes[$uri]) ) {
             $error->page403();
             die();
         }
-    }
 
-    if (!empty($listOfRoutes[$uri]['Role'])) {
-        $user = unserialize($_SESSION['user']);
-        $roleId = $user->getRole();
-        $role = new Role(); 
-        $roleName = $role->getOneBy(['id'=>$roleId]);
-        if (!in_array($roleName['role'], $listOfRoutes[$uri]['Role'])) {
-            $error = new Error();
-            $error->page403();
-            die();
-        }
+        // if (!empty($listOfRoutes[$uri]['Role'])) {
+        //     $user = unserialize($_SESSION['user']);
+        //     $roleId = $user->getRole();
+        //     // $role = new Role(); 
+        //     $roleName = $role->getOneBy(['id'=>$roleId]);
+        //     if (!in_array($roleName['role'], $listOfRoutes[$uri]['Role'])) {
+        //         $error = new Error();
+        //         $error->page403();
+        //         die();
+        //     }
+        // }
     }
 
     if (!empty($listOfRoutes[$uri]['Controller']) && !empty($listOfRoutes[$uri]['Action'])) {
