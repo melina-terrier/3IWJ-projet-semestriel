@@ -125,6 +125,7 @@ class Form
                 <input 
                     type='" . $input["type"] . "' 
                     name='" . $name . "' 
+                    value='".$value."'
                     " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
                     " . (isset($input["required"]) ? "required" : "") . "'
                 >";

@@ -2,6 +2,19 @@
   Controller: "Main"
   Action: "home"
 
+/profile/edit:
+  Controller: "User"
+  Action: "editUser"
+  Security: true
+  Role: ["Utilisateur", "Editeur", "Administrateur"]
+
+/profile/edit-password:
+  Controller: "User"
+  Action: "editPassword"
+  Security: true
+  Role: ["Utilisateur", "Editeur", "Administrateur"]
+
+
 # BACK-OFFICE
 /dashboard:
   Controller: "Main"
