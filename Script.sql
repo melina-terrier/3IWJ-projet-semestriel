@@ -221,7 +221,7 @@ CREATE TABLE msnu_page (
 	PRIMARY KEY (id),
 	CONSTRAINT fk_page_user FOREIGN KEY (user_id) REFERENCES msnu_user(id),
 	CONSTRAINT fk_page_status FOREIGN KEY (status_id) REFERENCES msnu_status(id)
-<<<<<<< HEAD
+
 )
 
 -- CREATE TABLE msnu_type_media (
