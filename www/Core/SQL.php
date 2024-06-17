@@ -185,38 +185,6 @@ class SQL
         return $queryPrepared->fetchColumn();
     }
 
-    // A revoir
-    public function sql_users_projects()
-    {
-        $query = 'SELECT u.firstname, u.lastname, COUNT(p.id) AS project_count
-                FROM msnu_user u
-                LEFT JOIN msnu_project p ON u.id = p.user_id
-                GROUP BY u.firstname, u.lastname
-                ORDER BY project_count DESC';
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getAllUsers() {
-        $stmt = $this->pdo->query('SELECT * FROM users');
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getUserStats($userId) {
-        $stmt = $this->pdo->prepare('
-            SELECT
-                (SELECT COUNT(*) FROM pages WHERE user_id = :id) as pages_count,
-                (SELECT COUNT(*) FROM categories WHERE user_id = :id) as categories_count,
-                (SELECT COUNT(*) FROM comments WHERE user_id = :id) as comments_count
-            FROM users WHERE id = :id
-        ');
-        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
-        $stmt->execute();
-        
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    
     public function generateId($sequenceName) {
         $query = "SELECT nextval(:sequenceName)"; 
         $statement = $this->pdo->prepare($query);
@@ -227,10 +195,33 @@ class SQL
         return $generatedId;
     }
 
-    public static function populate(int $id): object
+    public function populate(int $id): object
     {
         $class = get_called_class();
         $object = new $class();
         return $object->getOneBy(["id"=>$id], "object");
     }
+
+    public function getAllDataGroupBy(array $groupBy = null, string $return = "array"): array
+    {
+
+        $sql = "SELECT ";       
+        $sql .= $groupBy['condition']; 
+        $sql .= " FROM " . $this->table;
+        $sql .= " GROUP BY " . $groupBy['name'];
+        $sql .= " ORDER BY " . $groupBy['name'] .' ASC';
+
+        $queryPrepared = $this->pdo->prepare($sql);
+        $queryPrepared->execute();
+
+        if ($return === "object") {
+            $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+        } else {
+            $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
+        }
+
+        return $queryPrepared->fetchAll();
+    }
+
+
 }

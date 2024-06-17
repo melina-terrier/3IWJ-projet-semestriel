@@ -1,4 +1,5 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
@@ -59,6 +60,11 @@
     </article>
 
     <article class="card">
+        <h3>Admin</h3>
+        <p><?php echo $elementsCount['admin']; ?></p>
+    </article>
+
+    <article class="card">
         <h3>Commentaires</h3>
         <p><?php echo $elementsCount['comments']; ?></p>
     </article>
@@ -81,6 +87,17 @@
 
 <section>
 	<p>Nombre d'utilisateurs inscrits : <?php echo htmlspecialchars($elementsCount['users']); ?></p>
+
+    <p>Nombre d'utilisateurs inscrits par jour : <?php echo htmlspecialchars($elementsCount['userByDay']); ?></p>
+    <p>Nombre d'utilisateurs inscrits par Mois : <?php echo htmlspecialchars($elementsCount['userByMonth']); ?></p>
+    <p>Nombre d'utilisateurs inscrits par Ans : <?php echo htmlspecialchars($elementsCount['userByYear']); ?></p>
+
+    <p>Nombre de projets créées par jour : <?php echo htmlspecialchars($elementsCount['projectByDay']); ?></p>
+    <p>Nombre de projets créées par Mois : <?php echo htmlspecialchars($elementsCount['projectByMonth']); ?></p>
+    <p>Nombre de projets créées par Ans : <?php echo htmlspecialchars($elementsCount['projectByYear']); ?></p>
+
+    <p>Nombre de projets créées par utilisateur : <?php echo htmlspecialchars($elementsCount['projectByUser']); ?></p>
+
     <p>Nombre de visiteurs non inscrits : <?php echo htmlspecialchars($nombreVisiteursNonInscrits); ?></p>
 
     <div id="chart_div" style="width: 900px; height: 500px;"></div>

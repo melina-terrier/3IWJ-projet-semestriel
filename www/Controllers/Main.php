@@ -57,20 +57,50 @@ class Main
         $user = new User();
         $page = new Page();
         $media = new Media();
-        $project = new Project();
+        $projects = new Project();
         $comment = new Comment();
         $tag = new Tag();
 
+        $comments = $comment->getAllData();
+
+        $userByDay = $user->getAllDataGroupBy(['condition'=>'extract(day FROM creation_date) AS day', 'name'=>'day'], 'array');
+        $userByMonth = $user->getAllDataGroupBy(['condition'=>'extract(month FROM creation_date) AS month', 'name'=>'month'], 'array');
+        $userByYear = $user->getAllDataGroupBy(['condition'=>'extract(year FROM creation_date) AS year', 'name'=>'year'], 'array');
+
+        $projectByDay = $projects->getAllDataGroupBy(['condition'=>'extract(day FROM creation_date) AS day', 'name'=>'day'], 'array');
+        $projectByMonth = $projects->getAllDataGroupBy(['condition'=>'extract(month FROM creation_date) AS month', 'name'=>'month'], 'array');
+        $projectByYear = $projects->getAllDataGroupBy(['condition'=>'extract(year FROM creation_date) AS year', 'name'=>'year'], 'array');
+
+        foreach ($users as $user) {
+            $userId = $user->getId();
+            $projectCount = 0;
+            foreach ($projects as $project) {
+                $currentUserId = $project->getUser();
+                if ($currentUserId === $userId) {
+                    $projectCount++;
+                }
+            }
+        }
+
+        $admin = $user->getAllDataWithWhere(['id'=>1], "object");
+        $users = $user->getAllDataWithWhere(['id'=>3], 'object');
+
         $elementsCount = [
-            'users' => $user->getNbElements(),
+            'users' => count($users),
+            'admin' => count($admin),
+            'userByYear' => count($userByYear),
+            'userByMonth' => count($userByMonth),
+            'userByDay' => count($userByDay),
             'pages' => $page->getNbElements(),
             'medias' => $media->getNbElements(),
-            'projects' => $project->getNbElements(),
+            'projects' => $projects->getNbElements(),
+            'projectByYear' => count($projectByYear),
+            'projectByMonth' => count($projectByMonth),
+            'projectByDay' => count($projectByDay),
+            'projectByUser' => $projectCount,
             'comments' => $comment->getNbElements(),
             'tags'=>$tag->getNbElements(),
         ];
-
-        $comments = $comment->getAllData();
 
         $view = new View("Main/dashboard", "back");
         $view->assign("comments", $comments);
