@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset>
   <url>
-    <loc>https://locallhost.com/projects/un-super-projet</loc>
-    <lastmod>2024-06-17 18:18:48</lastmod>
+    <loc>https://locallhost.com/projects/nouveau-projet</loc>
+    <lastmod>2024-06-18 16:02:38</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/projects/-projet</loc>
+    <lastmod>2024-06-18 17:40:24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

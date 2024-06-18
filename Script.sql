@@ -39,6 +39,7 @@ CREATE TABLE msnu_role (
 
 INSERT INTO msnu_role (role) VALUES
   ('Administrateur'),
+  ('Editeur'),
   ('Utilisateur');
 
 CREATE SEQUENCE msnu_user_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
