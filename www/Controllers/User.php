@@ -299,7 +299,7 @@ class User
         $user = $db->getOneBy($arraySlug);
         $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         
-        if (!empty($user)) {          
+        if (!empty($user)) {       
             $routeFound = false;
             if ('/profiles/'.$slug === $requestUrl) {
                 $routeFound = true;

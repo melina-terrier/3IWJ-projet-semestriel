@@ -12,6 +12,7 @@ use App\Models\Project;
 use App\Models\Tag;
 use App\Models\Setting;
 use App\Models\Status;
+use App\Models\Role;
 
 class Main
 {
@@ -54,50 +55,104 @@ class Main
     }
 
     public function dashboard() {
-        $user = new User();
+        $users = new User();
         $page = new Page();
         $media = new Media();
         $projects = new Project();
         $comment = new Comment();
         $tag = new Tag();
+        $statusModel = new Status();
+        $roleModel = new Role();
+
+        $status = $statusModel->getOneBy(["status" => "Publié"], 'object');
+        $publishedStatusId = $status->getId();
+        
+        $userRole = $roleModel->getOneBy(["role" => "Utilisateur"], 'object');
+        $userRoleId = $userRole->getId();
+        $adminRole = $roleModel->getOneBy(["role" => "Administrateur"], 'object');
+        $adminRoleId = $adminRole->getId();
 
         $comments = $comment->getAllData();
 
-        $userByDay = $user->getAllDataGroupBy(['condition'=>'extract(day FROM creation_date) AS day', 'name'=>'day'], 'array');
-        $userByMonth = $user->getAllDataGroupBy(['condition'=>'extract(month FROM creation_date) AS month', 'name'=>'month'], 'array');
-        $userByYear = $user->getAllDataGroupBy(['condition'=>'extract(year FROM creation_date) AS year', 'name'=>'year'], 'array');
-
-        $projectByDay = $projects->getAllDataGroupBy(['condition'=>'extract(day FROM creation_date) AS day', 'name'=>'day'], 'array');
-        $projectByMonth = $projects->getAllDataGroupBy(['condition'=>'extract(month FROM creation_date) AS month', 'name'=>'month'], 'array');
-        $projectByYear = $projects->getAllDataGroupBy(['condition'=>'extract(year FROM creation_date) AS year', 'name'=>'year'], 'array');
-
-        foreach ($users as $user) {
-            $userId = $user->getId();
-            $projectCount = 0;
-            foreach ($projects as $project) {
-                $currentUserId = $project->getUser();
-                if ($currentUserId === $userId) {
-                    $projectCount++;
-                }
+        $userByDay = $users->getAllDataGroupBy(["status"=>1, "id_role"=>$userRoleId], ['condition' => 'extract(day FROM creation_date) AS day, extract(month FROM creation_date) AS month, extract(year FROM creation_date) AS year, COUNT(*) AS user_count', 'name' => 'year, month, day'], 'array');
+        $userByMonth = [];
+        foreach ($userByDay as $dayData) {
+            $year = $dayData['year'];
+            $month = $dayData['month'];
+            if (!isset($userByMonth[$year])) {
+                $userByMonth[$year] = [];
             }
+            if (!isset($userByMonth[$year][$month])) {
+                $userByMonth[$year][$month] = [];
+            }
+            $userByMonth[$year][$month][$dayData['day']] = $dayData['user_count'];
         }
 
-        $admin = $user->getAllDataWithWhere(['id'=>1], "object");
-        $users = $user->getAllDataWithWhere(['id'=>3], 'object');
+        $userMonth = $users->getAllDataGroupBy(["status"=>1, "id_role"=>$userRoleId], ['condition' => 'extract(month FROM creation_date) AS month, extract(year FROM creation_date) AS year, COUNT(*) AS user_count', 'name' => 'year, month'], 'array');
+        $userByYear = [];
+        foreach ($userMonth as $monthData) {
+            $year = $monthData['year'];
+            $month = $monthData['month'];
+            if (!isset($userByMonth[$year])) {
+                $userByYear[$year] = [];
+            }
+            $userByYear[$year][$month] = $monthData['user_count'];
+        }
+
+        $projectByDay = $projects->getAllDataGroupBy(["status_id"=>$publishedStatusId], ['condition' => 'extract(day FROM creation_date) AS day, extract(month FROM creation_date) AS month, extract(year FROM creation_date) AS year, COUNT(*) AS project_count', 'name' => 'year, month, day'], 'array');
+        $projectByMonth = [];
+        foreach ($projectByDay as $dayData) {
+            $year = $dayData['year'];
+            $month = $dayData['month'];
+            if (!isset($projectByMonth[$year])) {
+                $projectByMonth[$year] = [];
+            }
+            if (!isset($projectByMonth[$year][$month])) {
+                $projectByMonth[$year][$month] = [];
+            }
+            $projectByMonth[$year][$month][$dayData['day']] = $dayData['project_count'];
+        }
+
+        $projectMonth = $projects->getAllDataGroupBy(["status_id"=>$publishedStatusId], ['condition' => 'extract(month FROM creation_date) AS month, extract(year FROM creation_date) AS year, COUNT(*) AS project_count', 'name' => 'year, month'], 'array');
+        $projectByYear = [];
+        foreach ($projectMonth as $monthData) {
+            $year = $monthData['year'];
+            $month = $monthData['month'];
+            if (!isset($projectByYear[$year])) {
+                $projectByYear[$year] = [];
+            }
+            $projectByYear[$year][$month] = $monthData['project_count'];
+        }
+
+        $admin = $users->getAllDataWithWhere(['id_role'=>$adminRoleId, "status"=>1], "object");
+        $editors = $users->getAllDataWithWhere(['id_role'=>$userRoleId, "status"=>1], 'object');
+
+        $userProjectCounts = []; 
+        $AllUsers = $users->getAllDataWithWhere(['status'=>1], "object");
+        foreach ($AllUsers as $user) {
+          $userId = $user->getId();
+          $userName = $user->getUserName();
+          $userProjectCounts[$userName] = 0;
+          $AllProjects=$projects->getAllDataWithWhere(["status_id"=>$publishedStatusId],"object");
+          foreach ($AllProjects as $project) {
+            $currentUserId = $project->getUser();
+            if ($currentUserId === $userId) {
+              $userProjectCounts[$userName]++; 
+            }
+          }
+        }
 
         $elementsCount = [
-            'users' => count($users),
+            'users' => count($editors),
             'admin' => count($admin),
-            'userByYear' => count($userByYear),
-            'userByMonth' => count($userByMonth),
-            'userByDay' => count($userByDay),
+            'userByYear' => $userByYear,
+            'userByMonth' => $userByMonth,
             'pages' => $page->getNbElements(),
             'medias' => $media->getNbElements(),
             'projects' => $projects->getNbElements(),
-            'projectByYear' => count($projectByYear),
-            'projectByMonth' => count($projectByMonth),
-            'projectByDay' => count($projectByDay),
-            'projectByUser' => $projectCount,
+            'projectByMonth' => $projectByMonth,
+            'projectByYear' => $projectByYear,
+            'projectByUser' => $userProjectCounts,
             'comments' => $comment->getNbElements(),
             'tags'=>$tag->getNbElements(),
         ];

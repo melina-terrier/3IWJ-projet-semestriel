@@ -113,6 +113,7 @@ CREATE TABLE {prefix}_project (
 	status_id				INTEGER NOT NULL,
 	user_id 				INTEGER,
 	tag_id 					INTEGER,
+	featured_image 			VARCHAR(255),
 	PRIMARY KEY (id),
 	CONSTRAINT fk_project_user FOREIGN KEY (user_id) REFERENCES {prefix}_user(id),
 	CONSTRAINT fk_project_status FOREIGN KEY (status_id) REFERENCES {prefix}_status(id)

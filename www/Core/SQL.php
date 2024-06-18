@@ -202,19 +202,33 @@ class SQL
         return $object->getOneBy(["id"=>$id], "object");
     }
 
-    public function getAllDataGroupBy(array $groupBy = null, string $return = "array"): array
+    public function getAllDataGroupBy(array $where, array $groupBy = null, string $return = "array"): array
     {
-
         $sql = "SELECT ";       
         $sql .= $groupBy['condition']; 
         $sql .= " FROM " . $this->table;
+        if ($where) {
+            $sql .= " WHERE ";
+            $conditions = []; 
+            foreach ($where as $column => $value) {
+              $conditions[] = "$column = :$column";
+            }
+            $whereClauseString = implode(' AND ', $conditions);
+            $sql .= $whereClauseString;
+        }
         $sql .= " GROUP BY " . $groupBy['name'];
         $sql .= " ORDER BY " . $groupBy['name'] .' ASC';
 
         $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute();
 
-        if ($return === "object") {
+        if ($where) {
+            $parameters = array_combine(array_keys($where), array_values($where)); // Assuming $whereClause is an associative array
+            $queryPrepared->execute($parameters);
+        } else {
+            $queryPrepared->execute();
+        }
+        
+        if ($return == "object") {
             $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
         } else {
             $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
