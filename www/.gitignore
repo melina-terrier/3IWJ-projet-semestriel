@@ -1,0 +1,4 @@
+vendor/phpmailer
+vendor/tinymce
+vendor/composer
+node_modules

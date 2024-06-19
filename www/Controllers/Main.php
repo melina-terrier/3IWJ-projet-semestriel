@@ -19,17 +19,19 @@ class Main
     public function home() {
         $view = new View("Main/page", "front");
         $setting = new Setting();
-        $settingId = $setting->getOneBy(['id' => 1], 'object');
+        $settingId = $setting->getOneBy(['key' => 'homepage'], 'object');
         if ($settingId){
-            $homepageId = $settingId->getHomepage();
-            $page = new Page();
-            $homepage = $page->getOneBy(['id' => $homepageId]);
-            if (!empty($homepage)) {
-                $title = $homepage["title"];
-                $content = $homepage["content"];
-            } 
-            $view->assign("content", $content);
-            $view->assign("title", $title);
+            $homepageId = $settingId->getValue();
+            if($homepageId){
+                $page = new Page();
+                $homepage = $page->getOneBy(['id' => $homepageId]);
+                if (!empty($homepage)) {
+                    $title = $homepage["title"];
+                    $content = $homepage["content"];
+                } 
+                $view->assign("content", $content);
+                $view->assign("title", $title);
+            }
         } else {
             $project = new Project();
             $statusModel = new Status();

@@ -155,17 +155,8 @@ CREATE SEQUENCE {prefix}_setting_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE {prefix}_setting
 (
     id 						Integer DEFAULT nextval('{prefix}_setting_id_seq') NOT NULL,
-    icon 					VARCHAR(255),
-    title 					VARCHAR(255) NOT NULL,
-	slogan 					TEXT,
-    logo 					VARCHAR(255),
-	timezone 				VARCHAR(255),
-	homepage 				VARCHAR(255),
-	primary_color 			VARCHAR(255),
-	secondary_color 		VARCHAR(255),
-	accent_color 			VARCHAR(255),
-	primary_font 			VARCHAR(255),
-	secundary_font 			VARCHAR(255),
+    key						VARCHAR(255),
+	value					VARCHAR(255),
     modification_date		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (id)
