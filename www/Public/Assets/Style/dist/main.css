@@ -284,6 +284,57 @@ summary {
   font-size: 0.75rem;
 }
 
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding-top: 1rem;
+}
+.sidebar .sidebar-content {
+  padding: 1rem;
+}
+.sidebar .sidebar-brand {
+  display: block;
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.25rem;
+  color: #ecf0f1;
+  text-decoration: none;
+}
+.sidebar .sidebar-brand img {
+  display: block;
+  margin: 0 auto;
+}
+.sidebar .sidebar-nav {
+  list-style: none;
+  padding: 0;
+}
+.sidebar .sidebar-nav .sidebar-item {
+  margin-bottom: 1rem;
+}
+.sidebar .sidebar-nav .sidebar-item.active > .sidebar-link, .sidebar .sidebar-nav .sidebar-item:hover > .sidebar-link {
+  background-color: #34495e;
+}
+.sidebar .sidebar-nav .sidebar-item .sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: #ecf0f1;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+.sidebar .sidebar-nav .sidebar-item .sidebar-link i {
+  margin-right: 0.75rem;
+}
+.sidebar .sidebar-nav .sidebar-item.active > .sidebar-link {
+  background-color: #1abc9c;
+}
+
 ::root {
   --black: #000;
   --blue: #0d6efd;
