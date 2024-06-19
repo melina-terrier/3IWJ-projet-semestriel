@@ -13,7 +13,7 @@ class Tag{
     public function allTags(): void
     {
         $tag = new TagModel();
-        $tags = $tag->getAllData("object");
+        $tags = $tag->getAllData();
         $errors = [];
         $success = [];
         if (isset($_GET['action']) && isset($_GET['id'])) {
@@ -23,23 +23,22 @@ class Tag{
                 exit;
             }
         }
-        $projectCounts = []; // Use plural for clarity (storing multiple counts)
-        foreach ($tags as $tag) {
-            $tagId = $tag->getId();
-            if ($tagId !== null) {
-                $projectModel = new Project(); // Assuming you have a ProjectModel class
-                $projectCount = $projectModel->countElements("tag_id", $tagId); // Replace with appropriate method
-                $projectCounts[] = ["id" => $tagId, "projectCount" => $projectCount]; // Use descriptive keys
-            }
-        }
+        $projectCounts = [];
+        // foreach ($tags as $tag) {
+        //     $tagId = $tag->getId();
+        //     if ($tagId !== null) {
+        //         $projectModel = new Project(); // Assuming you have a ProjectModel class
+        //         $projectCount = $projectModel->countElements("tag_id", $tagId); // Replace with appropriate method
+        //         $projectCounts[] = ["id" => $tagId, "projectCount" => $projectCount]; // Use descriptive keys
+        //     }
+        // }
         $view = new View("Tag/tags-list", "back");
         $view->assign("errors", $errors);
         $view->assign("projectCounts", $projectCounts);
-        $view->assign("success", $success);
+        $view->assign("successes", $success);
         $view->assign("tags", $tags);
         $view->render();
     }
-
 
     public function addTag(): void
     {
@@ -87,7 +86,6 @@ class Tag{
         $view->render();
     }
 
-
     public function editTag(): void
     {
         $tag = new TagModel();
@@ -95,7 +93,7 @@ class Tag{
             $tagId = $_GET['id'];
             $currentTag = $tag->getOneBy(['id' => $tagId], 'object');
             if ($currentTag) {
-                $form = new Form("EditTag");
+                $form = new Form("AddTag");
                 $errors = [];
                 $success = [];
 
@@ -136,7 +134,5 @@ class Tag{
 
             }
         }
-    }
-
-    
+    }   
 }

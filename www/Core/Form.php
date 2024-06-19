@@ -25,59 +25,89 @@ class Form
     public function build(): string
     {
         $html = "";
-        if (!empty($this->errors)) {
-            foreach ($this->errors as $error) {
-                $html .= "<li>" . $error . "</li>";
-            }
-        }
+
         $enctype = isset($this->config["config"]["enctype"]) ? $this->config["config"]["enctype"] : '';
         $html .= "<form action='" . $this->config["config"]["action"] . "' method='" . $this->config["config"]["method"] . "' enctype='" . $enctype . "'>";
         
         foreach ($this->config["inputs"] as $name => $input) {
             $value = isset($this->fields[$name]) ? $this->fields[$name] : '';
 
+            if (isset($input["part"])) {
+                $partTitle = htmlentities($input["part"]);
+                $html .= "<h3>" . $partTitle . "</h3>";
+              }
+
             if ($input["type"] === "select") {
-                $html .= "<label for='$name'>" . $input["label"] . "</label>";
-                $html .= "<select name='$name' " . (isset($input["required"]) ? "required" : "") . " aria-label='Sélectionnez une catégorie'>";
-                $html .= "<option value='' disabled " . ($value == '' ? 'selected' : '') . " aria-label='Sélectionnez une catégorie'>Sélectionnez</option>";
-              
+                if (isset($input["label"]) && !empty($input["label"])) {
+                    $html .= "
+                      <label for='" . $name . "'>" . $input["label"] . "</label><br>
+                    ";
+                  }
+                $html .= "<select name='" . (isset($input["name"]) ? $input["name"] : "") . "' " . (isset($input["required"]) ? "required" : "") . " aria-label='". $input["label"]."' ". (isset($input["multiple"]) ? "multiple" : "") .">";
+                              
                 if (isset($input["option"]) && is_array($input["option"])) {
                     foreach ($input["option"] as $option) {
-                        $selected = $value == $option['id'] ? 'selected' : '';
+                        $selected = '';
+                        if ($value){
+                            foreach ($value as $select) {
+                                if ($select == $option['id']){
+                                    $selected = "selected";
+                                }
+                            }
+                        }
+
                         $html .= "<option value='{$option['id']}' " . (isset($option["disabled"]) ? "disabled" : "") . " $selected>{$option['name']}</option>";
                     }
                 }
               
                 $html .= "</select>";
             }else if ($input["type"] === "checkbox") {
-                $html .= "<label for='$name'>" . $input["label"] . "</label>";
+                if (isset($input["label"]) && !empty($input["label"])) {
+                    $html .= "
+                      <label for='" . $name . "'>" . $input["label"] . "</label><br>
+                    ";
+                  }
               
                 if (isset($input["option"]) && is_array($input["option"])) {
                   foreach ($input["option"] as $option) {
                     $html .= "
-                      <label for='{$option['id']}'>{$option['name']}</label>
+                      <label for='{$option['id']}'><img src='{$option['id']}'></label>
                       <input type='checkbox' name='$name' value='{$option['id']}'><br>";
                   }
                 }
             } else if ($input["type"] === "textarea") {
+                if (isset($input["label"]) && !empty($input["label"])) {
+                    $html .= "
+                      <label for='" . $name . "'>" . $input["label"] . "</label><br>
+                    ";
+                  }
                 $html .= "
-                <label for='" . $name . "'>" . $input["label"] . "</label>
                 <textarea
                     name='" . $name . "'
                     " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
                     " . (isset($input["required"]) ? "required" : "") . "
                 >" . htmlentities($value) . "</textarea>";
             } else if ($input["type"] === "submit") {
+                if (isset($input["label"]) && !empty($input["label"])) {
+                    $html .= "
+                      <label for='" . $name . "'>" . $input["label"] . "</label><br>
+                    ";
+                  }
+
                 $html .= "
-                <label for='" . $name . "'>" . $input["label"] . "</label>
                 <input 
                     type='" . $input["type"] . "' 
                     name='" . $name . "' 
                     value='" . $input["value"] . "'
                 >";
             } else {
+                if (isset($input["label"]) && !empty($input["label"])) {
+                    $html .= "
+                      <label for='" . $name . "'>" . $input["label"] . "</label><br>
+                    ";
+                }
+
                 $html .= "
-                <label for='" . $name . "'>" . $input["label"] . "</label>
                 <input 
                     type='" . $input["type"] . "' 
                     name='" . $name . "' 
@@ -91,6 +121,12 @@ class Form
 
         $html .= "<input type='submit' value='" . htmlentities($this->config["config"]["submit"]) . "'>";
         $html .= "</form>";
+
+        if (!empty($this->errors)) {
+            foreach ($this->errors as $error) {
+                $html .= "<li>" . $error . "</li>";
+            }
+        }
         return $html;
     }
 
@@ -152,15 +188,11 @@ class Form
                 $this->errors[] = $this->config["inputs"][$name]["error"];
             }
 
-            if ($this->config['inputs'][$name]['label']=="Laisser un commentaire" && preg_match('/(https?|ftp):\/\/([^\s]+)/i', $dataSent)) {
-                $this->errors[] = "Les URL ne sont pas autorisés dans le commentaire.";
+            if (isset($this->config['inputs'][$name]['label'])){
+                if ($this->config['inputs'][$name]['label']=="Laisser un commentaire" && preg_match('/(https?|ftp):\/\/([^\s]+)/i', $dataSent)) {
+                    $this->errors[] = "Les URL ne sont pas autorisés dans le commentaire.";
+                }
             }
-
-            // if ($this->config['inputs'][$name]['label'] == "Slug"){
-                
-            //         $this->errors[] = "Le slug existe déjà pour une autre catégorie";
-                
-            // }
                          
             if (isset($this->config["inputs"][$name]["confirm"]) && $dataSent != $_POST[$this->config["inputs"][$name]["confirm"]]) {
                 $this->errors[] = $this->config["inputs"][$name]["error"];

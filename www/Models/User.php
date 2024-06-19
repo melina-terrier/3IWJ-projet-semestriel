@@ -10,11 +10,23 @@ class User extends SQL
     protected string $email;
     protected ?string $password = null;
     protected INT $id_role;
+    protected $slug;
     protected int $status;
     protected ?string $reset_token = null;
     protected ?string $reset_expires = null;
     protected ?string $activation_token = null;
     protected ?string $photo = null;
+    protected $occupation;
+    protected $birthday;
+    protected $country;
+    protected $city;
+    protected $website;
+    protected $link;
+    protected $description;
+    protected $experience;
+    protected $study;
+    protected $competence;
+    protected $interest;
     protected $creation_date;
     protected $modification_date;
 
@@ -154,6 +166,7 @@ class User extends SQL
     {
         $this->modification_date = $modification_date;
     }
+
     public function setSlug()
     {
         $fullName = $this->getUserName();
@@ -161,15 +174,133 @@ class User extends SQL
         $slug = preg_replace('/[^a-zA-Z0-9-]/', '', $slug);
         $this->slug = $slug;
     }
+
     public function getSlug()
     {
         return $this->slug;
     }
 
+    public function getOccupation(): string
+    {
+        return $this->occupation;
+    }
+
+    public function setOccupation(?string $occupation): void
+    {
+        $this->occupation = $occupation;
+    }
+    public function getBirthday(): string
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday(?string $birthday): void
+    {
+        $this->birthday = $birthday;
+    }
+
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): void
+    {
+        $this->country = $country;
+    }
+
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): void
+    {
+        $this->city = $city;
+    }
+
+    public function getWebsite(): string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): void
+    {
+        $this->website = $website;
+    }
+
+    public function getLink(): string
+    {
+        return $this->link;
+    }
+
+    public function setLink(?string $link): void
+    {
+        $this->link = $link;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getExperience(): string
+    {
+        return $this->experience;
+    }
+
+    public function setExperience(?string $experience): void
+    {
+        $this->experience = $experience;
+    }
+
+    public function getStudy(): string
+    {
+        return $this->study;
+    }
+
+    public function setStudy(?string $study): void
+    {
+        $this->study = $study;
+    }
+
+    public function getCompetence(): string
+    {
+        return $this->competence;
+    }
+
+    public function setCompetence(?string $competence): void
+    {
+        $this->competence = $competence;
+    }
+
+    public function getInterest(): string
+    {
+        return $this->interest;
+    }
+
+    public function setInterest(?string $interest): void
+    {
+        $this->interest = $interest;
+    }
+
+    public function getUsers()
+    {
+        return $this->getAllData();
+    }
+
     public function getNbElements() {
         return $this->countElements();
     }
+
     public function __sleep() {
         return array_diff(array_keys(get_object_vars($this)), array('pdo'));
     }
+
+   
 }

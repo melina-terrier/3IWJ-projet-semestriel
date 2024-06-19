@@ -39,7 +39,8 @@ class Tag extends SQL
 
     public function setSlug($slug): void
     {
-        $slug = strtolower(preg_replace('/\s+|[^\w-]/', '-', $slug));
+        $slug = mb_strtolower(preg_replace('/\s+/', '-', trim($slug)));
+        $slug = preg_replace('/[^a-zA-Z0-9-]/', '', $slug);
         $this->slug = $slug;
     }
 
@@ -90,6 +91,5 @@ class Tag extends SQL
     public function getElementsByType($column, $value) {
         return $this->countElements($column, $value);
     }
-    
 
 }

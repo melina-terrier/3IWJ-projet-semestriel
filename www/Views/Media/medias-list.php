@@ -1,34 +1,37 @@
-<?php if (!empty($errors)): ?>
-    <div class="error">
-        <?php foreach ($errors as $error): ?>
-            <p class="text"><?php echo htmlspecialchars($error); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+<header>
 
-<?php if (!empty($success)): ?>
-    <div class="success">
-        <?php foreach ($success as $message): ?>
-            <p class="text"><?php echo htmlspecialchars($message); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
-
-<h2>Médias</h2>
-
-<a href="/dashboard/add-media">Ajouter un média</a>
-
-<?php $successMessage = isset($_GET['message']) && $_GET['message'] === 'success';
-    if (isset($_GET['message']) && $_GET['message'] === 'success') {
-      echo "<p>Le média a été ajouté.</p>";
-    } else if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
-      echo "<p>Le média a été supprimé.</p>";
+    <?php
+    if ($errors) {
+        echo "<ul>"; 
+        foreach ($errors as $error){
+            echo "<li>$error</li>";
+        }
+        echo "</ul>";
+    } else if ($successes) {
+        echo "<ul>"; 
+        foreach ($successes as $success){
+            echo "<li>$success</li>";
+        }
+        echo "</ul>";
     }
-?>
+    ?>
 
+    <h1>Médias</h1>
+
+    <?php
+        if (isset($_GET['message']) && $_GET['message'] === 'success') {
+        echo "<p>Le média a été ajouté.</p>";
+        } else if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
+        echo "<p>Le média a été supprimé.</p>";
+        }
+    ?>
+
+    <a href="/dashboard/add-media">Ajouter un média</a>
+
+</header>
 
 <section>
-    <table id="mediaTable">
+    <table>
         <thead>
             <tr>
                 <th>Fichier</th>
@@ -65,4 +68,3 @@
     ?>
     </table>
 </section>  
-

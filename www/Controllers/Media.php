@@ -87,7 +87,7 @@ class Media{
         $view = new View("Media/medias-list", "back");
         $view->assign("medias", $medias);
         $view->assign("errors", $errors);
-        $view->assign("success", $success);
+        $view->assign("successes", $success);
         $view->render();
     }
 

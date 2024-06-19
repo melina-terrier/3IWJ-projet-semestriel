@@ -1,35 +1,73 @@
-<?php 
-if (!empty($errors)): ?>
-    <div class="error">
-        <?php foreach ($errors as $error): ?>
-            <p class="text"><?php echo htmlspecialchars($error); ?></p>
-            <?php endforeach; ?>
-    </div>
-    <?php endif; ?>
-    
-    <?php if (!empty($success)): ?>
-        <div class="success">
-            <?php foreach ($success as $message): ?>
-                <p class="text"><?php echo htmlspecialchars($message); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+<header>
 
-<h3>Utilisateurs</h3>
+    <?php
+    if ($errors) {
+        echo "<ul>"; 
+        foreach ($errors as $error){
+            echo "<li>$error</li>";
+        }
+        echo "</ul>";
+    } else if ($successes) {
+        echo "<ul>"; 
+        foreach ($successes as $success){
+            echo "<li>$success</li>";
+        }
+        echo "</ul>";
+    }
+    ?>
 
-<?php
-if (isset($_GET['message']) && $_GET['message'] === 'succes') {
-    echo "<p>Le nouveau compte a été créé.</p>";
-} else if (isset($_GET['message']) && $_GET['message'] === 'permanent-delete-success') {
-    echo "<p>Le compte a été définitivement supprimé.</p>";
-}
+    <h1>Utilisateurs</h1>
 
-?>
+    <?php
+    if (isset($_GET['message']) && $_GET['message'] === 'succes') {
+        echo "<p>Le nouveau compte a été créé.</p>";
+    } else if (isset($_GET['message']) && $_GET['message'] === 'permanent-delete-success') {
+        echo "<p>Le compte a été définitivement supprimé.</p>";
+    }
+    ?>
 
-<a href="/dashboard/add-user">Ajouter un utilisateur</a>
+    <a href="/dashboard/add-user">Ajouter un utilisateur</a>
+
+</header>
 
 <section>
-    <table id="userTable">
+    <a href="adminUser">Tous</a>
+    <a href="adminUser">Administrateur</a>
+    <a href="editorUser">Editeur</a>
+</section>
+
+<?php
+$allUsers = [];
+$usersByRole = [];
+
+if (isset($users)) {
+  foreach ($users as $user) {
+    $role = $user['role_name'];
+    $allUsers[] = $user;
+    if (!isset($usersByRole[$role])) {
+      $usersByRole[$role] = [];
+    }
+    $usersByRole[$role][] = $user;
+  }
+}
+
+if (!empty($allUsers)) {
+  echo "
+  <section>
+  <h2>Tous les utilisateurs</h2>";
+  displayUsers($allUsers);
+  echo "</section>";
+}
+
+foreach ($usersByRole as $role => $users) {
+  echo "<section>
+  <h2>$role</h2>";
+  displayUsers($users);
+  echo "</section>";
+}
+
+function displayUsers($users) {
+    echo "<table>
         <thead>
             <tr>
                 <th>Nom</th>
@@ -39,68 +77,51 @@ if (isset($_GET['message']) && $_GET['message'] === 'succes') {
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-            <?php
-                foreach ($users as $user): 
-                    $userId = $user['id'];
-                    $userName = $user['firstname'].' '.$user['lastname'];
-                    $email = $user['email'];
-                    $role = $user['role_name'];
-                    $status = $user['status'];
+        <tbody>"; 
+        foreach ($users as $user){
+            $userId = $user['id'];
+            $userName = $user['firstname'].' '.$user['lastname'];
+            $email = $user['email'];
+            $role = $user['role_name'];
+            $status = $user['status'];
 
-                    $statusText = "";
-                    switch ($status) {
-                        case -1:
-                            $statusText = "Supprimé";
-                            break;
-                        case 0:
-                            $statusText = "En attente";
-                            break;
-                        case 1:
-                            $statusText = "Verifié";
-                            break;
-                        default:
-                            $statusText = "Inconnu";
-                    }
-
-                    echo "
-                        <tr>
-                            <td>$userName</td>
-                            <td>$email</td>
-                            <td>$role</td>
-                            <td>$statusText</td>
-                            <td>
-                                <a href='/profiles/".$user["slug"]."'>Voir</a>
-                                <a href='/dashboard/edit-user?id=$userId'>Modifier</a>
-                                <a href='/dashboard/users?action=delete&id=$userId' onclick='return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');'>Supprimer</a>
-                            </td>
-                        </tr>
-                    ";
-            endforeach; ?>
-        </tbody>
-    </table>
-</section>
+            $statusText = "";
+            switch ($status) {
+                case -1:
+                    $statusText = "Supprimé";
+                    break;
+                case 0:
+                    $statusText = "En attente";
+                    break;
+                case 1:
+                    $statusText = "Verifié";
+                    break;
+                default:
+                    $statusText = "Inconnu";
+            }
+            echo "
+            <tr>
+                <td>$userName</td>
+                <td>$email</td>
+                <td>$role</td>
+                <td>$statusText</td>
+                <td>
+                    <a href='/profiles/".$user["slug"]."'>Voir</a>
+                    <a href='/dashboard/edit-user?id=$userId'>Modifier</a>
+                    <a href='/dashboard/users?action=delete&id=$userId' onclick='return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');'>Supprimer</a>
+                </td>
+            </tr>"; 
+        }
+        echo "</tbody>
+    </table>"; 
+    }
+?>
 
 <script>
-    $(document).ready(function() {
-        var table = $('#userTable').DataTable({
-            "rowCallback": function(row, data, index) {
-                if (index % 2 === 0) {
-                    $(row).css("background-color", "white");
-                } else {
-                    $(row).css("background-color", "");
-                }
-            },
-            "drawCallback": function(settings) {
-                var rows = table.rows({ page: 'current' }).nodes();
-                $(rows).each(function(index) {
-                    if (index % 2 === 0) {
-                        $(this).css("background-color", "white");
-                    } else {
-                        $(this).css("background-color", "");
-                    }
-                });
-            }
-        });
-    });
-</script>
+
+$(document).ready( function () {
+  $('table').DataTable({
+    order: [[ 3, 'desc' ], [ 0, 'asc' ]],
+    pagingType: 'simple_numbers'
+  });
+});

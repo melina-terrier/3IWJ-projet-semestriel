@@ -16,18 +16,18 @@ class EditMedia
                 "title"=>[
                     "type"=>"text",
                     "min"=>2,
-                    "max"=>50,
+                    "max"=>1000,
                     "label"=>"Titre",
                     "required"=>true,
-                    "error"=>"Votre titre doit faire entre 2 et 50 caractères"
+                    "error"=>"Le titre est requis et doit faire entre 2 et 1000 caractères"
                 ],
                 "description"=>[
-                    "type"=>"text",
+                    "type"=>"textarea",
                     "min"=>2,
-                    "max"=>500,
+                    "max"=>4000,
                     "label"=>"Description",
                     "required"=>true,
-                    "error"=>"Votre description doit faire entre 2 et 500 caractères"
+                    "error"=>"La description est requise et doit faire entre 2 et 4000 caractères",
                 ]
             ]
         ];

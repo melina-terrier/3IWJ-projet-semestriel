@@ -4,14 +4,14 @@ namespace App;
 
 use App\Controllers\Error;
 use App\Controllers\Main;
+use App\Controllers\User as UserController;
 use App\Controllers\Security;
 use App\Models\User;
-
+use App\Models\Role;
+use App\Models\Setting;
 use App\Controllers\Page;
 use App\Controllers\Project;
-use App\Controllers\User as UserController;
-
-date_default_timezone_set('Europe/Paris');
+use App\Controllers\Install;
 
 //Autoloader
 spl_autoload_register("App\myAutoloader");
@@ -37,31 +37,35 @@ function myAutoloader($class){
     }
 }
 
+$setting = new Setting();
+if ($setting && file_exists('../config.php')){
+    $setting = $setting->getOneBy(['id'=>1]);
+    $timezone = $setting['timezone'];
+    if ($timezone){
+        date_default_timezone_set($timezone);
+    }
+} else {
+    date_default_timezone_set('Europe/paris');
+}
 
-
-
-// if (!file_exists('./config.php')) {
-//     $controller = new App\Controller\Install();
-//     $controller->run();
-//     die();
-// }
-
-
+if (!file_exists('../config.php')) {
+    $controller = new Install();
+    $controller->install();
+    die();
+}
 
 $uri = $_SERVER["REQUEST_URI"];
-if(strlen($uri) > 1)
+if(strlen($uri) > 1) {
     $uri = rtrim($uri, "/");
-$uriExploded = explode("?",$uri);
-$uri = $uriExploded[0];
-
-
+    $uriExploded = explode("?",$uri);
+    $uri = $uriExploded[0];
+}
 if(file_exists("../Routes.yml")) {
     $listOfRoutes = yaml_parse_file("../Routes.yml");
 }else{
     header("Internal Server Error", true, 500);
     die("Le fichier de routing ../Routes.yml n'existe pas");
 }
-
 
 if( !empty($listOfRoutes[$uri]) ) {
 
@@ -72,16 +76,18 @@ if( !empty($listOfRoutes[$uri]) ) {
             $error->page403();
             die();
         }
-    }
 
-    if (!empty($listOfRoutes[$uri]['Role'])) {
-        $user = unserialize($_SESSION['user']);
-
-        if (!in_array($user->getRoles(), $listOfRoutes[$uri]['Role'])) {
-            $error = new Error();
-            $error->page403();
-            die();
-        }
+        // if (!empty($listOfRoutes[$uri]['Role'])) {
+        //     $user = unserialize($_SESSION['user']);
+        //     $roleId = $user->getRole();
+        //     // $role = new Role(); 
+        //     $roleName = $role->getOneBy(['id'=>$roleId]);
+        //     if (!in_array($roleName['role'], $listOfRoutes[$uri]['Role'])) {
+        //         $error = new Error();
+        //         $error->page403();
+        //         die();
+        //     }
+        // }
     }
 
     if (!empty($listOfRoutes[$uri]['Controller']) && !empty($listOfRoutes[$uri]['Action'])) {
@@ -94,6 +100,7 @@ if( !empty($listOfRoutes[$uri]) ) {
                 $objetController = new $controller();
                 if (method_exists($controller, $action)) {
                     $objetController->$action();
+
                 } else {
                     die("La méthode ".$action." n'existe pas dans le controller ".$controller);
                 }
@@ -105,7 +112,7 @@ if( !empty($listOfRoutes[$uri]) ) {
         }
     } else {
         header("Internal Server Error", true, 500);
-    die("Le fichier routes.yml ne contient pas de controller ou d'action pour l'uri :".$uri);
+        die("Le fichier routes.yml ne contient pas de controller ou d'action pour l'uri :".$uri);
     }
 }
 else if($uri){

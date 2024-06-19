@@ -3,7 +3,7 @@
     const imgLists = [<?php
         if (!empty($this->data['mediasList'])) {
             foreach ($this->data['mediasList'] as $media) {
-                $title = $media['title'];
+                $title = htmlentities($media['title']);
                 $value = $media['value'];
                 echo "{title: '$title', value: '$value'},";
             }
@@ -85,4 +85,4 @@
         </div>
     <?php endif; ?>
 
-    </section>
+</section>

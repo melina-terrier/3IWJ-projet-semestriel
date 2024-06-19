@@ -1,24 +1,24 @@
-<?php if (!empty($errors)): ?>
-    <div class="error">
-        <?php foreach ($errors as $error): ?>
-            <p class="text"><?php echo htmlspecialchars($error); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+<header>
 
-<?php if (!empty($success)): ?>
-    <div class="success">
-        <?php foreach ($success as $message): ?>
-            <p class="text"><?php echo htmlspecialchars($message); ?></p>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+    <?php
+    if ($errors) {
+        echo "<ul>"; 
+        foreach ($errors as $error){
+            echo "<li>$error</li>";
+        }
+        echo "</ul>";
+    } else if ($successes) {
+        echo "<ul>"; 
+        foreach ($successes as $success){
+            echo "<li>$success</li>";
+        }
+        echo "</ul>";
+    }
+    ?>
 
-<h2>Pages</h2>
+    <h1>Pages</h1>
 
-<a href="/dashboard/add-page">Ajouter une page</a>
-
-<?php
+    <?php
     if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
       echo "<p>La page a été supprimée.</p>";
     } else if (isset($_GET['message']) && $_GET['message'] === 'permanent-delete-success'){
@@ -26,7 +26,11 @@
     } else if (isset($_GET['message']) && $_GET['message'] === 'restore-success'){
         echo "<p>La page a été restaurée.</p>";
     }
-?>
+    ?>
+
+    <a href="/dashboard/add-page">Ajouter une page</a>
+
+</header>
 
 <section class="section1-status-tab"> 
     <a href="#allPages">Toutes</a>
@@ -37,74 +41,91 @@
 
 <?php
 
-// print_r($statuses);
-// $statusNames = [];
-// foreach ($statuses as $status) {
-//     $statusName = $status->getName(); 
-//     $statusId = $status->getId();
-//     displayPages($statusName, $pages, $statusId);
-// }
+$allPages = [];
+$pagesByStatus = [];
 
-
-// function displayPages($status, $pages, $statusId){
-    echo "<section id=''>";
-    echo "<h2></h2>";
-    echo "<table id=''>";
-    echo "<thead>";
-    echo "<tr>";
-    echo "<th>Titre</th>";
-    echo "<th>Auteur</th>";
-    echo "<th>Status</th>";
-    echo "<th>Date</th>";
-    echo "<th>Actions</th>";
-    echo "</tr>";
-    echo "</thead>";
-    echo "<tbody>";
-
-    if ($pages) {
-    foreach ($pages as $page) {
-        $status = $page['status_name'];
-        // if ($status == $statusId){
-            $pageId = $page['id'];
-            $title = $page['title'];
-            $userName = $page['user_name'];
-            $creationDate = $page['creation_date'];
-            $publicationDate = $page['publication_date'];
-            $modificationDate = $page['modification_date'];
-            echo "<tr>";
-            echo "<td>$title</td>";
-            echo "<td>$userName</td>";
-            echo "<td>$status</td>"; 
-
-           switch ($status) {
-              case "published":
-                  echo "<td>$publicationDate</td>";
-                  echo "<td><a href='/".$page['slug']."'>Voir</a>
-                  <a href='/dashboard/add-page?id=$pageId'>Modifier</a>
-                  <a href='/dashboard/pages?action=delete&id=$pageId'>Supprimer</a></td>";
-                  break;
-              case "deleted":
-                  echo "<td>$modificationDate</td>";
-                  echo "<td>
-                  <a href='/dashboard/pages?action=restore&id=$pageId'>Restaurer</a>
-                  <a href='/dashboard/pages?action=permanent-delete&id=$pageId'>Supprimer définitivement</a></td>";
-                  break;
-              case "draft":
-                  echo "<td>$modificationDate</td>";
-                  echo "<td><a href='/".$page['slug']."?preview=true'>Prévisualiser</a>
-                  <a href='/dashboard/add-page?id=$pageId'>Modifier</a>
-                  <a href='/dashboard/pages?action=delete&id=$pageId'>Supprimer</a></td>"; 
-                  break;
-          }
-          echo "</tr>";
-        }
+if (isset($pages)) {
+  foreach ($pages as $page) {
+    $status = $page['status_name'];
+    $allPages[] = $page;
+    if (!isset($pageByStatus[$status])) {
+      $pageByStatus[$status] = [];
     }
-//   } else {
-//     echo "<tr><td colspan='5'>Aucun commentaire trouvé</td></tr>";
-//   }
-
-  echo "</tbody>";
-  echo "</table>";
+    $pageByStatus[$status][] = $page;
+  }
+}
+if (!empty($allPages)) {
+  echo "
+  <section>";
+  displayPages($allPages);
   echo "</section>";
-// }
+}
+foreach ($pagesByStatus as $status => $pages) {
+  echo "<section>";
+  displayPages($pages);
+  echo "</section>";
+}
+
+function displayPages($pages){
+    echo "<table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>"; 
+
+        if ($pages) {
+            foreach ($pages as $page) {
+                $status = $page['status_name'];
+                $pageId = $page['id'];
+                $title = $page['title'];
+                $userName = $page['user_name'];
+                $creationDate = $page['creation_date'];
+                $publicationDate = $page['publication_date'];
+                $modificationDate = $page['modification_date'];
+                echo "<tr>
+                    <td>$title</td>
+                    <td>$userName</td>
+                    <td>$status</td>"; 
+
+                    switch ($status) {
+                        case "Publié":
+                            echo "<td>$publicationDate</td>
+                            <td><a href='/".$page['slug']."'>Voir</a>
+                            <a href='/dashboard/add-page?id=$pageId'>Modifier</a>
+                            <a href='/dashboard/pages?action=delete&id=$pageId'>Supprimer</a></td>";
+                            break;
+                        case "Supprimé":
+                            echo "<td>$modificationDate</td>
+                            <td><a href='/dashboard/pages?action=restore&id=$pageId'>Restaurer</a>
+                            <a href='/dashboard/pages?action=permanent-delete&id=$pageId'>Supprimer définitivement</a></td>";
+                            break;
+                        case "Brouillon":
+                            echo "<td>$modificationDate</td>
+                            <td><a href='/".$page['slug']."?preview=true'>Prévisualiser</a>
+                            <a href='/dashboard/add-page?id=$pageId'>Modifier</a>
+                            <a href='/dashboard/pages?action=delete&id=$pageId'>Supprimer</a></td>"; 
+                            break;
+                    }
+                echo "</tr>";
+            }
+        }
+        echo "</tbody>";
+  echo "</table>";
+}
 ?>
+
+<script>
+$(document).ready( function () {
+  $('table').DataTable({
+    order: [[ 3, 'desc' ], [ 0, 'asc' ]],
+    pagingType: 'simple_numbers'
+  });
+});
+</script>
