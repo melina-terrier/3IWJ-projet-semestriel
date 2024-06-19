@@ -71,10 +71,15 @@ class SetSetting
                 ],
                 "slogan" => [
                     "type" => "text",
-                    "min" => 2,
                     "max" => 500,
                     "label" => "Slogan",
                     "error" => "Le slogan doit faire entre 2 et 500 caractères"
+                ],
+                "site_description" => [
+                    "type" => "text",
+                    "label" => "Description du site",
+                    "required" => true,
+                    "error" => "La description du site est obligatoire"
                 ],
                 "timezone" => [
                     "type" => "select",
@@ -84,16 +89,8 @@ class SetSetting
                 "homepage" => [
                     "type" => "select",
                     "label" => "Page d'accueil",
-                    "required" => true,
                     "option" => $formattedPages,
                     "error" => "La page d'accueil est requise"
-                ],
-                "icon" => [
-                    "type" => "file",
-                    "label" => "Favicon",
-                    "accept"=>  "image/png, image/jpeg, image/svg",
-                    "error" => "Le format du fichier n'est pas pris en compte", 
-                    "part" => "Apparence du site web"
                 ],
                 "logo" => [
                     "type" => "file",

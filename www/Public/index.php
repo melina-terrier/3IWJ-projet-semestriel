@@ -37,16 +37,8 @@ function myAutoloader($class){
     }
 }
 
-$setting = new Setting();
-if ($setting && file_exists('../config.php')){
-    $setting = $setting->getOneBy(['id'=>1]);
-    $timezone = $setting['timezone'];
-    if ($timezone){
-        date_default_timezone_set($timezone);
-    }
-} else {
-    date_default_timezone_set('Europe/paris');
-}
+date_default_timezone_set('Europe/paris');
+
 
 if (!file_exists('../config.php')) {
     $controller = new Install();

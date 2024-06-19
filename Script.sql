@@ -1,24 +1,24 @@
-DROP SEQUENCE IF EXISTS esgi_role_id_seq CASCADE;
-DROP TABLE IF EXISTS esgi_role CASCADE;
-DROP TABLE IF EXISTS esgi_status CASCADE;
-DROP SEQUENCE IF EXISTS esgi_user_id_seq CASCADE;
-DROP TABLE IF EXISTS esgi_user CASCADE;
-DROP SEQUENCE IF EXISTS esgi_media_id_seq CASCADE;
-DROP TABLE IF EXISTS esgi_media CASCADE;
-DROP SEQUENCE IF EXISTS esgi_page_id_seq CASCADE;
-DROP TABLE IF EXISTS esgi_page CASCADE;
-DROP SEQUENCE IF EXISTS esgi_project_id_seq CASCADE;
-DROP TABLE IF EXISTS esgi_project CASCADE;
-DROP SEQUENCE IF EXISTS esgi_tag_id_seq CASCADE;
-DROP TABLE IF EXISTS esgi_tag CASCADE;
-DROP SEQUENCE IF EXISTS esgi_comment_id_seq CASCADE;
-DROP TABLE IF EXISTS esgi_comment CASCADE;
-DROP SEQUENCE IF EXISTS esgi_setting_id_seq CASCADE;
-DROP TABLE IF EXISTS esgi_setting CASCADE;
-DROP SEQUENCE IF EXISTS esgi_project_tags_id_seq CASCADE;
-DROP TABLE IF EXISTS esgi_project_tags CASCADE;
-DROP SEQUENCE IF EXISTS esgi_pagehistory_id_seq CASCADE;
-DROP TABLE IF EXISTS esgi_pagehistory CASCADE;
+DROP SEQUENCE IF EXISTS msnu_role_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_role CASCADE;
+DROP TABLE IF EXISTS msnu_status CASCADE;
+DROP SEQUENCE IF EXISTS msnu_user_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_user CASCADE;
+DROP SEQUENCE IF EXISTS msnu_media_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_media CASCADE;
+DROP SEQUENCE IF EXISTS msnu_page_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_page CASCADE;
+DROP SEQUENCE IF EXISTS msnu_project_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_project CASCADE;
+DROP SEQUENCE IF EXISTS msnu_tag_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_tag CASCADE;
+DROP SEQUENCE IF EXISTS msnu_comment_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_comment CASCADE;
+DROP SEQUENCE IF EXISTS msnu_setting_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_setting CASCADE;
+DROP SEQUENCE IF EXISTS msnu_project_tags_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_project_tags CASCADE;
+DROP SEQUENCE IF EXISTS msnu_pagehistory_id_seq CASCADE;
+DROP TABLE IF EXISTS msnu_pagehistory CASCADE;
 
 CREATE TABLE msnu_status (
 	id SERIAL PRIMARY KEY,
@@ -247,17 +247,8 @@ CREATE SEQUENCE msnu_setting_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE msnu_setting
 (
     id 						Integer DEFAULT nextval('msnu_setting_id_seq') NOT NULL,
-    icon 					VARCHAR(255),
-    title 					VARCHAR(255) NOT NULL,
-	slogan 					TEXT,
-    logo 					VARCHAR(255),
-	timezone 				VARCHAR(255),
-	homepage 				VARCHAR(255),
-	primary_color 			VARCHAR(255),
-	secondary_color 		VARCHAR(255),
-	accent_color 		VARCHAR(255),
-	primary_font 			VARCHAR(255),
-	secundary_font 				VARCHAR(255),
+    key						VARCHAR(255),
+	value					VARCHAR(255),
     modification_date		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (id)
