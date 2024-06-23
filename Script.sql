@@ -74,13 +74,6 @@ CREATE TABLE msnu_user (
 	CONSTRAINT fk_user_role FOREIGN KEY (id_role) REFERENCES msnu_role(id)
 );
 
--- Define the msnu_type_notification table
--- CREATE TABLE msnu_type_notification (
--- 	id_type_notification SERIAL,
--- 	libelle              VARCHAR(50),
--- 	PRIMARY KEY (id_type_notification)
--- );
-
 
 CREATE SEQUENCE msnu_tag_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 -- Define the msnu_category table
@@ -134,16 +127,6 @@ CREATE TABLE msnu_project (
 	CONSTRAINT fk_project_status FOREIGN KEY (status_id) REFERENCES msnu_status(id)
 );
 
--- Define the msnu_category_project table
--- CREATE TABLE msnu_project_tags (
--- 	id SERIAL NOT NULL PRIMARY KEY,
--- 	project_id INTEGER NOT NULL,
--- 	tag_id INTEGER NOT NULL,
--- 	FOREIGN KEY (project_id) REFERENCES msnu_project(id),
--- 	FOREIGN KEY (tag_id) REFERENCES msnu_tag(id)
--- );
-
-
 
 CREATE SEQUENCE msnu_comment_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 -- Define the msnu_comment table
@@ -162,69 +145,71 @@ CREATE TABLE msnu_comment (
 	CONSTRAINT fk_comment_project FOREIGN KEY (project_id) REFERENCES msnu_project(id)
 );
 
--- Define the msnu_notification table
--- CREATE TABLE msnu_notification (
--- 	id_notification      SERIAL,
--- 	content              VARCHAR(50),
--- 	date_notification    DATE,
--- 	id_user              INTEGER,
--- 	id_type_notification INTEGER,
--- 	PRIMARY KEY (id_notification),
--- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id),
--- 	FOREIGN KEY (id_type_notification) REFERENCES msnu_type_notification(id_type_notification)
--- );
+-- Define the msnu_formation table
+CREATE TABLE msnu_formation (
+	id        SERIAL PRIMARY KEY NOT NULL,
+	title               VARCHAR(255),
+	start_date          DATE,
+	Diploma_date        DATE,
+	mention             VARCHAR(255),
+	domain_formation    VARCHAR(255),
+	Training_center     VARCHAR(255),
+	Description_formation TEXT,
+	user_id             INTEGER,
+	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES msnu_user(id)
+);
 
--- -- Define the msnu_formation table
--- CREATE TABLE msnu_formation (
--- 	id_formation        SERIAL,
--- 	title               VARCHAR(50),
--- 	start_date          DATE,
--- 	Diploma_date        DATE,
--- 	mention             VARCHAR(155),
--- 	domain_formation    VARCHAR(50),
--- 	Training_center     VARCHAR(50),
--- 	Description_formation TEXT,
--- 	id_user             INTEGER,
--- 	PRIMARY KEY (id_formation),
--- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
--- );
+-- Define the msnu_professional_experience table
+CREATE TABLE msnu_professional_experience (
+	id         SERIAL PRIMARY KEY NOT NULL,
+	libelle               VARCHAR(255),
+	start_date            DATE,
+	finish_date           DATE,
+	mention               VARCHAR(255),
+	domain_formation      VARCHAR(255),
+	business              VARCHAR(255),
+	Description_experience TEXT,
+	user_id               INTEGER,
+	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES msnu_user(id)
+);
 
--- -- Define the msnu_professional_experience table
--- CREATE TABLE msnu_professional_experience (
--- 	id_experience         SERIAL,
--- 	libelle               VARCHAR(50),
--- 	start_date            DATE,
--- 	finish_date           DATE,
--- 	mention               VARCHAR(155),
--- 	domain_formation      VARCHAR(50),
--- 	business              VARCHAR(50),
--- 	Description_experience TEXT,
--- 	id_user               INTEGER,
--- 	PRIMARY KEY (id_experience),
--- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
--- );
+-- Define the msnu_skills table
+CREATE TABLE msnu_skills (
+	id            SERIAL PRIMARY KEY NOT NULL,
+	title                VARCHAR(255),
+	level_skills         DATE,
+	description_skills   TEXT,
+	user_id              INTEGER,
+	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES msnu_user(id)
+);
 
--- -- Define the msnu_skills table
--- CREATE TABLE msnu_skills (
--- 	id_skills            SERIAL,
--- 	title                VARCHAR(50),
--- 	level_skills         DATE,
--- 	description_skills   TEXT,
--- 	id_user              INTEGER,
--- 	PRIMARY KEY (id_skills),
--- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
--- );
+-- Define the msnu_interests table
+CREATE TABLE msnu_interests (
+	id         SERIAL PRIMARY KEY NOT NULL,
+	title                 VARCHAR(255),
+	level_skills          VARCHAR(255),
+	description_interests TEXT,
+	user_id               INTEGER,
+	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES msnu_user(id)
+);
 
--- -- Define the msnu_interests table
--- CREATE TABLE msnu_interests (
--- 	id_interests          SERIAL,
--- 	title                 VARCHAR(50),
--- 	level_skills          VARCHAR(50),
--- 	description_interests TEXT,
--- 	id_user               INTEGER,
--- 	PRIMARY KEY (id_interests),
--- 	FOREIGN KEY (id_user) REFERENCES msnu_user(id)
--- );
+CREATE TABLE msnu_link (
+	id        SERIAL PRIMARY KEY NOT NULL,
+	name      VARCHAR(255),
+	link      VARCHAR(255),
+	user_id	  INT NOT NULL,
+	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES msnu_user(id)
+);
 
 CREATE SEQUENCE msnu_page_id_seq INCREMENT 1 MINVALUE 1 CACHE 1;
 CREATE TABLE msnu_page (
@@ -273,4 +258,20 @@ CREATE TABLE msnu_pagehistory (
   content text,
   slug VARCHAR(255),
   FOREIGN KEY (page_id) REFERENCES msnu_page(id)
+);
+
+CREATE TABLE msnu_menu (
+    id 		SERIAL PRIMARY KEY NOT NULL,
+    type 	VARCHAR(255) NOT NULL
+);
+CREATE TABLE msnu_menu_items (
+    id 			SERIAL PRIMARY KEY NOT NULL,
+    menu_id 	INT,
+    parent_id 	INT DEFAULT NULL,
+    type 		VARCHAR(255) NOT NULL,
+    title 		VARCHAR(255) NOT NULL,
+    url 		VARCHAR(255) NOT NULL,
+    position 	INT,
+    FOREIGN KEY (menu_id) REFERENCES msnu_menus(id),
+    FOREIGN KEY (parent_id) REFERENCES msnu_menu_items(id) ON DELETE CASCADE
 );

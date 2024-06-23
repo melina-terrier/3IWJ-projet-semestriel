@@ -60,6 +60,7 @@ class EditUser
                 ],
                 "country"=>[
                     "type"=>"select",
+                    "name"=>"country",
                     "label"=>"Zone géographique",
                     "option"=>[["id"=>"", "name"=>"Tous les pays"], ["id"=>"France", "name"=>"France"], ["id"=>"Etats-Unis", "name"=>"Etats-Unis"], ["id"=>"Belgique", "name"=>"Belgique"], ["id"=>"Allemagne", "name"=>"Allemagne"]],
                     "error"=>"Votre pays doit faire entre 2 et 50 caractères",
@@ -81,15 +82,20 @@ class EditUser
                     "error"=>"Votre ville doit faire entre 2 et 50 caractères",
                     "part"=>"Sur le web",
                 ],
-                "link"=>[
+                "link[]"=>[
                     "type"=>"text",
                     "min"=>2,
                     "max"=>255,
                     "label"=>"Lien vers vos réseaux sociaux",
                     "required"=>true,
+                    "add-input"=>true,
                     "error"=>"ce champ doit faire entre 2 et 255 caractères",
                 ],
-
+                "add-link"=>[
+                    "type"=>"button",
+                    "label"=>"Ajouter un lien",
+                    "link-to"=>"link[]",
+                ],
                 "description"=>[
                     "type"=>"textarea",
                     "min"=>2,

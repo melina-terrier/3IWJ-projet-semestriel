@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-use App\Models\User;
+use App\Models\UserModel;
 use App\Models\Page;
 use App\Models\Project;
 use App\Models\Status;

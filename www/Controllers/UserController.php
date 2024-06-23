@@ -8,11 +8,16 @@ use App\Models\Comment;
 use App\Models\Page;
 use App\Models\Tag;
 use App\Models\Role;
+use App\Models\Formation;
+use App\Models\Interest;
+use App\Models\Professional_experience;
+use App\Models\Skill;
+use App\Models\Link;
 use App\Models\Project;
 use App\Models\User as UserModel;
 use App\Controllers\Security as UserSecurity;
 
-class User
+class UserController
 {
 
     public function allUsers(): void
@@ -94,7 +99,7 @@ class User
         $userSecurity = new UserSecurity();
         $errors = [];
         $success = [];
-        $formattedDate = date('d/m/Y H:i:s');
+        $formattedDate = date('Y-m-d H:i:s');
 
         if (isset($_GET['id']) && $_GET['id']) {
             $userId = $_GET['id'];
@@ -156,21 +161,18 @@ class User
     }
 
     public function editUser(): void {
-        $userId = 
         $user = new UserModel();
+        $linkModel = new Link();
         $errors = [];
         $success = [];
 
         $userSerialized = null;
-
         if (isset($_SESSION['user'])) {
             $userSerialized = unserialize($_SESSION['user']);
         }
-
         if (!$userSerialized) {
             $errors[] = "Utilisateur non trouvé.";
         }
-
         $userId = $userSerialized->getId();
         $userModel = $user->getOneBy(['id' => $userId]);
 
@@ -183,18 +185,20 @@ class User
         $form->setField('birthday', $userModel['birthday']);
         $form->setField('country', $userModel['country']);
         $form->setField('city', $userModel['city']);
-        $form->setField('link', $userModel['link']);
         $form->setField('website', $userModel['website']);
         $form->setField('description', $userModel['description']);
         $form->setField('experience', $userModel['experience']);
         $form->setField('study', $userModel['study']);
         $form->setField('competence', $userModel['competence']);
         $form->setField('interest', $userModel['interest']);
-        
-        if( $form->isSubmitted() && $form->isValid() )
+
+        $links = $linkModel->getAllDataWithWhere(['user_id' => $userId]);
+        $form->setField('link[]', $links);
+
+        if( $form->isSubmitted() && $form->isValid())
         {
             $user->setDataFromArray($userModel);
-            $formattedDate = date('d/m/Y H:i:s');
+            $formattedDate = date('Y-m-d H:i:s');
             $user->setLastname($_POST["lastname"]);
             $user->setFirstname($_POST["firstname"]);
             $user->setEmail($_POST["email"]);
@@ -223,12 +227,23 @@ class User
                 $media->save();
                 $user->setPhoto('/uploads/users/'. $fileName);
             }
+
+            if ($_POST['link']) {
+                foreach ($_POST['link'] as $link) {
+                    $linkModel->setName('Test'); 
+                    $linkModel->setLink($link); 
+                    $linkModel->setUserId($userId); 
+                    $linkModel->setCreationDate($formattedDate); 
+                    $linkModel->setModificationDate($formattedDate);
+                    $linkModel->save();  
+                }
+            }
+
             $user->setBirthday($_POST["birthday"]);
             $user->setOccupation($_POST["occupation"]);
             $user->setCountry($_POST["country"]);
             $user->setCity($_POST["city"]);
             $user->setWebsite($_POST["website"]);
-            $user->setLink($_POST["link"]);
             $user->setDescription($_POST["description"]);
             $user->setExperience($_POST["experience"]);
             $user->setStudy($_POST["study"]);

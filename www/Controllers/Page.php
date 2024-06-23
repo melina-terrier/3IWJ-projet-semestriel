@@ -7,6 +7,7 @@ use App\Core\View;
 use App\Models\Media;
 use App\Models\User;
 use App\Controllers\Error;
+use App\Controllers\SEO;
 use App\Models\Status;
 use App\Models\PageHistory;
 use App\Models\Page as PageModel;
@@ -111,8 +112,17 @@ class Page {
             }
         }
 
+        $seoScore = '';
+        $seoSuggestions = '';
+
         if( $form->isSubmitted() && $form->isValid() )
         {   
+            $seo = new SEO();
+            $content = $_POST['content'];
+            $targetKeywords = explode($_POST['seo-request']);
+            $seoScore = calculateSEO($pageContent, $targetKeywords);
+            $seoSuggestions = getSEOSuggestions($seoScore);
+
             if(isset($_GET['id']) && $_GET['id']){
 
                 if ($selectedPage->getTitle() !== $_POST['title'] ||
@@ -208,8 +218,9 @@ class Page {
             $sitemap->renderSiteMap();
             $page->save();
         }
-
         $view = new View("Page/add-page", "back");
+        $view->assign("seoScore", $seoScore);
+        $view->assign("seoSuggestions", $seoSuggestions);
         $view->assign("form", $form->build());
         $view->assign("mediasList", $mediasList ?? []);
         $view->assign("errorsForm", $errors);
@@ -229,7 +240,7 @@ class Page {
 
         if (!empty($page) && $page["status_id"] === $publishedStatusId || (isset($_GET['preview']) && $_GET['preview'] == true)) {
             $content = $page["content"];
-            $title = $page["title"];
+            $pageTitle = $page["title"];
     
             $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             $routeFound = false;
@@ -239,7 +250,7 @@ class Page {
             if ($routeFound) {
                 $view = new View("Main/page", "front");
                 $view->assign("content", $content);
-                $view->assign("title", $title);
+                $view->assign("pageTitle", $pageTitle);
                 $view->render(); 
             }
         } else {

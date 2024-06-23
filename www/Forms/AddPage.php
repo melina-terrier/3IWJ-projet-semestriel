@@ -62,6 +62,19 @@ class AddPage
                     "label"=>"Ancienne version de la page",
                     "option"=>$historyPage, 
                 ],
+                "seo-title"=>[
+                    "type"=>"text",
+                    "label"=>"Titre SEO",
+                    "part"=>"SEO"
+                ],
+                "seo-request"=>[
+                    "type"=>"text",
+                    "label"=>"Requête cible",
+                ],
+                "seo-description"=>[
+                    "type"=>"textarea",
+                    "label"=>"Méta description",
+                ],
                 "submit-draft"=>[
                     "label"=>"Enregistrer en tant que brouillon",
                     "type"=>"submit",

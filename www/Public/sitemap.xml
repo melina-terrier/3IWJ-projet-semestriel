@@ -1,2 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset/>
+<urlset>
+  <url>
+    <loc>https://locallhost/test-de-page</loc>
+    <lastmod>2024-06-19 18:49:34</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/projects/super-projet</loc>
+    <lastmod>2024-06-21 19:27:14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://locallhost.com/projects/test-avec-une-image</loc>
+    <lastmod>2024-06-22 12:36:37</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

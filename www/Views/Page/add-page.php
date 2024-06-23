@@ -83,6 +83,10 @@
                 <p class="text"><?php echo htmlspecialchars($message); ?></p>
             <?php endforeach; ?>
         </div>
-    <?php endif; ?>
+    <?php endif; 
+    
+    echo $seoScore; 
+    echo $seoSuggestions; 
+    ?>
 
 </section>

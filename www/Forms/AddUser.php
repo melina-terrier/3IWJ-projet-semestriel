@@ -12,6 +12,7 @@ class AddUser
         $roles = $role->getAllData('object');
 
         $formattedRoles = [];
+        $formattedRoles[] = ["id"=>"", "name"=>"Sélectionnez un rôle"];
         if (!empty($roles)) {
             foreach ($roles as $role) {
               $formattedRoles[] = [
@@ -32,7 +33,7 @@ class AddUser
                 "action"=>"",
                 "method"=>"POST",
                 "submit"=>"Envoyer un mail de création de mot de passe"
-                ],
+            ],
             "inputs"=>[
                 "lastname"=>[
                     "type"=>"text",

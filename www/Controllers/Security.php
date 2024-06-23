@@ -5,7 +5,7 @@ use App\Core\Form;
 use App\Core\View;
 use App\Models\User;
 use App\Models\Role as RoleModel;
-use App\Core\Security as CoreSecurity;
+use App\Core\SecurityCore;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -14,11 +14,10 @@ class Security{
 
     public function login(): void
     {
-        session_start();
         $form = new Form("Login");
         $errors = [];
         $success = [];
-        $security = new CoreSecurity();
+        $security = new SecurityCore();
 
         $token = $_GET['token'] ?? '';
         if (!empty($token)) {
@@ -88,7 +87,7 @@ class Security{
         $roles = new RoleModel();
         $role = $roles->getOneBy(['role'=>'Utilisateur'], 'object');
         $roleId = $role->getId();
-        $security = new CoreSecurity();
+        $security = new SecurityCore();
         if ($security->isLogged()){
             $view = new View("Security/already-login", "front");
         } else {

@@ -4,6 +4,7 @@ namespace App\Forms;
 use App\Models\Tag;
 use App\Models\Media;
 use App\Core\SQL;
+use App\Core\Form;
 
 class AddProject
 {
@@ -39,13 +40,10 @@ class AddProject
                 "name" => $mediaObject->getName(),
               ];
             }
-        } else {
-            $arrayMedias[] = [
-                "id" => '',
-                "name" => 'Aucune image disponible',
-                "selected" => true,
-            ];
         }
+
+        $form = new Form('AddMedia'); 
+        
         return [
             "config"=>[
                 "action"=>"",
@@ -69,9 +67,10 @@ class AddProject
                     "error"=>"Le contenu est requis et doit avoir au minimum 2 caractères",
                 ],
                 "featured_image"=>[
-                    "type"=>"checkbox",
+                    "type"=>"media",
                     "option"=>$arrayMedias,
                     "label"=>"Image mise en avant",
+                    "form"=>$form->build(),
                     "error"=>"Le format du fichier n'est pas pris en compte"
                 ],
                 "slug"=>[
@@ -86,6 +85,19 @@ class AddProject
                     "label"=>"Catégorie du projet",
                     "option"=>$formattedTags, 
                     "multiple"=>true,
+                ],
+                "seo-title"=>[
+                    "type"=>"text",
+                    "label"=>"Titre SEO",
+                    "part"=>"SEO"
+                ],
+                "seo-request"=>[
+                    "type"=>"text",
+                    "label"=>"Requête cible",
+                ],
+                "seo-description"=>[
+                    "type"=>"textarea",
+                    "label"=>"Méta description",
                 ],
                 "submit-draft"=>[
                     "label"=>"Enregistrer en tant que brouillon",

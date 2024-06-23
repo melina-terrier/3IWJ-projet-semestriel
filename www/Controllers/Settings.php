@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Form;
 use App\Core\View;
+use App\Models\Menu;
 use App\Models\Setting as SettingModel;
 
 class Settings{
@@ -165,6 +166,120 @@ class Settings{
             $errors[]="Les settings n'ont pas été mis à jour.";
         }
         $view = new View("Setting/setting", "back");
+        $view->assign("form", $form->build());
+        $view->assign("errors", $errors);
+        $view->render();
+    }
+
+    public function setMenu(){
+            $errors = [];
+            $settingsManager = new Menu();
+            $form = new Form("SetMenu");
+          
+            if ($form->isSubmitted() && $form->isValid()) {
+              $data = json_decode($this->getRequest()->request->get('data'), true);
+              $menuItemIds = isset($data['menuItems']) ? (array) $data['menuItems'] : [];
+          
+              if (!empty($menuItemIds)) {
+                // Process the menu item IDs
+              } else {
+                $errors[] = "Aucun élément de menu n'a été sélectionné.";
+              }
+            } else {
+              $errors[] = "Requête invalide.";
+            }
+          
+            $response = [
+              'success' => empty($errors),
+              'errors' => $errors,
+            ];
+          
+            echo json_encode($response);
+      
+        $view = new View("Setting/menu", "back");
+        $view->assign("form", $form->build());
+        $view->assign("errors", $errors);
+        $view->render();
+    }
+
+    public function setAppearance()
+    {
+        $errors = [];
+        $settingsManager = new SettingModel();
+        $form = new Form("appearanceSetting");
+
+        if( $form->isSubmitted() && $form->isValid() )
+        {
+            $formattedDate = date('Y-m-d H:i:s');
+
+            $settingsPrimaryColor = $settingsManager->getOneBy(['key'=>'primary_color'], 'object');
+            if ($settingsPrimaryColor){
+                $settingsPrimaryColor->setValue($_POST['primary_color']);
+                $settingsPrimaryColor->setModificationDate($formattedDate);
+            } else {
+                $settingsPrimaryColor = new SettingModel();
+                $settingsPrimaryColor->setKey('primary_color');
+                $settingsPrimaryColor->setValue($_POST['primary_color']);
+                $settingsPrimaryColor->setCreationDate($formattedDate);
+                $settingsPrimaryColor->setModificationDate($formattedDate);
+            }
+            $settingsPrimaryColor->save();
+
+            $settingsSecondaryColor = $settingsManager->getOneBy(['key'=>'secondary_color'], 'object');
+            if ($settingsSecondaryColor){
+                $settingsSecondaryColor->setValue($_POST['secondary_color']);
+                $settingsSecondaryColor->setModificationDate($formattedDate);
+            } else {
+                $settingsSecondaryColor = new SettingModel();
+                $settingsSecondaryColor->setKey('secondary_color');
+                $settingsSecondaryColor->setValue($_POST['secondary_color']);
+                $settingsSecondaryColor->setCreationDate($formattedDate);
+                $settingsSecondaryColor->setModificationDate($formattedDate);
+            }
+            $settingsSecondaryColor->save();
+
+            $settingsAccentColor = $settingsManager->getOneBy(['key'=>'accent_color'], 'object');
+            if ($settingsAccentColor){
+                $settingsAccentColor->setValue($_POST['accent_color']);
+                $settingsAccentColor->setModificationDate($formattedDate);
+            } else {
+                $settingsAccentColor = new SettingModel();
+                $settingsAccentColor->setKey('accent_color');
+                $settingsAccentColor->setValue($_POST['accent_color']);
+                $settingsAccentColor->setCreationDate($formattedDate);
+                $settingsAccentColor->setModificationDate($formattedDate);
+            }
+            $settingsAccentColor->save();
+
+            $settingsPrimaryFont = $settingsManager->getOneBy(['key'=>'primary_font'], 'object');
+            if ($settingsPrimaryFont){
+                $settingsPrimaryFont->setValue($_POST['primary_font']);
+                $settingsPrimaryFont->setModificationDate($formattedDate);
+            } else {
+                $settingsPrimaryFont = new SettingModel();
+                $settingsPrimaryFont->setKey('primary_font');
+                $settingsPrimaryFont->setValue($_POST['primary_font']);
+                $settingsPrimaryFont->setCreationDate($formattedDate);
+                $settingsPrimaryFont->setModificationDate($formattedDate);
+            }
+            $settingsPrimaryFont->save();
+
+            $settingsSecundaryFont = $settingsManager->getOneBy(['key'=>'secundary_font'], 'object');
+            if ($settingsSecundaryFont){
+                $settingsSecundaryFont->setValue($_POST['secundary_font']);
+                $settingsSecundaryFont->setModificationDate($formattedDate);
+            } else {
+                $settingsSecundaryFont = new SettingModel();
+                $settingsSecundaryFont->setKey('secundary_font');
+                $settingsSecundaryFont->setValue($_POST['secundary_font']);
+                $settingsSecundaryFont->setCreationDate($formattedDate);
+                $settingsSecundaryFont->setModificationDate($formattedDate);
+            }
+            $settingsSecundaryFont->save();
+        } else {
+            $errors[]="Les settings n'ont pas été mis à jour.";
+        }
+        $view = new View("Setting/appearance", "back");
         $view->assign("form", $form->build());
         $view->assign("errors", $errors);
         $view->render();

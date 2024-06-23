@@ -1,2 +1,7 @@
 vendor
 node_modules
+
+/Public/Assets/Uploads/media/*
+/Public/Assets/Uploads/users/*
+.env
+config.php

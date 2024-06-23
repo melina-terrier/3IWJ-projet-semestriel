@@ -28,12 +28,12 @@ class Media{
                 $fileSize = $mediaFile['size'];
                 $fileType = $mediaFile['type']; 
                 $tmpName = $mediaFile['tmp_name'];                
-                $destinationPath = '../Public/uploads/media/' . $fileName;
+                $destinationPath = '../Public/Assets/Uploads/media/' . $fileName;
                 if (move_uploaded_file($tmpName, $destinationPath)) {
                     $media->setType($fileType);
                     $media->setSize($fileSize);
                     $media->setName($fileName);
-                    $media->setUrl('/uploads/media/'. $fileName); 
+                    $media->setUrl('/Assets/uploads/media/'. $fileName); 
                 } else {
                     $errors[] = "Erreur lors du téléchargement du média.";
                 }

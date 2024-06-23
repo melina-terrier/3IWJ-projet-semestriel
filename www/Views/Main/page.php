@@ -2,8 +2,8 @@
 
     <h1>
         <?php
-        if (isset($title)) {
-            echo $title;
+        if (isset($pageTitle)) {
+            echo $pageTitle;
         } else {
             echo "Bienvenue sur la page d'accueil"; 
         }

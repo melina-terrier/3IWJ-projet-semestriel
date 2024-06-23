@@ -43,19 +43,22 @@ class Form
                       <label for='" . $name . "'>" . $input["label"] . "</label><br>
                     ";
                   }
-                $html .= "<select name='" . (isset($input["name"]) ? $input["name"] : "") . "' " . (isset($input["required"]) ? "required" : "") . " aria-label='". $input["label"]."' ". (isset($input["multiple"]) ? "multiple" : "") .">";
+                $html .= "<select name='" .$name. "' " . (isset($input["required"]) ? "required" : "") . " aria-label='". $input["label"]."' ". (isset($input["multiple"]) ? "multiple" : "") .">";
                               
                 if (isset($input["option"]) && is_array($input["option"])) {
                     foreach ($input["option"] as $option) {
                         $selected = '';
-                        if ($value){
+                        if ($value && is_array($value)){
                             foreach ($value as $select) {
                                 if ($select == $option['id']){
                                     $selected = "selected";
                                 }
                             }
+                        } else if ($value) {
+                            if ($value == $option['id']){
+                                $selected = "selected";
+                            }
                         }
-
                         $html .= "<option value='{$option['id']}' " . (isset($option["disabled"]) ? "disabled" : "") . " $selected>{$option['name']}</option>";
                     }
                 }
@@ -71,24 +74,35 @@ class Form
                 if (isset($input["option"]) && is_array($input["option"])) {
                   foreach ($input["option"] as $option) {
                     $html .= "
-                      <label for='{$option['id']}'><img src='{$option['id']}'></label>
-                      <input type='checkbox' name='$name' value='{$option['id']}'><br>";
+                    <input type='checkbox' name='$name' value='{$option['id']}'>
+                    <label for='{$option['id']}'>{$option['name']}</label><br>";
                   }
                 }
-            } else if ($input["type"] === "custom") {
-                if (isset($input["label"]) && !empty($input["label"])) {
-                    $html .= "
-                      <label for='" . $name . "'>" . $input["label"] . "</label><br>
-                    ";
-                  }
-                if (isset($input["option"]) && is_array($input["option"])) {
-                    $html .= "<ul id='menu-container'>"; 
-                    foreach ($input["option"] as $option) {
-                        $html .= "
-                        <li draggable='true' class='menu-item' id='{$option['id']}'>".$option['name']."</li>";
-                    }
-                    $html .= "</ul>";
-                }
+            } else if ($input["type"] === "media") {
+                $html .=' <button id="openMediaModal" value="'.$value.'">Select Media</button>
+
+                <div id="mediaModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Media Selection</h2>
+            
+                        <div id="mediaSelection">';
+
+                        if (isset($input["option"]) && is_array($input["option"])) {
+                            foreach ($input["option"] as $option) {
+                              $html .= "
+                             <label for='{$option['id']}'><img src='{$option['id']}'></label>
+                            <input type='checkbox' name='$name' value='{$option['id']}'><br>";
+                            }
+                          }
+
+                $html .= '</div>
+                        <div id="imageUpload">'.
+                        $input['form']
+                        .'</div>
+                        <button id="saveMedia">Save</button>
+                    </div>
+                </div>'; 
             } else if ($input["type"] === "textarea") {
                 if (isset($input["label"]) && !empty($input["label"])) {
                     $html .= "
@@ -114,21 +128,81 @@ class Form
                     name='" . $name . "' 
                     value='" . $input["value"] . "'
                 >";
-            } else {
+            } else if ($input["type"] === "button") {
+                $html .= '<button id="'.$name.'"';
+                if (isset($input['link-to'])){
+                    $html .= 'data-link="'.$input['link-to'].'"';
+                }
+                $html .= ">".$input['label']."</button>";
+            } else if ($input["type"] === "custom") {
+                $html .= "<div class='menu-container'>";
                 if (isset($input["label"]) && !empty($input["label"])) {
                     $html .= "
                       <label for='" . $name . "'>" . $input["label"] . "</label><br>
                     ";
+                  }
+              
+                $html .= "<ul id='pages-list'>";
+                if (isset($input["option"]) && is_array($input["option"])) {
+                  foreach ($input["option"] as $option) {
+                    $html .= "
+                    <input type='checkbox' name='$name' id='{$option['id']}'>
+                    <label for='{$option['id']}'>{$option['name']}</label><br>";
+                  }
+                }
+                $html .= "</ul>
+                <div>
+                    <h2>Ajouter un lien externe</h2>
+                    <input type='text' id='external-link-title' placeholder='Titre du lien'>
+                    <input type='text' id='external-link-url' placeholder='URL du lien'>
+                    <button id='add-external-link'>Ajouter un lien externe</button>
+                </div>
+                <a href='#' id='add-to-menu'>Ajouter au menu</a>
+                <br><div class='menu-list' sortable></div></div>";
+            } else {
+                if (isset($input['add-input'])) {
+                     $html .= '<div id="'.$name.'">';
                 }
 
-                $html .= "
-                <input 
-                    type='" . $input["type"] . "' 
-                    name='" . $name . "' 
-                    value='".$value."'
-                    " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
-                    " . (isset($input["required"]) ? "required" : "") . "'
-                >";
+                if (isset($input["label"]) && !empty($input["label"])) {
+                    $html .= "
+                    <label for='" . $name . "'>" . $input["label"] . "</label><br>
+                    ";
+                }
+
+                if (is_array($value)){
+                    $number = 0; 
+                    foreach ($value as $text){
+
+                        if ($name == 'link[]'){
+                            $html .= "
+                            <input 
+                                type='" . $input["type"] . "' 
+                                name='" . $name. "' 
+                                " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] .$number. "'" : "") . "
+                                value='".$text['link']."'
+                                " . (isset($input["required"]) ? "required" : "") . "'
+                            >";
+                        }
+                        
+                        $number++;
+                    }
+                } else {
+                    $html .= "
+                    <input 
+                        type='" . $input["type"] . "' 
+                        name='" . $name . "' 
+                        value='".$value."'
+                        " . (isset($input["id"]) && !empty($input["id"]) ? "id='" . $input["id"] . "'" : "") . "
+                        " . (isset($input["required"]) ? "required" : "") . "'
+                    >";
+                }
+
+               
+
+                if (isset($input['add-input'])) {
+                    $html .= '</div>';
+               }
             }
             $html .= "<br>";
         }
@@ -186,9 +260,10 @@ class Form
         }
 
         foreach ($_POST as $name => $dataSent) {
-            if (!isset($this->config["inputs"][$name])) {
-                $this->errors[] = "Le champ " . $name . " n'est pas autorisé";
-            }
+
+            // if (!isset($this->config["inputs"][$name])) {
+            //       $this->errors[] = "Le champ " . $name . " n'est pas autorisé";
+            // }
 
             if (isset($this->config["inputs"][$name]["required"]) && empty($dataSent)) {
                 $this->errors[] = "Le champ " . $name . " ne doit pas être vide";

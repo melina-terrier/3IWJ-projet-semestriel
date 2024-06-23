@@ -1,8 +1,16 @@
+<?php
+use App\Models\Setting;
+$setting = new Setting();
+if ($setting) {
+    $title = $setting->getOneBy(['key' => "title"]) ?? '';
+}
+?>
+
 <!DOCTYPE HTML>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>dashboard</title>
+        <title><?= $title['value'] ?></title>
         <meta name="description" content="Dashboard du CMS">
 
         <link rel="stylesheet" href="../Assets/Style/dist/css/style.css">
@@ -13,16 +21,17 @@
 
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+
+        <script src="https://kit.fontawesome.com/cd44d84840.js" crossorigin="anonymous"></script>
         
     </head>
     <body>        
         <header id="header" class="back-office-header">
-
+            <h1><?= $title['value'] ?></h1>
             <nav>
                 <ul>
-                    <li><a href="">Mes notifications</a></li>
                     <li><a href="/dashboard/profile">Mon profil</a></li>
-                    <li><a href="/logout">Se déconnecter</a></li>
+                    <li><a href="/logout" title="Se déconnecter"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
                 </ul>
             </nav>
 
@@ -57,7 +66,13 @@
                     </li>
                     <li><a href="/dashboard/comments">Commentaires</a>
                     </li>
-                    <li><a href="/dashboard/settings">Paramètres</a></li>
+                    <li><a href="#">Paramètres</a>
+                        <ul>
+                        <li><a href="/dashboard/settings">Paramêtres généraux</a></li>
+                            <li><a href="/dashboard/menu">Menus </a></li>
+                            <li><a href="/dashboard/appearance">Apparence</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </nav>
         </header>

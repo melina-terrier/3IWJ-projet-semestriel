@@ -14,7 +14,8 @@ class SetSetting
         $statusId = $status->getId();
         $pages = $page->getAllDataWithWhere(["status_id"=>$statusId], 'object');
         $formattedPages = [];
-        $formattedPages[] = ["id"=>"Projetcs", "name"=>"Tous les projets"];
+        $formattedPages[] = ["id"=>"", "name"=>"Page par défaut"];
+        $formattedPages[] = ["id"=>"Projects", "name"=>"Tous les projets"];
         $formattedPages[] = ["id"=>"Users", "name"=>"Tous les utilisateurs"];
         if (!empty($pages)) {
             foreach ($pages as $page) {
@@ -92,33 +93,18 @@ class SetSetting
                     "option" => $formattedPages,
                     "error" => "La page d'accueil est requise"
                 ],
+                "allow_reviews" => [
+                    "name" => "Autoriser les commentaires",
+                    "type" => "checkbox",
+                    "id" => "allow_reviews",
+                    "class" => "input w-100",
+                    "required" => false,
+                  ],
                 "logo" => [
                     "type" => "file",
                     "label" => "Logo",
                     "error" => ""
                 ],
-                "primary_color" => [
-                    "type" => "color",
-                    "label" => "Couleur principale",
-                ],
-                "secondary_color" => [
-                    "type" => "color",
-                    "label" => "Couleur secondaire",
-                ],
-                "accent_color" => [
-                    "type" => "color",
-                    "label" => "Couleur d'accentuation",
-                ],
-                "primary_font" => [
-                    "type" => "select",
-                    "label" => "Police des titres",
-                    "options" => "",
-                ], 
-                "secundary_font" => [
-                    "type" => "select",
-                    "label" => "Police du texte",
-                    "options" => "",
-                ], 
             ]
         ];
     }

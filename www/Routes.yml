@@ -3,13 +3,13 @@
   Action: "home"
 
 /profile/edit:
-  Controller: "User"
+  Controller: "UserController"
   Action: "editUser"
   Security: true
   Role: ["Utilisateur", "Editeur", "Administrateur"]
 
 /profile/edit-password:
-  Controller: "User"
+  Controller: "UserController"
   Action: "editPassword"
   Security: true
   Role: ["Utilisateur", "Editeur", "Administrateur"]
@@ -24,19 +24,19 @@
 
 # USER
 /dashboard/users:
-  Controller: "User"
+  Controller: "UserController"
   Action: "allUsers"
   Security: true
   Role: ["Administrateur"]
 
 /dashboard/add-user:
-  Controller: "User"
+  Controller: "UserController"
   Action: "addUser"
   Security: true
   Role: ["Administrateur"]
 
 /dashboard/edit-user:
-  Controller: "User"
+  Controller: "UserController"
   Action: "addUser"
   Security: true
   Role: ["Administrateur"]
@@ -131,6 +131,18 @@
   Security: true
   Role: ["Administrateur"]
 
+/dashboard/menu:
+  Controller: "Settings"
+  Action: "setMenu"
+  Security: true
+  Role: ["Administrateur"]
+
+/dashboard/appearance:
+  Controller: "Settings"
+  Action: "setAppearance"
+  Security: true
+  Role: ["Administrateur"]
+
 # USER
 /login:
   Controller: "Security"
@@ -155,3 +167,7 @@
 /request-password:
   Controller: "Security"
   Action: "requestPassword"
+
+/search: 
+  Controller: "Search"
+  Action: "displayResult"

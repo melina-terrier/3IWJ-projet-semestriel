@@ -11,7 +11,7 @@ use App\Models\Tag;
 use App\Models\Comment;
 use App\Models\Project_Tags;
 use App\Models\Project as ProjectModel;
-use App\Models\User;
+use App\Models\UserModel;
 use App\Core\Sitemap;
 
 class Project{
