@@ -9,6 +9,7 @@ use App\Models\Media;
 use App\Models\Status;
 use App\Models\Tag;
 use App\Models\Comment;
+use App\Models\Project_Tags;
 use App\Models\Project as ProjectModel;
 use App\Models\User;
 use App\Core\Sitemap;
@@ -308,27 +309,32 @@ class Project{
             $view->assign("projects", $projects);
             $view->render();  
         } else if($requestUrl === '/projects' || $requestUrl === '/projects//') {
+            $projectTags = new Project_Tags();
             $projects = $db->getAllDataWithWhere(['status_id' => $publishedStatusId]);
             $userModel = new User();
             foreach ($projects as &$project) {
-            //   $tagId = $project['tag_id'];
+                $projectTagsId = $projectTags->getAllDataWithWhere(['id_project'=>$project['id']]);
                 $userId = $project['user_id'];
                 $project['category_name'] ='';
                 $project['username'] ='';
                 $project['userSlug'] ='';
+                $project['profile_photo'] = '';
                 if ($userId) {
                     $user = $userModel->getOneBy(['id' => $userId], 'object');
                     if ($user) {
                         $project['username'] = $user->getUserName();
                         $project['userSlug'] = $user->getSlug();
+                        $project['profile_photo'] = $user->getPhoto();
                   }
                 }
-            //   if ($tagId) {
-            //     $tag = $tags->getOneBy(['id' => $tagId], 'object');
-            //     if ($tag) {
-            //       $project['category_name'] = $tag->getName(); // Add category name to project data
-            //     }
-            //   }
+                if ($projectTagsId) {
+                    foreach ($projectTagsId as $projectTagId){
+                        $tagId = $tags->getOneBy(['id' => $projectTagId['id_tag']]);
+                        if ($tagId) {
+                            $project['category_name'] .= $tag['name'];
+                        }
+                    }
+                }
             }
         
             $view = new View("Main/all-projects", "front");

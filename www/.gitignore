@@ -1,3 +1,2 @@
-vendor/phpmailer
-vendor/tinymce
+vendor
 node_modules

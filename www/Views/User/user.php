@@ -1,4 +1,4 @@
-<section class="user-profile">
+<section>
         <img src="<?= !empty($userData['img_path']) ? htmlspecialchars($userData['img_path']) : '/Views/styles/dist/images/profil.png' ?>" alt="Image de profil">
         <div class="user-info">
             <p class="subtitle"><?= htmlspecialchars($userData['firstname']) . ' ' . htmlspecialchars($userData['lastname']) ?></p>
@@ -12,4 +12,3 @@
             <a href="/bo/user/edit-user?id=<?php echo $userData['id']; ?>"><button class="button button-primary">Modifier</button></a>
         </div>
 </section>
-

@@ -1,165 +1,169 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord</title>
-    <link rel="stylesheet" href="../styles/dist/main.css">
+<h1>Tableau de bord</h1>
 
-</head>
-<body>
-<main>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+<section>
 
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Catégorie', 'Nombre'],
-                ['Visiteurs', <?php echo $nombreVisiteursNonInscrits; ?>],
-                ['Abonnés', <?php echo $nombreUtilisateursInscrits; ?>],
-                ['Auteurs', 0 ] 
-            ]);
+    <article class="card">
+        <h3>Pages</h3>
+        <p><?php echo $elementsCount['pages']; ?></p>
+    </article>
 
-            var options = {
-                title: 'Statistiques',
-                chartArea: {width: '50%'},
-                hAxis: {
-                    title: 'Nombre total',
-                    minValue: 0
-                },
-                vAxis: {
-                    title: 'Catégorie'
-                }
-            };
+    <article class="card">
+        <h3>Projets</h3>
+        <p><?php echo $elementsCount['projects']; ?></p>
+    </article>
 
-            var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
+    <article class="card">
+        <h3>Tags</h3>
+        <p><?php echo $elementsCount['tags']; ?></p>
+    </article>
+        
+    <article class="card">
+        <h3>Médias</h3>
+        <p><?php echo $elementsCount['medias']; ?></p>
+    </article>
+
+    <article class="card">
+        <h3>Utilisateurs</h3>
+        <p><?php echo $elementsCount['users']; ?></p>
+    </article>
+
+    <article class="card">
+        <h3>Admin</h3>
+        <p><?php echo $elementsCount['admin']; ?></p>
+    </article>
+
+    <article class="card">
+        <h3>Commentaires</h3>
+        <p><?php echo $elementsCount['comments']; ?></p>
+    </article>
+
+</section>
+
+<section>
+    <h2>Commentaires en attentes de validation</h2>
+    <?php 
+        foreach ($comments as $comment) {
+            if($comment['status'] == 0){
+                echo '<article>
+                    <p>'.$comment["name"].'</p>
+                    <p>'.$comment["comment"].'<p>
+                </article>';
+            }
         }
-    </script>
+    ?>
+</section>
 
-    <div class="dashboard">
-        <h2>Tableau de bord</h2>
-        <p class="subtitle">Bonjour, <strong><?php echo htmlspecialchars($lastname); ?> <?php echo htmlspecialchars($firstname); ?></strong>!
-            <br>Vous êtes connecté en tant que <em><?php echo htmlspecialchars($roles); ?></em>
-        </p>
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
 
-        <section class="dashboard-cards">
-        <a href="/dashboard/pages" class="dashboard-card green">
-        <article class="card">
-                    <div class="text">
-                        <div class="title">Page</div>
-                        <div class="number"><?php echo htmlspecialchars($elementsCount['pages']); ?></div>
-                    </div>
-                    <button class="view-all">View All</button>
-             </article>
-            </a>
-            <a href="/dashboard/projects" class="dashboard-card purple">
-            <article class="card">
-                    <div class="text">
-                        <div class="title">Projets</div>
-                        <div class="number"><?php echo htmlspecialchars($elementsCount['projects']); ?></div>
-                    </div>
-                    <button class="view-all">View All</button>
-             </article>
-            </a>
-            <a href="/dashboard/user" class="dashboard-card dark">
-            <article class="card">
-                    <div class="text">
-                        <div class="title">Utulisateurs</div>
-                        <div class="number"><?php echo htmlspecialchars($elementsCount['users']); ?></div>
-                    </div>
-                    <button class="view-all">View All</button>
-             </article>
-            </a>
-            <a href="/dashboard/comments" class="dashboard-card blue">
-            <article class="card">
-                    <div class="text">
-                        <div class="title">Commentaires</div>
-                        <div class="number"><?php echo htmlspecialchars($elementsCount['comments']); ?></div>
-                    </div>
-                    <button class="view-all">View All</button>
-            </article>
-            
-            
-        </section>
-    </div>
-        <div>
-            <p>Nombre d'utilisateurs inscrits : <?php echo htmlspecialchars($nombreUtilisateursInscrits); ?></p>
-            <p>Nombre de visiteurs non inscrits : <?php echo htmlspecialchars($nombreVisiteursNonInscrits); ?></p>
-        </div>
-        <div id="chart_div" style="width: 900px; height: 500px;"></div>
 
-        <div id="usersProjects">
-            <h2>Utilisateurs et nombre de projets réalisés</h2>
-            <ul>
-                <?php if (isset($labels) && is_array($labels) && isset($data) && is_array($data)) : ?>
-                    <?php foreach ($labels as $index => $label) : ?>
-                        <li><?php echo htmlspecialchars($label . ' : ' . $data[$index] . ' projets réalisés'); ?></li>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <li>Aucune donnée disponible</li>
-                <?php endif; ?>
-            </ul>
-        </div>
-        <div id="donutChart"></div>
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                var data = <?php echo isset($data) ? json_encode($data) : '[]'; ?>;
-                var labels = <?php echo isset($labels) ? json_encode($labels) : '[]'; ?>;
-                if (data.length > 0 && labels.length > 0) {
-                    new ApexCharts(document.querySelector("#donutChart"), {
-                        series: data,
-                        chart: {
-                            height: 350,
-                            type: 'donut',
-                            toolbar: {
-                                show: true
-                            }
-                        },
-                        labels: labels,
-                        dataLabels: {
-                            enabled: true,
-                            formatter: function (val) {
-                                return val.toFixed(0);
-                            }
-                        }
-                    }).render();
-                } else {
-                    document.querySelector("#donutChart").innerText = "Aucune donnée disponible pour afficher le graphique";
-                }
+<script>
+
+    function displayData($id, $data) {
+        var root = am5.Root.new($id);
+
+        var chart = root.container.children.push(
+            am5xy.XYChart.new(root, {
+                panY: false,
+                wheelY: "zoomX",
+                layout: root.verticalLayout
+            })
+        );
+
+
+        const data = [];
+        for (const label in $data) {
+            data.push({
+                label: label,
+                value: $data[label]
             });
-        </script>
+        }
+        
+        let yAxis = chart.yAxes.push(
+            am5xy.ValueAxis.new(root, {
+                renderer: am5xy.AxisRendererY.new(root, {
+                }),
+            })
+        );
 
-        <section>
-            <div class="card">
-                <h3>Pages</h3>
-                <p><?= htmlspecialchars($elementsCount['pages'] ?? 0); ?></p>
-            </div>
-            <div class="card">
-                <h3>Projets</h3>
-                <p><?= htmlspecialchars($elementsCount['projects'] ?? 0); ?></p>
-            </div>
-            <div class="card">
-                <h3>Utilisateurs</h3>
-                <p><?= htmlspecialchars($elementsCount['users'] ?? 0); ?></p>
-            </div>
-            <div class="card">
-                <h3>Commentaires</h3>
-                <p><?= htmlspecialchars($elementsCount['comments'] ?? 0); ?></p>
-            </div>
-            <div class="card">
-                <h3>Catégories</h3>
-                <p><?= htmlspecialchars($elementsCount['categories'] ?? 0); ?></p>
-            </div>
-            <div class="card">
-                <h3>Médias</h3>
-                <p><?= htmlspecialchars($elementsCount['medias'] ?? 0); ?></p>
-            </div>
-        </section>
-    </div>
-        </main>
-</body>
-</html>
+        var xAxis = chart.xAxes.push(
+            am5xy.CategoryAxis.new(root, {
+                maxDeviation: 0.2,
+                renderer: am5xy.AxisRendererX.new(root, {
+                }),
+                categoryField: "label"
+            })
+        );
+        xAxis.data.setAll(data);
+
+        var series1 = chart.series.push(
+            am5xy.ColumnSeries.new(root, {
+                name: "Series",
+                xAxis: xAxis,
+                yAxis: yAxis,
+                valueYField: "value",
+                categoryXField: "label",
+                tooltip: am5.Tooltip.new(root, {})
+            })
+        );
+        series1.data.setAll(data);
+    }
+
+</script>
+
+
+<?php 
+    foreach ($elementsCount['userByMonth'] as $year => $monthsData) {
+        foreach($monthsData as $month => $days){
+            setlocale(LC_TIME, 'fr_FR');
+            $monthName = strftime("%B", mktime(0, 0, 0, $month, 1, date('Y')));
+            echo "<h2>Nouveaux comptes créés en $monthName $year </h2>";
+            echo "<div id='usersByDay-$year-$month' style='width: 100%; height: 500px;'></div>";?>
+            <script>
+                displayData('usersByDay-<?php echo $year . '-' . $month; ?>', <?php echo json_encode($days); ?>);
+            </script>
+    <?php } 
+    }
+?>
+
+<?php 
+    foreach ($elementsCount['userByYear'] as $year => $monthsData) {
+        echo "<h2>Nouveaux comptes créés en $year</h2>";
+        echo "<div id='usersByMonth-$year' style='width: 100%; height: 500px;'></div>";?>
+        <script>
+            displayData('usersByMonth-<?php echo $year; ?>', <?php echo json_encode($monthsData); ?>);
+        </script>
+    <?php 
+    }
+?>
+
+<?php 
+    foreach ($elementsCount['projectByMonth'] as $year => $monthsData) {
+        foreach($monthsData as $month => $days){
+            $monthName = date('F', $month); 
+            echo "<h2>Projets publiés en $monthName $year </h2>";
+            echo "<div id='projectsByDay-$year-$month' style='width: 100%; height: 500px;'></div>";?>
+            <script>
+                displayData('projectsByDay-<?php echo $year . '-' . $month; ?>', <?php echo json_encode($days); ?>);
+            </script>
+    <?php } 
+    }
+?>
+
+<?php 
+    foreach ($elementsCount['projectByYear'] as $year => $monthsData) {
+        echo "<h2>Projets publiés en $year</h2>";
+        echo "<div id='projectsByMonth-$year' style='width: 100%; height: 500px;'></div>";?>
+        <script>
+            displayData('projectsByMonth-<?php echo $year; ?>', <?php echo json_encode($monthsData); ?>);
+        </script>
+    <?php 
+    }
+?>
+
+<h2>Nombre de projets publiés par utilisateur</h2>
+<div id="projectsByUser" style="width: 100%; height: 500px;"></div>
+<script>
+    displayData('projectsByUser', <?php echo json_encode($elementsCount['projectByUser']); ?>);
+</script>
+

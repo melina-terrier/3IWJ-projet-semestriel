@@ -1,15 +1,14 @@
 <?php
-
 namespace App\Controllers;
 use App\Core\View;
 use App\Core\SQL;
 use App\Core\Form;
-use App\Models\Project as ProjectModel;
 use App\Models\Media;
 use App\Models\Comment;
 use App\Models\Page;
 use App\Models\Tag;
 use App\Models\Role;
+use App\Models\Project;
 use App\Models\User as UserModel;
 use App\Controllers\Security as UserSecurity;
 
@@ -23,12 +22,6 @@ class User
         $user = new UserModel();
         $allUsers = $user->getAllData("array");
         if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
-            $project = new Project();
-            $projects = $project->getAllDataWithWhere(["user_id"=>$_GET['id']], "object");
-            foreach ($projects as $project){
-                $project->setUser(null);
-                $project->save();
-            }
 
             $media = new Media();
             $medias = $media->getAllDataWithWhere(["user_id"=>$_GET['id']], "object");
@@ -57,8 +50,24 @@ class User
                 $tag->save();
             }
 
+            $projectObj = new Project();
+            $projects = $projectObj->getAllDataWithWhere(["user_id"=>$_GET['id']]);
+            foreach ($projects as $project) {
+              $projectObj->delete(['id'=>$project['id']]);
+            }
             $user->delete(['id' => $_GET['id']]);
-            header('Location: /dashboard/users?message=permanent-delete-success');
+
+            $userSerialized = null;
+            if (isset($_SESSION['user'])) {
+                $userSerialized = unserialize($_SESSION['user']);
+            }
+            $userId = $userSerialized->getId();
+
+            if ($_GET['id'] == $userId){
+                header('Location: /logout');
+            } else {    
+                header('Location: /dashboard/users?message=permanent-delete-success');
+            }
         }
 
         $roleModel = new Role();
@@ -154,8 +163,6 @@ class User
 
         $userSerialized = null;
 
-        session_start();
-
         if (isset($_SESSION['user'])) {
             $userSerialized = unserialize($_SESSION['user']);
         }
@@ -166,11 +173,23 @@ class User
 
         $userId = $userSerialized->getId();
         $userModel = $user->getOneBy(['id' => $userId]);
-        
+
         $form = new Form("EditUser");
-        $form->setField('firstname', $userSerialized->getFirstname());
-        $form->setField('lastname', $userSerialized->getLastname());
-        $form->setField('email', $userSerialized->getEmail());
+
+        $form->setField('firstname', $userModel['firstname']);
+        $form->setField('lastname', $userModel['lastname']);
+        $form->setField('email', $userModel['email']);
+        $form->setField('occupation', $userModel['occupation']);
+        $form->setField('birthday', $userModel['birthday']);
+        $form->setField('country', $userModel['country']);
+        $form->setField('city', $userModel['city']);
+        $form->setField('link', $userModel['link']);
+        $form->setField('website', $userModel['website']);
+        $form->setField('description', $userModel['description']);
+        $form->setField('experience', $userModel['experience']);
+        $form->setField('study', $userModel['study']);
+        $form->setField('competence', $userModel['competence']);
+        $form->setField('interest', $userModel['interest']);
         
         if( $form->isSubmitted() && $form->isValid() )
         {
@@ -220,10 +239,50 @@ class User
             // Redirect after successful creation (optional success message)
             // header("Location: /dashboard/users?message=update-success");
             // exit; 
-            
         }
-        $view = new View("User/edit-user", "back");
+
+        if (isset($_GET['action']) && $_GET['action'] === 'delete') {
+            $media = new Media();
+            $medias = $media->getAllDataWithWhere(["user_id"=>$userId], "object");
+            foreach ($medias as $media){
+                $media->setUser(null);
+                $media->save();
+            }
+
+            $page = new Page();
+            $pages = $page->getAllDataWithWhere(["user_id"=>$userId], "object");            
+            foreach ($pages as $page){
+                $page->setUser(null);
+                $page->save();
+            }
+
+            $comment = new Comment();
+            $comments = $comment->getAllDataWithWhere(["user_id"=>$userId], "object");
+            foreach ($comments as $comment){
+                $comment->setUserId(null);
+                $comment->save();
+            }
+
+            $tag = new Tag();
+            $tags = $tag->getAllDataWithWhere(["user_id"=>$userId], "object");
+            foreach ($tags as $tag){
+                $tag->setUserId(null);
+                $tag->save();
+            }
+
+            $projectObj = new Project();
+            $projects = $projectObj->getAllDataWithWhere(["user_id"=>$userId]);
+            foreach ($projects as $project) {
+              $projectObj->delete(['id'=>$project['id']]);
+            }
+            $user->delete(['id' => $userId]);
+
+            header('Location: /logout');
+        }
+
+        $view = new View("User/edit-user", "front");
         $view->assign("form", $form->build());
+        $view->assign("userId", $userId);
         $view->assign("errorsForm", $errors);
         $view->assign("successForm", $success);
         $view->render();
@@ -240,14 +299,14 @@ class User
         $user = $db->getOneBy($arraySlug);
         $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         
-        if (!empty($user)) {          
+        if (!empty($user)) {       
             $routeFound = false;
             if ('/profiles/'.$slug === $requestUrl) {
                 $routeFound = true;
             }
 
             if ($routeFound) {
-                $project = new ProjectModel();
+                $project = new Project();
                 $media = new Media();
                 $projects = $project->getAllDataWithWhere(['user_id'=>$user['id']]);
                 $medias = $media->getOneBy(['url'=>$user['photo']]);
@@ -275,5 +334,38 @@ class User
             $error = new Error();
             $error->page404();
         }
+    }
+
+    public function editPassword(): void {
+        $userId = $_GET['id'] ?? null;
+        $user = new UserModel();
+        $errors = [];
+        $success = [];
+        if ($userId) {
+            $userData = $user->getOneBy(['id' => $userId]);
+            if (!$userData) {
+                $errors[] = "Utilisateur non trouvé.";
+            } else {
+                $form = new Form('EditPassword');
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $user->setDataFromArray($userData);
+                    if (password_verify($_POST['old-password'], $user->getPassword())) {
+                        $user->setPassword($_POST['password']);
+                        $user->save();
+                        $success[] = "Le mot de passe de l'utilisateur a été mises à jour avec succès.";
+                    } else {
+                        $errors[] = 'Le mot de passe actuel est incorrect';
+                    }
+                }
+            }
+        } else {
+            $errors[] = "Aucun ID d'utilisateur spécifié.";
+        }
+
+        $view = new View("User/edit-password", "front");
+        $view->assign("form", $form->build());
+        $view->assign("errors", $errors);
+        $view->assign("successes", $success);
+        $view->render();
     }
 }

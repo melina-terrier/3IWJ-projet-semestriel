@@ -7,6 +7,7 @@ use App\Core\Form;
 use App\Models\User;
 use App\Models\Role as RoleModel;
 use App\Controllers\Security;
+use App\Models\Setting;
 
 use PDO;
 use PDOException;
@@ -27,14 +28,15 @@ class Install
             $email = $_POST['email']; 
             $password = $_POST['password']; 
             $passwordConfirm = $_POST['passwordConfirm']; 
-            $dbname = $_POST['dbname']; 
+            $dbname = $_POST['dbname'];
+            $dbhost = $_POST['dbhost']; 
             $dbuser = $_POST['dbuser']; 
             $dbpassword = $_POST['dbpwd']; 
             $tablePrefix = $_POST['table_prefix']; 
 
             $configContent = "<?php\n";
             $configContent .= "// Configuration de la base de données\n";
-            $configContent .= "define('DB_HOST', 'postgres');\n";
+            $configContent .= "define('DB_HOST', '" . addslashes($dbhost) . "');\n";
             $configContent .= "define('DB_PORT', '5432');\n";
             $configContent .= "define('DB_NAME', '" . addslashes($dbname) . "');\n";
             $configContent .= "define('DB_USER', '" . addslashes($dbuser) . "');\n";
@@ -55,7 +57,7 @@ class Install
             fclose($myenv);
 
             try {
-                $pdo = new PDO("pgsql:host=postgres;dbname=$dbname;port=5432;user=$dbuser;password=$dbpassword");
+                $pdo = new PDO("pgsql:host=$dbhost;dbname=$dbname;port=5432;user=$dbuser;password=$dbpassword");
                 $bddPath = '../Script.sql';
                 $sqlScript = file_get_contents($bddPath);
                 $sqlScript = str_replace("{prefix}", $tablePrefix, $sqlScript);
@@ -84,19 +86,21 @@ class Install
             $user->setRole($roleId);
             $user->setCreationDate($formattedDate);
             $user->setModificationDate($formattedDate);  
-            $user->setStatus(0);
+            $user->setStatus(1);
             $user->setSlug();
             $activationToken = bin2hex(random_bytes(16));
             $user->setActivationToken($activationToken);
             $emailResult = $security->sendActivationEmail($user->getEmail(), $activationToken);
-            if (isset($emailResult['success'])) {
-                $user->save();
-                $success[] = "Merci pour votre inscription. Avant de pouvoir vous connecter, nous avons besoin que vous activiez votre compte en cliquant sur le lien d'activation dans l'email que nous venons de vous envoyer.";
-            } elseif (isset($emailResult['error'])) {
-                $errors[] = "Une erreur est survenu lors de votre inscription : ". $emailResult['error'] ." Merci de réessayer ultérieurement.";
-            }
-        }
+            $user->save();
 
+            $setting = new Setting();
+            $setting->setTitle($siteTitle);
+            $setting->setCreationDate($formattedDate);
+            $setting->setModificationDate($formattedDate);  
+            $setting->save();
+            
+            header('Location: /dashboard');
+        }
         $view = new View("Installer/install", "front");
         $view->assign("form", $form->build());
         $view->assign("errors", $errors);

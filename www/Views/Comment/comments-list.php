@@ -72,38 +72,29 @@ if (isset($comments)) {
       }
     }
 
-    displayComments('Tous', $allComments, 'all');
-    displayComments('En attente', $pendingComments, 'pending');
-    displayComments('Approuvé', $approvedComments, 'approved');
-    displayComments('Indésirable', $unwantedComments, 'unwanted');
-    displayComments('Supprimé', $deletedComments, 'deleted');
+    displayComments('all', $allComments, $projects);
+    displayComments('pending', $pendingComments, $projects);
+    displayComments('approved', $approvedComments, $projects);
+    displayComments('unwanted', $unwantedComments, $projects);
+    displayComments('deleted', $deletedComments, $projects);
   }
 
-function displayComments($statusName, $comments, $id) {
-  echo "<section id=\"$statusName\">";
-  
-    echo "<h2>$statusName</h2>";
 
+function displayComments($status, $comments, $projects) {
+  echo "<section id=\"$status\">";
+  echo "<h2>$status</h2>";
 
-function displayComments($statusName, $comments, $id) {
-  echo "<section id=\"$statusName\">";
-  
-    echo "<h2>$statusName</h2>";
-
-    echo "<table id=\"{$id}Comments\">";
-      echo "<thead>";
-        echo "<tr>";
-          echo "<th>Commentaire</th>";
-          echo "<th>Auteur</th>";
-          echo "<th>Projet</th>";
-          echo "<th>Publié le</th>";
-          if ($statusName == "Tous"){
-            echo "<th>Statut</th>";
-          }
-          echo "<th>Actions</th>";
-        echo "</tr>";
-      echo "</thead>";
-      echo "<tbody>";
+  echo "<table id=\"{$status}Comments\">";
+  echo "<thead>";
+  echo "<tr>";
+  echo "<th>Commentaire</th>";
+  echo "<th>Auteur</th>";
+  echo "<th>Projet</th>";
+  echo "<th>Status</th>";
+  echo "<th>Actions</th>";
+  echo "</tr>";
+  echo "</thead>";
+  echo "<tbody>";
 
         if ($comments) {
           foreach ($comments as $comment) {
@@ -175,11 +166,34 @@ function displayComments($statusName, $comments, $id) {
 ?>
 
 <script>
-$(document).ready( function () {
-  $('table').DataTable({
-    order: [[ 3, 'desc' ], [ 0, 'asc' ]],
-    pagingType: 'simple_numbers'
-  });
-});
+$(document).ready(function() {
+  function initDataTable(tableId) {
+    var table = $('#' + tableId).DataTable({
+      "rowCallback": function(row, data, index) {
+        if (index % 2 === 0) {
+          $(row).css("background-color", "white");
+        } else {
+          $(row).css("background-color", "");
+        }
+      },
+      "drawCallback": function(settings) {
+        var rows = table.rows({ page: 'current' }).nodes();
+        $(rows).each(function(index) {
+          if (index % 2 === 0) {
+            $(this).css("background-color", "white");
+          } else {
+            $(this).css("background-color", "");
+          }
+        });
+      }
+    });
+  }
 
+  // Call the function for each table with its unique ID
+  initDataTable('allComments');  // Replace with your table ID
+  initDataTable('pendingComments');  // Replace with your table ID
+  initDataTable('approvedComments'); // Replace with your table ID
+  initDataTable('unwantedComments'); // Replace with your table ID
+  initDataTable('deletedComments');  // Replace with your table ID
+});
 </script>

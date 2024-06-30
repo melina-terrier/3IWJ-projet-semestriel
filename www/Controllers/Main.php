@@ -1,105 +1,167 @@
 <?php
 namespace App\Controllers;
 
-use App\Core\View;
 use App\Core\SQL;
+use App\Models\StatUser;
+use App\Core\View;
 use App\Models\User;
 use App\Models\Page;
 use App\Models\Media;
-use App\Models\StatUser;
 use App\Models\Comment;
 use App\Models\Project;
+use App\Models\Tag;
+use App\Models\Setting;
+use App\Models\Status;
+use App\Models\Role;
 
 class Main
 {
-    private $statUser;
-
-    public function __construct() {
-        $this->statUser = new StatUser();
-    }
-
     public function home() {
-        $view = new View("Main/home", "front");
+        $view = new View("Main/page", "front");
+        $setting = new Setting();
+        $settingId = $setting->getOneBy(['key' => 'homepage'], 'object');
+        if ($settingId){
+            $homepageId = $settingId->getValue();
+            if($homepageId){
+                $page = new Page();
+                $homepage = $page->getOneBy(['id' => $homepageId]);
+                if (!empty($homepage)) {
+                    $title = $homepage["title"];
+                    $content = $homepage["content"];
+                } 
+                $view->assign("content", $content);
+                $view->assign("title", $title);
+            }
+        } else {
+            $project = new Project();
+            $statusModel = new Status();
+            $userModel = new User();
+            $status = $statusModel->getOneBy(["status" => "Publié"], 'object');
+            $publishedStatusId = $status->getId();
+            $projects = $project->getAllDataWithWhere(['status_id' => $publishedStatusId]);
+            foreach ($projects as &$project) {
+                $userId = $project['user_id'];
+                $project['username'] ='';
+                $project['userSlug'] ='';
+                if ($userId) {
+                    $user = $userModel->getOneBy(['id' => $userId], 'object');
+                    if ($user) {
+                        $project['username'] = $user->getUserName();
+                        $project['userSlug'] = $user->getSlug();
+                  }
+                }
+              }
+            $view->assign("projects", $projects);
+        }
         $view->render();
     }
 
-    public function displayDashboard() {
-        return $this->statUser->getAllUserStats();
-    }
-
     public function dashboard() {
-       
-
-        $user = new User();
+        $users = new User();
         $page = new Page();
         $media = new Media();
-        $project = new Project();
+        $projects = new Project();
         $comment = new Comment();
+        $tag = new Tag();
+        $statusModel = new Status();
+        $roleModel = new Role();
 
-        $nombre_utilisateurs_inscrits = $user->getNbElements();
+        $status = $statusModel->getOneBy(["status" => "Publié"], 'object');
+        $publishedStatusId = $status->getId();
+        
+        $userRole = $roleModel->getOneBy(["role" => "Utilisateur"], 'object');
+        $userRoleId = $userRole->getId();
+        $adminRole = $roleModel->getOneBy(["role" => "Administrateur"], 'object');
+        $adminRoleId = $adminRole->getId();
+
+        $comments = $comment->getAllData();
+
+        $userByDay = $users->getAllDataGroupBy(["status"=>1, "id_role"=>$userRoleId], ['condition' => 'extract(day FROM creation_date) AS day, extract(month FROM creation_date) AS month, extract(year FROM creation_date) AS year, COUNT(*) AS user_count', 'name' => 'year, month, day'], 'array');
+        $userByMonth = [];
+        foreach ($userByDay as $dayData) {
+            $year = $dayData['year'];
+            $month = $dayData['month'];
+            if (!isset($userByMonth[$year])) {
+                $userByMonth[$year] = [];
+            }
+            if (!isset($userByMonth[$year][$month])) {
+                $userByMonth[$year][$month] = [];
+            }
+            $userByMonth[$year][$month][$dayData['day']] = $dayData['user_count'];
+        }
+
+        $userMonth = $users->getAllDataGroupBy(["status"=>1, "id_role"=>$userRoleId], ['condition' => 'extract(month FROM creation_date) AS month, extract(year FROM creation_date) AS year, COUNT(*) AS user_count', 'name' => 'year, month'], 'array');
+        $userByYear = [];
+        foreach ($userMonth as $monthData) {
+            $year = $monthData['year'];
+            $month = $monthData['month'];
+            if (!isset($userByMonth[$year])) {
+                $userByYear[$year] = [];
+            }
+            $userByYear[$year][$month] = $monthData['user_count'];
+        }
+
+        $projectByDay = $projects->getAllDataGroupBy(["status_id"=>$publishedStatusId], ['condition' => 'extract(day FROM creation_date) AS day, extract(month FROM creation_date) AS month, extract(year FROM creation_date) AS year, COUNT(*) AS project_count', 'name' => 'year, month, day'], 'array');
+        $projectByMonth = [];
+        foreach ($projectByDay as $dayData) {
+            $year = $dayData['year'];
+            $month = $dayData['month'];
+            if (!isset($projectByMonth[$year])) {
+                $projectByMonth[$year] = [];
+            }
+            if (!isset($projectByMonth[$year][$month])) {
+                $projectByMonth[$year][$month] = [];
+            }
+            $projectByMonth[$year][$month][$dayData['day']] = $dayData['project_count'];
+        }
+
+        $projectMonth = $projects->getAllDataGroupBy(["status_id"=>$publishedStatusId], ['condition' => 'extract(month FROM creation_date) AS month, extract(year FROM creation_date) AS year, COUNT(*) AS project_count', 'name' => 'year, month'], 'array');
+        $projectByYear = [];
+        foreach ($projectMonth as $monthData) {
+            $year = $monthData['year'];
+            $month = $monthData['month'];
+            if (!isset($projectByYear[$year])) {
+                $projectByYear[$year] = [];
+            }
+            $projectByYear[$year][$month] = $monthData['project_count'];
+        }
+
+        $admin = $users->getAllDataWithWhere(['id_role'=>$adminRoleId, "status"=>1], "object");
+        $editors = $users->getAllDataWithWhere(['id_role'=>$userRoleId, "status"=>1], 'object');
+
+        $userProjectCounts = []; 
+        $AllUsers = $users->getAllDataWithWhere(['status'=>1], "object");
+        foreach ($AllUsers as $user) {
+          $userId = $user->getId();
+          $userName = $user->getUserName();
+          $userProjectCounts[$userName] = 0;
+          $AllProjects=$projects->getAllDataWithWhere(["status_id"=>$publishedStatusId],"object");
+          foreach ($AllProjects as $project) {
+            $currentUserId = $project->getUser();
+            if ($currentUserId === $userId) {
+              $userProjectCounts[$userName]++; 
+            }
+          }
+        }
+
         $elementsCount = [
-            'users' => $user->getNbElements(),
-            'medias' => $media->getNbElements(),
-            'projects' => $project->getNbElements(),
-            'comments' => $comment->getNbElements(),
+            'users' => count($editors),
+            'admin' => count($admin),
+            'userByYear' => $userByYear,
+            'userByMonth' => $userByMonth,
             'pages' => $page->getNbElements(),
+            'medias' => $media->getNbElements(),
+            'projects' => $projects->getNbElements(),
+            'projectByMonth' => $projectByMonth,
+            'projectByYear' => $projectByYear,
+            'projectByUser' => $userProjectCounts,
+            'comments' => $comment->getNbElements(),
+            'tags'=>$tag->getNbElements(),
         ];
 
-        if (isset($_SESSION['user'])) {
-            $userSerialized = $_SESSION['user'];
-            $user = unserialize($userSerialized);
-            $lastname = $user->getLastname();
-            $firstname = $user->getFirstname();
-        } else {
-            $lastname = '';
-            $firstname = '';
-        }
-
-        // Initialiser le compteur si nécessaire
-        if (!isset($_SESSION['nombre_visiteurs_non_inscrits'])) {
-            $_SESSION['nombre_visiteurs_non_inscrits'] = 0;
-        }
-
-        // Vérifier si le cookie 'visiteur_unique' n'existe pas
-        if (!isset($_COOKIE['visiteur_unique'])) {
-            // Incrémenter le compteur de visiteurs non inscrits dans la session
-            $_SESSION['nombre_visiteurs_non_inscrits'] += 1;
-
-            // Définir le cookie pour une durée de 30 jours
-            $cookie_value = uniqid();
-            setcookie('visiteur_unique', $cookie_value, time() + 3600 * 24 * 30, "/");
-            $_COOKIE['visiteur_unique'] = $cookie_value; // Pour assurer que $_COOKIE contient la valeur actuelle
-        }
-
-        // Récupérer le compteur depuis la session
-        $nombre_visiteurs_non_inscrits = $_SESSION['nombre_visiteurs_non_inscrits'];
-
-        // var_dump($_SESSION);
-        // var_dump($_COOKIE);
-        // var_dump($nombre_visiteurs_non_inscrits);
-
-        $sql = new SQL();
-        $usersProjects = $sql->sql_users_projects();
-
-        $labels = [];
-        $data = [];
-        foreach ($usersProjects as $userProject) {
-            $labels[] = $userProject['firstname'] . ' ' . $userProject['lastname'];
-            $data[] = (int)$userProject['project_count'];
-        }
-
-        // Initialiser l'objet View avant de l'utiliser
         $view = new View("Main/dashboard", "back");
-
-        // Assigner les variables à la vue
-        $view->assign("labels", $labels);
-        $view->assign("data", $data);
+        $view->assign("comments", $comments);
         $view->assign("elementsCount", $elementsCount);
-        $view->assign("lastname", $lastname);
-        $view->assign("firstname", $firstname);
-        $view->assign("nombreUtilisateursInscrits", $nombre_utilisateurs_inscrits);
-        $view->assign("nombreVisiteursNonInscrits", $nombre_visiteurs_non_inscrits);
-
         $view->render();
     }
 }
