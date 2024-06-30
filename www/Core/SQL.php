@@ -236,6 +236,24 @@ class SQL
 
         return $queryPrepared->fetchAll();
     }
+    public function sql_users_projects()
+    {
+        $query = 'SELECT u.firstname, u.lastname, COUNT(p.id) AS project_count
+                FROM msnu_user u
+                LEFT JOIN msnu_project p ON u.id = p.user_id
+                GROUP BY u.firstname, u.lastname
+                ORDER BY project_count DESC';
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 
+    public function getUnreadComments() {
+        $sql = "SELECT * FROM msnu_comment WHERE status = 1";
+        $queryPrepared = $this->pdo->prepare($sql);
+        $queryPrepared->execute();
+        return $queryPrepared->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

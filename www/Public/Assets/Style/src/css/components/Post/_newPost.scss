@@ -1,0 +1,181 @@
+.new-post-main {
+  display: flex;
+  height: 100%;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+h3 {
+  color: var(--blue);
+}
+
+
+.section1-new-post-container {
+  padding: rem(15);
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 80%;
+  align-items: center;
+  margin-right: rem(8);
+  form {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    .post-wrapper {
+      border-right: rem(7) solid white;
+      border-radius: rem(10);
+      margin-right: rem(8);
+      padding-right: rem(20);
+      width: inherit;
+      .form-group {
+        background-color: white;
+        display: flex;
+        margin: rem(20) auto;
+        border-radius: rem(10);
+        box-shadow: 0 rem(4) rem(4) 0 rgba(0, 0, 0, 0.25);
+        padding: rem(17) rem(19);
+        align-items: flex-start;
+        width: 77%;
+        input {
+          border: none;
+          outline: none;
+          width: 100%;
+          font-family: $font1;
+          font-weight: bold;
+        }
+      }
+      .form-content {
+        background-color: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        display: flex;
+        margin: rem(20) auto;
+        align-items: flex-start;
+        width: inherit;
+      }
+      .form-footer {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+      }
+      .form-button-add-element {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        width: 100%;
+      }
+    }
+  }
+  .button-submit-deleted{
+    display: flex;
+    justify-content: flex-end;
+
+  }
+}
+
+.block-card {
+  &.block-card-custom-page {
+    border: rem(2) solid var(--green);
+    padding: rem(5) rem(20);
+    text-align: center;
+    &.color {
+      .block-card-custom-page-color-wrapper {
+        box-shadow: none;
+        display: flex;
+        justify-content: center;
+        margin-top: rem(5);
+        .block-card-custom-page-color-content {
+          display: flex;
+          flex-direction: column;
+          border: rem(1) solid var(--grey);
+          border-radius: rem(10);
+          padding: rem(5);
+          width: 30%;
+          align-items: center;
+          &:first-child {
+            margin-right: rem(10);
+          }
+          input[type="color"] {
+            border: none;
+            border-radius: rem(10);
+            box-shadow: 0 rem(4) rem(4) 0 rgba(0, 0, 0, 0.25);
+            height: rem(25);
+            width: rem(30);
+          }
+        }
+      }
+    }
+    &.block-card-custom-page.typo {
+      border: rem(2) solid var(--blue);
+      .block-card-custom-page-typo-property {
+        text-align: left;
+        padding: rem(10) 0 rem(10) 0;
+        .block-card-custom-page-typo-value {
+          border: rem(1) solid var(--grey);
+          border-radius: rem(15);
+          margin-left: rem(15);
+          padding: rem(5) rem(20);
+        }
+        .block-card-custom-page-typo-wrapper {
+          .block-card-custom-page-typo-property {
+            display: flex;
+            flex-direction: column;
+            .block-card-custom-page-typo-value {
+              border: rem(1) solid var(--grey);
+              border-radius: rem(15);
+              margin-left: rem(15);
+              padding: rem(5) rem(20);
+            }
+          }
+        }
+      }
+    }
+  }
+  &.block-card-custom-page.info {
+    .block-card-custom-page-info-property {
+      text-align: left;
+      padding: rem(10) 0 rem(10) 0;
+      .block-card-custom-page-info-value {
+        border: rem(1) solid var(--grey);
+        border-radius: rem(10);
+        margin-left: rem(15);
+        padding: rem(5) rem(20);
+      }
+    }
+  }
+  &.block-card-custom-page.media {
+    border: rem(2) solid var(--blue);
+    .block-card-custom-page-media-property {
+      text-align: center;
+      padding-bottom: rem(10);
+    }
+    .block-card-custom-page-media-value {
+      border: rem(1) solid var(--grey);
+      border-radius: rem(10);
+      display: flex;
+      margin-left: rem(15);
+      padding: rem(5) rem(20);
+      text-align: center;
+    }
+  }
+}
+
+.button-new-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .button-deleted {
+    display: flex;
+    justify-content: center;
+    margin: rem(25) 0;
+  }
+}
+
+.post-info {
+  display: flex;
+  flex-direction: column;
+}
+

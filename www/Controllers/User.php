@@ -155,27 +155,31 @@ class User
         $view->render();
     }
 
-    public function editUser(): void {
-        $userId = 
-        $user = new UserModel();
-        $errors = [];
-        $success = [];
+   public function editUser(): void {
+    $user = new UserModel();
+    $errors = [];
+    $success = [];
 
-        $userSerialized = null;
+    $userSerialized = null;
 
-        if (isset($_SESSION['user'])) {
-            $userSerialized = unserialize($_SESSION['user']);
-        }
+    if (isset($_SESSION['user'])) {
+        $userSerialized = unserialize($_SESSION['user']);
+    }
 
-        if (!$userSerialized) {
-            $errors[] = "Utilisateur non trouvé.";
-        }
+    if (!$userSerialized) {
+        $errors[] = "Utilisateur non trouvé.";
+    }
 
-        $userId = $userSerialized->getId();
-        $userModel = $user->getOneBy(['id' => $userId]);
+    $userId = $userSerialized->getId();
+    $userModel = $user->getOneBy(['id' => $userId], 'array');
 
-        $form = new Form("EditUser");
+    if (!$userModel) {
+        $errors[] = "Utilisateur non trouvé.";
+    }
 
+    $form = new Form("EditUser");
+
+    if ($userModel) {
         $form->setField('firstname', $userModel['firstname']);
         $form->setField('lastname', $userModel['lastname']);
         $form->setField('email', $userModel['email']);
@@ -190,31 +194,29 @@ class User
         $form->setField('study', $userModel['study']);
         $form->setField('competence', $userModel['competence']);
         $form->setField('interest', $userModel['interest']);
-        
-        if( $form->isSubmitted() && $form->isValid() )
-        {
-            $user->setDataFromArray($userModel);
-            $formattedDate = date('d/m/Y H:i:s');
-            $user->setLastname($_POST["lastname"]);
-            $user->setFirstname($_POST["firstname"]);
-            $user->setEmail($_POST["email"]);
+    }
 
-            $media = new Media();
-            if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-                $mediaFile = $_FILES['photo'];
-                $fileName = $mediaFile['name']; 
-                $fileSize = $mediaFile['size'];
-                $fileType = $mediaFile['type']; 
-                $tmpName = $mediaFile['tmp_name'];                
-                $destinationPath = '../Public/uploads/users/' . $fileName;
-                if (move_uploaded_file($tmpName, $destinationPath)) {
-                    $media->setType($fileType);
-                    $media->setSize($fileSize);
-                    $media->setName($fileName);
-                    $media->setUrl('/uploads/users/'. $fileName); 
-                } else {
-                    $errors[] = "Erreur lors du téléchargement du média.";
-                }
+    if ($form->isSubmitted() && $form->isValid()) {
+        $user->setDataFromArray($userModel);
+        $formattedDate = date('Y-m-d H:i:s');
+        $user->setLastname($_POST["lastname"]);
+        $user->setFirstname($_POST["firstname"]);
+        $user->setEmail($_POST["email"]);
+
+        // Gestion du fichier photo
+        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+            $mediaFile = $_FILES['photo'];
+            $fileName = $mediaFile['name'];
+            $fileSize = $mediaFile['size'];
+            $fileType = $mediaFile['type'];
+            $tmpName = $mediaFile['tmp_name'];
+            $destinationPath = '../Public/uploads/users/' . $fileName;
+            if (move_uploaded_file($tmpName, $destinationPath)) {
+                $media = new Media();
+                $media->setType($fileType);
+                $media->setSize($fileSize);
+                $media->setName($fileName);
+                $media->setUrl('/uploads/users/'. $fileName);
                 $media->setTitle($fileName);
                 $media->setDescription('Photo de profil de l\'utilisateur');
                 $media->setCreationDate($formattedDate);
@@ -222,71 +224,90 @@ class User
                 $media->setUser($userId);
                 $media->save();
                 $user->setPhoto('/uploads/users/'. $fileName);
+            } else {
+                $errors[] = "Erreur lors du téléchargement du média.";
             }
-            $user->setBirthday($_POST["birthday"]);
-            $user->setOccupation($_POST["occupation"]);
-            $user->setCountry($_POST["country"]);
-            $user->setCity($_POST["city"]);
-            $user->setWebsite($_POST["website"]);
-            $user->setLink($_POST["link"]);
-            $user->setDescription($_POST["description"]);
-            $user->setExperience($_POST["experience"]);
-            $user->setStudy($_POST["study"]);
-            $user->setCompetence($_POST["competence"]);
-            $user->setInterest($_POST["interest"]);
-            $user->setModificationDate($formattedDate);
+        }
+
+        // Conversion de la date d'anniversaire
+        if (isset($_POST["birthday"]) && $_POST["birthday"]) {
+            $inputDate = $_POST["birthday"];
+            $dateTime = \DateTime::createFromFormat('Y-m-d', $inputDate); // Modification du format
+            if ($dateTime) {
+                $formattedBirthday = $dateTime->format('Y-m-d');
+                $user->setBirthday($formattedBirthday);
+            } else {
+                $errors[] = "Format de date d'anniversaire invalide.";
+            }
+        }
+
+        $user->setOccupation($_POST["occupation"] ?? null);
+        $user->setCountry($_POST["country"] ?? null);
+        $user->setCity($_POST["city"] ?? null);
+        $user->setWebsite($_POST["website"] ?? null);
+        $user->setLink($_POST["link"] ?? null);
+        $user->setDescription($_POST["description"] ?? null);
+        $user->setExperience($_POST["experience"] ?? null);
+        $user->setStudy($_POST["study"] ?? null);
+        $user->setCompetence($_POST["competence"] ?? null);
+        $user->setInterest($_POST["interest"] ?? null);
+        $user->setModificationDate($formattedDate);
+
+        try {
             $user->save();
-            // Redirect after successful creation (optional success message)
-            // header("Location: /dashboard/users?message=update-success");
-            // exit; 
+            $success[] = "Les informations ont été mises à jour avec succès.";
+        } catch (\PDOException $e) {
+            $errors[] = "Erreur lors de la mise à jour des informations : " . $e->getMessage();
         }
-
-        if (isset($_GET['action']) && $_GET['action'] === 'delete') {
-            $media = new Media();
-            $medias = $media->getAllDataWithWhere(["user_id"=>$userId], "object");
-            foreach ($medias as $media){
-                $media->setUser(null);
-                $media->save();
-            }
-
-            $page = new Page();
-            $pages = $page->getAllDataWithWhere(["user_id"=>$userId], "object");            
-            foreach ($pages as $page){
-                $page->setUser(null);
-                $page->save();
-            }
-
-            $comment = new Comment();
-            $comments = $comment->getAllDataWithWhere(["user_id"=>$userId], "object");
-            foreach ($comments as $comment){
-                $comment->setUserId(null);
-                $comment->save();
-            }
-
-            $tag = new Tag();
-            $tags = $tag->getAllDataWithWhere(["user_id"=>$userId], "object");
-            foreach ($tags as $tag){
-                $tag->setUserId(null);
-                $tag->save();
-            }
-
-            $projectObj = new Project();
-            $projects = $projectObj->getAllDataWithWhere(["user_id"=>$userId]);
-            foreach ($projects as $project) {
-              $projectObj->delete(['id'=>$project['id']]);
-            }
-            $user->delete(['id' => $userId]);
-
-            header('Location: /logout');
-        }
-
-        $view = new View("User/edit-user", "front");
-        $view->assign("form", $form->build());
-        $view->assign("userId", $userId);
-        $view->assign("errorsForm", $errors);
-        $view->assign("successForm", $success);
-        $view->render();
     }
+
+    if (isset($_GET['action']) && $_GET['action'] === 'delete') {
+        $media = new Media();
+        $medias = $media->getAllDataWithWhere(["user_id" => $userId], "object");
+        foreach ($medias as $media) {
+            $media->setUser(null);
+            $media->save();
+        }
+
+        $page = new Page();
+        $pages = $page->getAllDataWithWhere(["user_id" => $userId], "object");
+        foreach ($pages as $page) {
+            $page->setUser(null);
+            $page->save();
+        }
+
+        $comment = new Comment();
+        $comments = $comment->getAllDataWithWhere(["user_id" => $userId], "object");
+        foreach ($comments as $comment) {
+            $comment->setUserId(null);
+            $comment->save();
+        }
+
+        $tag = new Tag();
+        $tags = $tag->getAllDataWithWhere(["user_id" => $userId], "object");
+        foreach ($tags as $tag) {
+            $tag->setUserId(null);
+            $tag->save();
+        }
+
+        $projectObj = new Project();
+        $projects = $projectObj->getAllDataWithWhere(["user_id" => $userId]);
+        foreach ($projects as $project) {
+            $projectObj->delete(['id' => $project['id']]);
+        }
+        $user->delete(['id' => $userId]);
+
+        header('Location: /logout');
+    }
+
+    $view = new View("User/edit-user", "back");
+    $view->assign("form", $form->build());
+    $view->assign("userId", $userId);
+    $view->assign("errorsForm", $errors);
+    $view->assign("successForm", $success);
+    $view->render();
+}
+
 
     
     public function showUser($slug): void

@@ -7,8 +7,8 @@ use App\Core\SQL;
 class Project_Tags extends SQL
 {
     protected ?int $id = null;
-    protected $project_id;
-    protected $tag_id;
+    protected $project_id; // Correspond à la colonne project_id dans la base de données
+    protected $tag_id; // Correspond à la colonne tag_id dans la base de données
     
     public function getId(): ?int
     {

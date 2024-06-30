@@ -1,0 +1,18 @@
+// src/css/components/Media/_media.scss
+
+.media {
+  @include card;
+  border-left: 5px solid $primary-color;
+  margin-bottom: $margin;
+  padding: $padding;
+}
+
+.media-title {
+  font-weight: bold;
+  color: $secondary-color;
+}
+
+.media-content {
+  margin-top: $margin;
+  color: #333;
+}

@@ -11,7 +11,7 @@ class Comment extends SQL
     protected $user_id;
     protected $mail;
     protected $name;
-    protected $status;
+    protected int $is_reported;
     protected int $project_id;
     protected ?string $creation_date;
     protected ?string $modification_date;
@@ -66,14 +66,14 @@ class Comment extends SQL
         $this->name = $name;
     }
 
-    public function getStatus()
+    public function getReport()
     {
-        return $this->status;
+        return $this->is_reported;
     }
 
-    public function setStatus($status): void
+    public function setReport($is_reported): void
     {
-        $this->status = $status;
+        $this->is_reported = $is_reported;
     }
 
      public function getProject()

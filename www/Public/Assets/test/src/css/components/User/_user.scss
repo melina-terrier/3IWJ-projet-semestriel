@@ -1,0 +1,18 @@
+// src/css/components/User/_user.scss
+
+.user {
+  @include card;
+  border-left: 5px solid $quaternary-color;
+  margin-bottom: $margin;
+  padding: $padding;
+}
+
+.user-title {
+  font-weight: bold;
+  color: $secondary-color;
+}
+
+.user-content {
+  margin-top: $margin;
+  color: #333;
+}

@@ -1,0 +1,75 @@
+.button {
+  // reset
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+
+  // Variables du composant
+  --padding: #{rem(10)} #{rem(16)};
+  --fontSize: 1rem;
+  --text-color: currentColor;
+  --main-radius: 4px; // Définissez une valeur par défaut pour le border-radius
+
+  // Utilisation de ces variables
+  font-size: var(--fontSize);
+  padding: var(--padding);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border-radius: var(--main-radius);
+
+  font-weight: 600; // Cette propriété n'est pas appelée à varier
+  transition: background-color 0.3s;
+
+  // Modificateurs de couleur (nlles valeurs pour les variables locales)
+  &--primary {
+    --bg-color: var(--primary);
+    --text-color: var(--white);
+    &:hover {
+      --bg-color: var(--primary-hover);
+    }
+  }
+
+  &--secondary {
+    --bg-color: var(--secondary);
+    --text-color: var(--white);
+    &:hover {
+      --bg-color: var(--secondary-hover);
+    }
+  }
+
+  &--danger {
+    --bg-color: var(--danger);
+    --text-color: var(--white);
+    &:hover {
+      --bg-color: var(--danger-hover);
+    }
+  }
+
+  &--outline {
+    border: solid thin var(--text-color);
+  }
+
+  // Modificateurs de taille (nlles valeurs pour les variables locales)
+  &--lg {
+    --padding: #{rem(16)} #{rem(24)};
+  }
+
+  &--sm {
+    --fontSize: #{rem(14)};
+    --padding: #{rem(8)} #{rem(12)};
+  }
+
+  // Style pour les boutons circulaires
+  &--circular {
+    width: 50px;  // Définit une largeur fixe
+    height: 50px; // Définit une hauteur fixe
+    padding: 0; // Réinitialise le padding pour des boutons circulaires
+    border-radius: 50%; // Définit le border-radius à 50% pour rendre le bouton circulaire
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+}
