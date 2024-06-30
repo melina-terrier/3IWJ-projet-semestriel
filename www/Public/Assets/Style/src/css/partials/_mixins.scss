@@ -93,3 +93,25 @@
 @mixin color-theme-dark-bg {
     background-color: #333;
 }
+// src/css/partials/_mixins.scss
+
+@mixin card-style($bg-color, $text-color: $black) {
+    background-color: $bg-color;
+    color: $text-color;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin: 0.5rem;
+    text-align: center;
+  }
+  
+  @mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  @mixin transition($property, $duration) {
+    transition: $property $duration;
+  }
+  

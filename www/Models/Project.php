@@ -16,7 +16,7 @@ class Project extends SQL
     protected $modification_date;
     protected $publication_date;
     protected $user_id;
-    protected $featured_image;
+    // protected $featured_image;
     
     public function getId(): ?int
     {
@@ -123,15 +123,15 @@ class Project extends SQL
         $this->user_id = $user_id;
     }
 
-    public function getFeaturedImage(): string
-    {
-        return $this->featured_image;
-    }
+    // public function getFeaturedImage(): string
+    // {
+    //     return $this->featured_image;
+    // }
 
-    public function setFeaturedImage(?string $featured_image): void
-    {
-        $this->featured_image = $featured_image;
-    }
+    // public function setFeaturedImage(?string $featured_image): void
+    // {
+    //     $this->featured_image = $featured_image;
+    // }
 
     public function getTag()
     {

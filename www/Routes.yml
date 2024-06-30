@@ -37,7 +37,7 @@
 
 /dashboard/edit-user:
   Controller: "User"
-  Action: "addUser"
+  Action: "editUser"
   Security: true
   Role: ["Administrateur"]
 
@@ -79,12 +79,20 @@
   Security: true
   Role: ["Administrateur"]
 
+
 # Comments
+/dashboard/add-coment:
+  Controller: "add-coment"
+  Action: "addComments"
+  Security: true
+  Role: ["Administrateur"]
+
 /dashboard/comments:
   Controller: "Comment"
   Action: "allComments"
   Security: true
   Role: ["Administrateur"]
+ 
 
 # TAGS
 /dashboard/add-tag:
@@ -131,6 +139,23 @@
   Security: true
   Role: ["Administrateur"]
 
+
+
+
+# NOTIFICATIONS
+/notifications/getNotificationCount:
+  Controller: "Main"
+  Action: "getNotificationCount"
+  Security: true
+  Role: ["Administrateur"]
+
+/notifications/getUnreadComments:
+  Controller: "Main"
+  Action: "getUnreadComments"
+  Security: true
+  Role: ["Administrateur"]
+
+
 # USER
 /login:
   Controller: "Security"
@@ -155,3 +180,5 @@
 /request-password:
   Controller: "Security"
   Action: "requestPassword"
+
+  

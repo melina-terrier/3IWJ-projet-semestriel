@@ -4,3 +4,4 @@ import "../css/main.scss";
 import "./components/accordion.js";
 import "./components/modal.js";
 
+import "./components/user.js";

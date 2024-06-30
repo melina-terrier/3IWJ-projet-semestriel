@@ -1,20 +1,21 @@
-<h2>Ecrire un commentaire</h2>
+<h2>Écrire un commentaire</h2>
+<?php echo $form; 
 
-<?= $form ?>
+if (isset($successForm) && !empty($successForm)) {
+  echo "<div class='success-message'>";
+  foreach ($successForm as $message) {
+    echo "<p>$message</p>";
+  }
+  echo "</div>";
+}
+
+if (isset($errorsForm) && !empty($errorsForm)) {
+    echo "<div class='success-message'>";
+    foreach ($errorsForm as $message) {
+      echo "<p>$message</p>";
+    }
+    echo "</div>";
+}
 
 
-<?php if (!empty($errorsForm)): ?>
-    <div>
-        <?php foreach ($errorsForm as $error): ?>
-            <p class="text"><?php echo htmlspecialchars($error); ?></p>
-        <?php endforeach; ?>
-    </div>
-    <?php endif; ?>
-
-    <?php if (!empty($successForm)): ?>
-        <div>
-            <?php foreach ($successForm as $message): ?>
-                <p class="text"><?php echo htmlspecialchars($message); ?></p>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
+?>

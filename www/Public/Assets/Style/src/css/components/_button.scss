@@ -7,7 +7,7 @@
 	cursor: pointer;
 
 	// Variables du composant
-	--padding: #{rem(10)} #{rem(16)};
+	--padding: #{rem(10)} #{rem(14)};
 	--fontSize: 1rem;
 	--text-color: currentColor;
 
@@ -20,6 +20,14 @@
 
 	font-weight: 600; // Cette propriété n'est pas appelée à varier
 	transition: background-color 0.3s;
+
+        background-color: #0056b3; // Couleur de fond bleue foncée au survol
+ 
+
+    &:active {
+        background-color: #004080; // Couleur de fond encore plus foncée lors du clic
+    }
+
 	// Modificateurs de couleur (nlles valeurs pour les variables locales)
 	&--primary {
 		--bg-color: var(--primary);
@@ -49,6 +57,14 @@
 		border: solid thin var(--text-color);
 	}
 
+	&--bleu {
+		--bg-color: var(--bleu);
+		--text-color: var(--white);
+		&:hover {
+			--bg-color: var(--danger-hover);
+		}
+	}
+
 	// Modificateurs de taille (nlles valeurs pour les variables locales)
 
 	&--lg {
@@ -59,4 +75,22 @@
 		--fontSize: #{rem(14)};
 		--padding: #{rem(8)} #{rem(12)};
 	}
+}
+.view-all {
+	background-color: transparent;
+	border: 1px solid $gray-dark;
+	border-radius: 4px;
+	padding: 0.9rem 1rem;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+
+	&:hover {
+	  background-color: $gray-dark;
+	  color: $white;
+	}
+  }
+  .aj_user_form_button_container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; // Ajustez la marge selon vos besoins
 }

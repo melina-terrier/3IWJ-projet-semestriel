@@ -1,78 +1,148 @@
-@mixin card($color) {
-  background-color: $color;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: white;
-  font-size: 16px;
-}
 
-$color-green: #28a745;
-$color-purple: #6f42c1;
-$color-orange: #fd7e14;
-$color-blue: #007bff;
-$color-dark: #343a40;
 
-  .dashboard-card {
-      flex: 1 1 calc(33.333% - 20px);
-      text-decoration: none;
-      color: #333;
-
-      .dashboard-card-content {
-          padding: 20px;
-          border-radius: 8px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          color: white;
-      }
-
-      &.green .dashboard-card-content {
-          @include card($color-green);
-      }
-
-      &.purple .dashboard-card-content {
-          @include card($color-purple);
-      }
-
-      &.orange .dashboard-card-content {
-          @include card($color-orange);
-      }
-
-      &.blue .dashboard-card-content {
-          @include card($color-blue);
-      }
-
-      &.dark .dashboard-card-content {
-          @include card($color-dark);
-      }
+.card {
+    @include card-style($white);
+  
+    .title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+  
+    .number {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+  
+    
+  
+    &.green {
+      @include card-style($green, $white);
+    }
+  
+    &.blue {
+      @include card-style($blue, $white);
+    }
+  
+    &.orange {
+      @include card-style($orange, $white);
+    }
+  
+    &.purple {
+      @include card-style($purple, $white);
+    }
+  
+    &.yellow {
+      @include card-style($yellow, $white);
+    }
+  
+    &.black {
+      @include card-style($black, $white);
+    }
   }
+  
 
-.dashboard {
-  font-family: Arial, sans-serif;
-  margin: 20px;
 
-  .dashboard-cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-  }
+  //front
+  .cards-section {
+    text-align: center;
+    padding: 20px;
 
-  .dashboard-card {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 20px;
-      text-align: center;
-      flex: 1;
-      min-width: 200px;
-      max-width: 200px;
+    .header {
+        margin-bottom: 20px;
 
-      .title {
-          font-size: 1.2em;
-          margin-bottom: 10px;
-      }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
 
-      .number {
-          font-size: 2em;
-          color: #333;
-      }
-  }
+        p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+    }
+
+    .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .affichpro_card {
+        width: 250px; 
+        padding: 0; 
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden; 
+        background-color: #ffffff; 
+        margin-bottom: 20px; 
+        transition: transform 0.3s, box-shadow 0.3s; 
+
+        &:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            text-decoration: none; 
+            color: inherit; 
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+
+        .content {
+            padding: 15px;
+            text-align: left; 
+
+            .title {
+                font-size: 1rem;
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+            }
+
+            .category {
+                color: #666666;
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+
+            img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%; 
+                margin-right: 10px;
+            }
+
+            span {
+                font-size: 0.9rem;
+                color: #333;
+            }
+        }
+
+        .additional-info {
+            padding: 15px;
+            font-size: 0.8rem;
+            color: #999999;
+
+            p {
+                margin-bottom: 5px;
+            }
+
+            .project-description {
+                color: #333;
+                font-size: 0.9rem;
+                margin-top: 10px;
+            }
+        }
+    }
 }

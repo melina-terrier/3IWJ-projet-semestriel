@@ -1,58 +1,75 @@
 .button {
-  --bg-color: var(--blue);
-  --bg-hover-color: var(--white);
-  --bg-hover-border-color: var(--blue);
-  --bg-text-color: var(--white);
-  --bg-text-hover-color: var(--blue);
-  --bg-border-color: var(--blue);
+  // reset
   display: inline-block;
-  padding: rem(6) rem(24);
-  border-radius: rem(30);
+  line-height: 1;
   text-decoration: none;
-  cursor: pointer;
   border: none;
-  font-family: var(--text-font);
-  font-weight: 600;
-  font-size: rem(12);
-  line-height: rem(18);
+  cursor: pointer;
+
+  // Variables du composant
+  --padding: #{rem(10)} #{rem(16)};
+  --fontSize: 1rem;
+  --text-color: currentColor;
+  --main-radius: 4px; // Définissez une valeur par défaut pour le border-radius
+
+  // Utilisation de ces variables
+  font-size: var(--fontSize);
+  padding: var(--padding);
   background-color: var(--bg-color);
-  color: var(--bg-text-color);
+  color: var(--text-color);
+  border-radius: var(--main-radius);
 
-  &:hover {
-    background-color: var(--bg-hover-color);
-    color: var(--bg-text-hover-color);
-    border: rem(1) solid var(--bg-hover-border-color);
+  font-weight: 600; // Cette propriété n'est pas appelée à varier
+  transition: background-color 0.3s;
+
+  // Modificateurs de couleur (nlles valeurs pour les variables locales)
+  &--primary {
+    --bg-color: var(--primary);
+    --text-color: var(--white);
+    &:hover {
+      --bg-color: var(--primary-hover);
+    }
   }
 
-  &-primary {
-    --bg-color: var(--blue);
-    --bg-hover-color: var(--white);
-    --bg-hover-border-color: var(--blue);
-    --bg-text-hover-color: var(--blue);
+  &--secondary {
+    --bg-color: var(--secondary);
+    --text-color: var(--white);
+    &:hover {
+      --bg-color: var(--secondary-hover);
+    }
   }
 
-  &-secondary {
-    --bg-color: var(--green);
-    --bg-hover-color: var(--white);
-    --bg-hover-border-color: var(--green);
-    --bg-text-hover-color: var (--green);
+  &--danger {
+    --bg-color: var(--danger);
+    --text-color: var(--white);
+    &:hover {
+      --bg-color: var(--danger-hover);
+    }
   }
 
-  &-danger {
-    --bg-color: var(--red);
-    --bg-hover-color: var(--white);
-    --bg-hover-border-color: var(--red);
-    --bg-text-hover-color: var(--red);
+  &--outline {
+    border: solid thin var(--text-color);
   }
 
-  &-lg {
-    padding: rem(10) rem(32);
-    font-size: rem(16);
+  // Modificateurs de taille (nlles valeurs pour les variables locales)
+  &--lg {
+    --padding: #{rem(16)} #{rem(24)};
   }
 
-  &-sm {
-    line-height: rem(16);
-    padding: rem(4) rem(16);
-    font-size: rem(12);
+  &--sm {
+    --fontSize: #{rem(14)};
+    --padding: #{rem(8)} #{rem(12)};
+  }
+
+  // Style pour les boutons circulaires
+  &--circular {
+    width: 50px;  // Définit une largeur fixe
+    height: 50px; // Définit une hauteur fixe
+    padding: 0; // Réinitialise le padding pour des boutons circulaires
+    border-radius: 50%; // Définit le border-radius à 50% pour rendre le bouton circulaire
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
   }
 }

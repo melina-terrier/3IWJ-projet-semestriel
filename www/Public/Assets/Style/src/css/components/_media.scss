@@ -1,0 +1,100 @@
+header.header-media {
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
+
+.header-media h1 {
+    margin: 0 0 10px;
+}
+
+.user_errors, .user_successes, .user_message {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.user_errors {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.user_successes {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.user_message {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.add_user_btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    padding: 15px;
+    text-align: center;
+}
+
+.card input[type="checkbox"] {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.card img {
+    display: block;
+    object-fit: cover;
+    height: 200px; /* Vous pouvez ajuster la hauteur selon vos besoins */
+    width: calc(100% + 30px); /* Pour compenser le padding */
+    margin: -15px -15px 0; /* Pour occuper la zone de padding du parent */
+}
+
+.card h1 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.card p {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0;
+}
+
+.media-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.media-action {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+.media-action:hover {
+    color: #0056b3;
+}
+

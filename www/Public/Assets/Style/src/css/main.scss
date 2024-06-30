@@ -1,11 +1,9 @@
 @import "vendor/modern-normalize";
 
-
 @import "partials/_functions";
 @import "partials/_mixins"; 
 @import "partials/_button";
 @import "partials/_fonts";
-@import 'partials/sidebar';
 @import "partials/_variables"; 
 @import "partials/_globals";
 @import "partials/_modal"; 
@@ -15,5 +13,13 @@
 @import "components/_card";     
 @import "components/_banner";
 @import "components/_navbar";
+@import "components/_header";
+@import "components/_page";
+@import "components/_project";
 @import "components/_container";
 @import "components/_grid";
+@import "components/_stat";
+@import "components/_user";
+@import "components/_media";
+@import "components/_forms_ajout";
+@import "components/_comment";

@@ -1,6 +1,22 @@
 $colNumber: 12;
 $gutter: 2rem;
-
+.main-content {
+	//margin-left: 270px; 
+	padding: 2rem;
+  
+	section {
+	  margin-bottom: 2rem;
+  
+	  article {
+		background-color: $white;
+		border: 1px solid $gray-dark;
+		border-radius: 8px;
+		padding: 1rem;
+		margin-bottom: 1rem;
+	  }
+	}
+  }
+  
 .grid {
 	overflow: hidden;
 	.row {

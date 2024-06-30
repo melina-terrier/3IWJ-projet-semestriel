@@ -1,17 +1,47 @@
-// _globals.scss
 body {
   font-family: Arial, sans-serif;
+  background-color: $gray-light;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f9;
 }
 
-.dashboard {
-  padding: 20px;
+h1 {
+  font-size: 2rem;
+  color: $black;
+  text-align: center;
+  margin: 1rem 0;
 }
 
-.dashboard-cards {
+h2 {
+  font-size: 1.5rem;
+  color: $black;
+  margin: 1rem 0;
+}
+
+
+#usersProjects {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 2rem 0;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      margin: 0.5rem 0;
+    }
+  }
+}
+
+#donutChart {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
 }
