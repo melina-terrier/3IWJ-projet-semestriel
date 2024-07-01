@@ -1,118 +1,114 @@
 <?php
 namespace App\Models;
-
 use App\Core\SQL;
 
 class Comment extends SQL
 {
-
     protected ?int $id = null;
-    protected $comment;
-    protected $user_id;
-    protected $mail;
-    protected $name;
-    protected int $is_reported;
+    protected string $comment;
+    protected ?int $user_id = null;
+    protected string $mail;
+    protected string $name;
+    protected int $status;
     protected int $project_id;
-    protected ?string $creation_date;
-    protected ?string $modification_date;
+    protected string $creation_date;
+    protected string $modification_date;
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId($id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
-    public function getComment()
+    public function getComment(): string
     {
         return $this->comment;
     }
 
     public function setComment($comment): void
     {
+        $comment = strip_tags(trim($comment));
         $this->comment = $comment;
     }
 
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->user_id;
     }
 
-    public function setUserId($user_id): void
+    public function setUserId(int $user_id): void
     {
         $this->user_id = $user_id;
     }
 
-    public function getMail()
+    public function getMail(): string
     {
         return $this->mail;
     }
 
-    public function setMail($mail): void
+    public function setMail(string $mail): void
     {
+        $email = strip_tags(strtolower(trim($email)));
         $this->mail = $mail;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName($name): void
+    public function setName(string $name): void
     {
+        $name = strip_tags(ucwords(strtolower(trim($name))));
         $this->name = $name;
     }
 
-    public function getReport()
+    public function getStatus(): int
     {
         return $this->is_reported;
     }
 
-    public function setReport($is_reported): void
+    public function setStatus(int $status): void
     {
         $this->is_reported = $is_reported;
     }
 
-     public function getProject()
+     public function getProject(): int
     {
         return $this->project_id;
     }
 
-    public function setProject($project_id): void
+    public function setProject(int $project_id): void
     {
         $this->project_id = $project_id;
     }
 
-    public function getCreationDate()
+    public function getCreationDate(): string
     {
         return $this->creation_date;
     }
 
-    public function setCreationDate($creation_date): void
+    public function setCreationDate(string $creation_date): void
     {
         $this->creation_date = $creation_date;
     }
 
-    public function getModificationDate()
+    public function getModificationDate(): string
     {
         return $this->modification_date;
     }
 
-    public function setModificationDate($modification_date): void
+    public function setModificationDate(string $modification_date): void
     {
         $this->modification_date = $modification_date;
     }
     
-
     public function getNbElements() {
         return $this->countElements();
-    }
-
-    public function getElementsByType($column, $value) {
-        return $this->countElements($column, $value);
     }
 
 }

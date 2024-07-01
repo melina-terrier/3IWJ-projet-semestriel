@@ -17,71 +17,53 @@ class SQL
             $dbport = DB_PORT;
             $tablePrefix = TABLE_PREFIX;
             try{
-                $this->pdo = new PDO("pgsql:host=$dbHost;dbname=$dbName;port=$dbport","$dbUser","$dbPassword");
+                $this->pdo = new PDO('pgsql:host='.$dbHost.';dbname='.$dbName.';port='.$dbport,$dbUser,$dbPassword);
             }catch (\Exception $e){
-                die("Erreur SQL : ".$e->getMessage());
+                die('Erreur SQL : '.$e->getMessage());
             }
             $classChild = get_called_class();
-            $this->table = $tablePrefix."_".strtolower(str_replace("App\\Models\\","",$classChild));
+            $this->table = $tablePrefix.'_'.strtolower(str_replace('App\\Models\\','',$classChild));
         }
     }
 
     public function save()
     {
-        // Vous ne devez pas écrire en dur le nom de la table ou des colonnes à insérer en BDD
         $columnsAll = get_object_vars($this);
         $columnsToDelete = get_class_vars(get_class());
         $columns = array_diff_key($columnsAll, $columnsToDelete);
-
         if( empty($this->getId()) ) {
             unset($columns['id']);
-            $sql = "INSERT INTO ".$this->table. " (". implode(', ', array_keys($columns) ) .")  
-            VALUES (:". implode(',:', array_keys($columns) ) .")";
+            $sql = 'INSERT INTO '.$this->table. ' ('. implode(', ', array_keys($columns) ) .')  
+            VALUES (:'. implode(',:', array_keys($columns) ) .')';
         }else{
             $isUpdate = true;
-            //UPDATE esgi_user SET firstname=:firstname, lastname=:lastname WHERE id=1
             foreach ( $columns as $column=>$value){
-                $sqlUpdate[] = $column."=:".$column;
+                $sqlUpdate[] = $column.'=:'.$column;
             }
-
-            $sql = "UPDATE " . $this->table . " SET " . implode(', ', $sqlUpdate) . " WHERE id=" . $this->getId();
+            $sql = 'UPDATE ' . $this->table . ' SET ' . implode(', ', $sqlUpdate) . ' WHERE id=' . $this->getId();
         }
         $queryPrepared = $this->pdo->prepare($sql);
         foreach ($columns as $key => $value) {
             $type = is_bool($value) ? \PDO::PARAM_BOOL : (is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
-            $queryPrepared->bindValue(":$key", $value, $type);
+            $queryPrepared->bindValue(':'.$key, $value, $type);
         }
         $queryPrepared->execute($columns); 
         if (isset($isUpdate)) {
             return $this->getId();
         }
-        return $this->pdo->lastInsertId($this->table."_id_seq");
+        return $this->pdo->lastInsertId();
     }
 
-    public function emailExists($email): bool {
-        $sql = "SELECT COUNT(*) FROM " . $this->table . " WHERE email = :email";
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute([':email' => $email]);
-        $number = $queryPrepared->fetchColumn();
-        return $number > 0;
-    }
-
-    public function getOneBy(array $data, string $return = "array")
-    {
-        $sql = "SELECT * FROM ".$this->table. " WHERE ";
+    public function isUnique(array $data): bool {
+        $sql = 'SELECT COUNT(*) FROM ' . $this->table . ' WHERE'; 
         foreach ($data as $column => $value) {
-            $sql .= " ".$column."=:".$column. " AND";
+            $sql .= ' '.$column.'=:'.$column. ' AND';
         }
         $sql = substr($sql, 0, -3);
-        $queryPrepared = $this->pdo->prepare($sql); 
+        $queryPrepared = $this->pdo->prepare($sql);
         $queryPrepared->execute($data);
-
-        if($return == "object") {
-            $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
-        } else {
-            $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
-        }
-        return $queryPrepared->fetch(); // pour récupérer le résultat de la requête (un seul enregistrement)
+        $number = $queryPrepared->fetchColumn();
+        return $number > 0;
     }
 
     public function checkUserCredentials(string $email, string $password): ?object
@@ -93,55 +75,75 @@ class SQL
         return null;
     }
 
-    public function getAllData(string $return = "array")
+    public function getOneBy(array $data, string $return = 'array')
     {
-        $sql = "SELECT * FROM " . $this->table;
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute();
-
-        if($return == "object") {
-            // les resultats seront sous forme d'objet de la classe appelée
+        $sql = 'SELECT * FROM '.$this->table. ' WHERE ';
+        foreach ($data as $column => $value) {
+            $sql .= ' '.$column.'=:'.$column. ' AND';
+        }
+        $sql = substr($sql, 0, -3);
+        $queryPrepared = $this->pdo->prepare($sql); 
+        $queryPrepared->execute($data);
+        if($return == 'object') {
             $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
         } else {
-            // pour récupérer un tableau associatif
+            $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
+        }
+        return $queryPrepared->fetch();
+    }
+
+    public function populate(int $id, string $return = 'object' )
+    {
+        $class = get_called_class();
+        $object = new $class();
+        if($return == 'object') {
+            return $object->getOneBy(['id'=>$id], 'object');
+
+        } else {
+            return $object->getOneBy(['id'=>$id], 'array');
+        }
+    }
+
+    public function getAllData(array $where = null, array $groupBy = null, string $return = 'array')
+    {
+        $sql = 'SELECT '; 
+        if ($groupBy){
+            $sql .= $groupBy['condition']; 
+        } else {
+            $sql .= '*'; 
+        }
+        $sql .= ' FROM ' . $this->table;
+        if ($where) {
+            $sql .= ' WHERE ';
+            $conditions = []; 
+            foreach ($where as $column => $value) {
+              $conditions[] = $column.' = :'.$column;
+            }
+            $whereString = implode(' AND ', $conditions);
+            $sql .= $whereString;
+        }
+        if ($groupBy){
+            $sql .= ' GROUP BY ' . $groupBy['name'];
+            $sql .= ' ORDER BY ' . $groupBy['name'] .' ASC';
+        }
+        $queryPrepared = $this->pdo->prepare($sql);
+        if ($where) {
+            $parameters = array_combine(array_keys($where), array_values($where)); // Assuming $where is an associative array
+            $queryPrepared->execute($parameters);
+        } else {
+            $queryPrepared->execute();
+        }
+        if($return == 'object') {
+            $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+        } else {
             $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
         }
         return $queryPrepared->fetchAll();
     }
 
-    public function getAllDataWithWhere(array $whereClause = null, string $return = "array") {
-        $sql = "SELECT * FROM " . $this->table;
-
-        if ($whereClause) {
-          $sql .= " WHERE ";
-          $conditions = []; 
-          foreach ($whereClause as $column => $value) {
-            $conditions[] = "$column = :$column";
-          }
-          $whereClauseString = implode(' AND ', $conditions);
-          $sql .= $whereClauseString;
-        }
-      
-        $queryPrepared = $this->pdo->prepare($sql);
-        if ($whereClause) {
-          $parameters = array_combine(array_keys($whereClause), array_values($whereClause)); // Assuming $whereClause is an associative array
-          $queryPrepared->execute($parameters);
-        } else {
-          $queryPrepared->execute();
-        }
-      
-        if ($return == "object") {
-          $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
-        } else {
-          $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
-        }
-        return $queryPrepared->fetchAll();
-    }
-      
-
     public function getDataObject(): array
     {
-        return array_diff_key(get_object_vars($this), get_class_vars(get_class())); //mettre dans un tableau les données de l'objet
+        return array_diff_key(get_object_vars($this), get_class_vars(get_class()));
     }
 
     public function setDataFromArray(array $data): void 
@@ -159,101 +161,52 @@ class SQL
         if (!$recordToDelete) {
             return false;
         }
-        $sql = "DELETE FROM " . $this->table . " WHERE ";
+        $sql = 'DELETE FROM ' . $this->table . ' WHERE ';
         foreach ($data as $column => $value) {
-            $sql .= " " . $column . "=:" . $column . " AND";
+            $sql .= ' ' . $column . '=:' . $column . ' AND';
         }
         $sql = substr($sql, 0, -3);
-        print_r($sql);
         $queryPrepared = $this->pdo->prepare($sql);
         $queryPrepared->execute($data);
         return $queryPrepared->rowCount() > 0;
     }
 
-
     public function countElements($typeColumn = null, $typeValue = null): int {
         if ($typeColumn && $typeValue) {
-            $sql = "SELECT COUNT(*) FROM " . $this->table . " WHERE " . $typeColumn . " = :typeValue";
+            $sql = 'SELECT COUNT(*) FROM ' . $this->table . ' WHERE ' . $typeColumn . ' = :typeValue';
             $queryPrepared = $this->pdo->prepare($sql);
             $queryPrepared->execute(['typeValue' => $typeValue]);
         } else {
-            $sql = "SELECT COUNT(*) FROM " . $this->table;
+            $sql = 'SELECT COUNT(*) FROM ' . $this->table;
             $queryPrepared = $this->pdo->prepare($sql);
             $queryPrepared->execute();
         }
-
         return $queryPrepared->fetchColumn();
     }
 
-    public function generateId($sequenceName) {
-        $query = "SELECT nextval(:sequenceName)"; 
-        $statement = $this->pdo->prepare($query);
-        $statement->bindValue(':sequenceName', $sequenceName);
-        $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-        $generatedId = $result['nextval'];
-        return $generatedId;
-    }
-
-    public function populate(int $id): object
-    {
-        $class = get_called_class();
-        $object = new $class();
-        return $object->getOneBy(["id"=>$id], "object");
-    }
-
-    public function getAllDataGroupBy(array $where, array $groupBy = null, string $return = "array"): array
-    {
-        $sql = "SELECT ";       
-        $sql .= $groupBy['condition']; 
-        $sql .= " FROM " . $this->table;
+    public function search(array $where = null, string $return = 'array') {
+        $sql = 'SELECT * FROM ' . $this->table;
         if ($where) {
-            $sql .= " WHERE ";
+            $sql .= ' WHERE ';
             $conditions = []; 
             foreach ($where as $column => $value) {
-              $conditions[] = "$column = :$column";
+                $conditions[] = $column.' ILIKE :'.$column;
             }
-            $whereClauseString = implode(' AND ', $conditions);
-            $sql .= $whereClauseString;
+            $whereString = implode(' OR ', $conditions);
+            $sql .= $whereString;
         }
-        $sql .= " GROUP BY " . $groupBy['name'];
-        $sql .= " ORDER BY " . $groupBy['name'] .' ASC';
-
         $queryPrepared = $this->pdo->prepare($sql);
-
         if ($where) {
-            $parameters = array_combine(array_keys($where), array_values($where)); // Assuming $whereClause is an associative array
+            $parameters = array_combine(array_keys($where), array_values($where));
             $queryPrepared->execute($parameters);
         } else {
             $queryPrepared->execute();
         }
-        
-        if ($return == "object") {
+        if ($return == 'object') {
             $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
         } else {
             $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
         }
-
         return $queryPrepared->fetchAll();
     }
-    public function sql_users_projects()
-    {
-        $query = 'SELECT u.firstname, u.lastname, COUNT(p.id) AS project_count
-                FROM msnu_user u
-                LEFT JOIN msnu_project p ON u.id = p.user_id
-                GROUP BY u.firstname, u.lastname
-                ORDER BY project_count DESC';
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-
-    public function getUnreadComments() {
-        $sql = "SELECT * FROM msnu_comment WHERE status = 1";
-        $queryPrepared = $this->pdo->prepare($sql);
-        $queryPrepared->execute();
-        return $queryPrepared->fetchAll(PDO::FETCH_ASSOC);
-    }
-    
 }

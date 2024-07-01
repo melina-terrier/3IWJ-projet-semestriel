@@ -6,31 +6,31 @@ class AddTag
     public static function getConfig(): array
     {
         return [
-            "config"=>[
-                "action"=>"",
-                "method"=>"POST",
-                "submit"=>"Ajouter une nouvelle catégorie"
+            'config'=>[
+                'action'=>'',
+                'method'=>'POST',
+                'submit'=>'Ajouter une catégorie'
             ],
-            "inputs"=>[
-                "name"=>[
-                    "type"=>"text",
-                    "min"=>2,
-                    "max"=>255,
-                    "label"=>"Nom",
-                    "required"=>true,
-                    "error"=>"Le nom est requis et doit être compris entre 2 et 255 caractères."
+            'inputs'=>[
+                'name'=>[
+                    'type'=>'text',
+                    'min'=>2,
+                    'max'=>255,
+                    'label'=>'Nom',
+                    'required'=>true,
+                    'error'=>'Le nom est doit être compris entre 2 et 255 caractères.'
                 ],
-                "slug"=>[
-                    "type"=>"text",
-                    "label"=>"Slug",
-                    "max"=>255,
-                    "error"=>"Le slug doit avoir au moins 255 caractères."
+                'slug'=>[
+                    'type'=>'text',
+                    'max'=>255,
+                    'label'=>'Slug',
+                    'error'=>'Le slug doit avoir au maximum 255 caractères.'
                 ],
-                "description"=>[
-                    "type"=>"textarea",
-                    "label"=>"Description",
-                    "max"=>4000,
-                    "error"=>"La description doit avoir au moins 4000 caractères."
+                'description'=>[
+                    'type'=>'textarea',
+                    'max'=>1000,
+                    'label'=>'Description',
+                    'error'=>'La description doit avoir au maximum 1000 caractères.'
                 ]
             ]
         ];

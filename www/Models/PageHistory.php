@@ -1,17 +1,15 @@
 <?php
-
 namespace App\Models;
 use App\Core\SQL;
-
 
 class PageHistory extends SQL
 {
     protected ?int $id = null;
-    protected $page_id;
-    protected $title;
-    protected $content;
-    protected $slug;
-    protected $creation_date;
+    protected int $page_id;
+    protected string $title;
+    protected string $content;
+    protected string $slug;
+    protected string $creation_date;
 
     public function getId(): ?int
     {
@@ -23,57 +21,56 @@ class PageHistory extends SQL
         $this->id = $id;
     }
 
-    public function getPageId()
+    public function getPageId(): int
     {
         return $this->page_id;
     }
 
-    public function setPageId($page_id): void
+    public function setPageId(int $page_id): void
     {
         $this->page_id = $page_id;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function setTitle($title): void
+    public function setTitle(string $title): void
     {
+        $title = trim($title);
         $this->title = $title;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    public function setContent($content): void
+    public function setContent(string $content): void
     {
+        $content = trim($content);
         $this->content = $content;
     }
 
-    public function getSlug()
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function setSlug($slug): void
+    public function setSlug(string $slug): void
     {
-        $this->slug = $slug;
+        $slug = trim(strtolower($slug));
+        $slug->slug = $slug;
     }
 
-    public function getCreationDate()
+    public function getCreationDate(): string
     {
         return $this->creation_date;
     }
 
-    public function setCreationDate($creation_date): void
+    public function setCreationDate(string $creation_date): void
     {
         $this->creation_date = $creation_date;
-    }
-
-    public function getNbElements() {
-        return $this->countElements();
     }
 }

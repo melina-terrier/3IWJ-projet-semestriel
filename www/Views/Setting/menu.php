@@ -1,4 +1,4 @@
-<h1>Paramêtres du site</h1>
+<h1>Menu du site</h1>
 
 <?= $form ?>
 

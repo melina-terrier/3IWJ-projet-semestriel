@@ -4,24 +4,21 @@ use App\Core\SQL;
 
 class Setting extends SQL{
     protected ?int $id = null;
-    protected $key; 
-    protected $value;
-    protected $creation_date;
-    protected $modification_date;
+    protected string $key; 
+    protected string $value;
+    protected string $creation_date;
+    protected string $modification_date;
 
-    public static function getInstance()
+    public function setId($id)
     {
-        if(!isset(self::$instance))
-        {
-            self::$instance = new self();
-        }
-        return self::$instance;
+        $this->id = $id;
     }
 
     public function getId()
     {
         return $this->id;
     }
+
 
     public function setKey($key)
     {
@@ -35,6 +32,7 @@ class Setting extends SQL{
 
     public function setValue($value)
     {
+        $value = strip_tags(strtolower(trim($value)));
         $this->value = $value;
     }
 

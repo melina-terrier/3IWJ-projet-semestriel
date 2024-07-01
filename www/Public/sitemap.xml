@@ -1,27 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset>
-  <url>
-    <loc>https://locallhost.com/projects/aa</loc>
-    <lastmod>2024-06-20 13:08:42.900513</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://locallhost.com/projects/ee</loc>
-    <lastmod>2024-06-20 13:09:02.829704</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://locallhost.com/projects/aaa</loc>
-    <lastmod>2024-06-28 10:29:38</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://locallhost.com/projects/web-backend</loc>
-    <lastmod>2024-06-28 19:46:12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-</urlset>
+<urlset/>

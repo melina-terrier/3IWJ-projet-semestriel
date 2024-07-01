@@ -1,28 +1,38 @@
+<?php
+use App\Models\Setting;
+$setting = new Setting();
+if ($setting) {
+    $title = $setting->getOneBy(['key' => "title"]) ?? '';
+}
+?>
+
 <!DOCTYPE HTML>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <meta name="description" content="Dashboard du CMS">
-    <link rel="stylesheet" href="../Assets/Style/dist/main.css">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.tiny.cloud/1/stqcjxqqgksnn9nkz2g0l1zda7dcsz9o5smv1jpbkbydtlis/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-    <header id="header" class="back-office-header">
-        <nav>
-            <div class="right-nav">
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title><?= $title['value'] ?></title>
+        <meta name="description" content="Dashboard du CMS">
+
+        <link rel="stylesheet" href="../Assets/Style/dist/css/style.css">
+        <script type="text/javascript" src="../Assets/Style/dist/js/main.js"></script>
+
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="https://cdn.tiny.cloud/1/stqcjxqqgksnn9nkz2g0l1zda7dcsz9o5smv1jpbkbydtlis/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+
+        <script src="https://kit.fontawesome.com/cd44d84840.js" crossorigin="anonymous"></script>
+        
+    </head>
+    <body>        
+        <header id="header" class="back-office-header">
+            <h1><?= $title['value'] ?></h1>
+            <nav>
                 <ul>
-                    <li>
-                        <div class="notification-icon">
-                            <i class="fa fa-bell"></i>
-                            <span id="notification-count" class="notification-count"></span>
-                            <div id="notification-list" class="notification-list"></div>
-                        </div>
-                    </li>
-                    <li><a href="/logout"><i class="fas fa-sign-out-alt"></i></a></li>
+                    <li><a href="/dashboard/profile">Mon profil</a></li>
+                    <li><a href="/logout" title="Se déconnecter"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
+
                 </ul>
             </div>
         </nav>
@@ -78,6 +88,50 @@
     </ul>
 </aside>
 
+<<<<<<< HEAD
+            <nav>
+                <ul>
+                    <li><a href="/dashboard">Accueil</a></li>
+                    <li><a href="#">Pages</a>
+                        <ul>
+                            <li><a href="/dashboard/pages">Toutes les pages </a></li>
+                            <li><a href="/dashboard/add-page">Ajouter une page</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Projets</a>
+                        <ul>
+                            <li><a href="/dashboard/projects">Tous les projets </a></li>
+                            <li><a href="/dashboard/add-project">Ajouter un projet</a></li>
+                            <li><a href="/dashboard/tags">Catégories</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Médias</a>
+                        <ul>
+                            <li><a href="/dashboard/medias">Médiathèque </a></li>
+                            <li><a href="/dashboard/add-media">Ajouter un média</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Utilisateurs</a>
+                        <ul>
+                            <li><a href="/dashboard/users">Tous les utilisateurs</a></li>
+                            <li><a href="/dashboard/add-user">Ajouter un utilisateur</a></li>
+                            <li><a href="/dashboard/profile">Mon profil</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/dashboard/comments">Commentaires</a>
+                    </li>
+                    <li><a href="#">Paramètres</a>
+                        <ul>
+                        <li><a href="/dashboard/settings">Paramêtres généraux</a></li>
+                            <li><a href="/dashboard/menu">Menus </a></li>
+                            <li><a href="/dashboard/appearance">Apparence</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+=======
+>>>>>>> dev
 
         <?php include "../Views/".$this->view.".php";?>
     </main>

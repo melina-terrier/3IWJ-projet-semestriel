@@ -11,25 +11,25 @@ class User extends SQL
     protected string $email;
     protected ?string $password = null;
     protected int $id_role;
-    protected ?string $slug = null;
+    protected string $slug;
     protected int $status;
     protected ?string $reset_token = null;
     protected ?string $reset_expires = null;
     protected ?string $activation_token = null;
     protected ?string $photo = null;
-    protected ?string $occupation = null;
-    protected ?string $birthday = null;
-    protected ?string $country = null;
-    protected ?string $city = null;
-    protected ?string $website = null;
-    protected ?string $link = null;
-    protected ?string $description = null;
-    protected ?string $experience = null;
-    protected ?string $study = null;
-    protected ?string $competence = null;
-    protected ?string $interest = null;
-    protected ?string $creation_date = null;
-    protected ?string $modification_date = null;
+    protected ?string $occupation;
+    protected ?string $birthday = '';
+    protected ?string $country;
+    protected ?string $city;
+    protected ?string $website;
+    protected ?string $link;
+    protected ?string $description;
+    protected ?string $experience;
+    protected ?string $formation;
+    protected ?string $skill;
+    protected ?string $interest;
+    protected string $creation_date;
+    protected string $modification_date;
 
     public function getUserName(): string
     {
@@ -149,27 +149,27 @@ class User extends SQL
         $this->photo = $photo;
     }
 
-    public function getCreationDate(): ?string
+    public function getCreationDate(): string
     {
         return $this->creation_date;
     }
 
-    public function setCreationDate(?string $creation_date): void
+    public function setCreationDate(string $creation_date): void
     {
         $this->creation_date = $creation_date;
     }
 
-    public function getModificationDate(): ?string
+    public function getModificationDate(): string
     {
         return $this->modification_date;
     }
 
-    public function setModificationDate(?string $modification_date): void
+    public function setModificationDate(string $modification_date): void
     {
         $this->modification_date = $modification_date;
     }
 
-    public function setSlug(): void
+    public function setSlug(string $slug)
     {
         $fullName = $this->getUserName();
         $slug = strtolower(trim($fullName));
@@ -182,7 +182,7 @@ class User extends SQL
         $this->slug = $slug;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -194,10 +194,11 @@ class User extends SQL
 
     public function setOccupation(?string $occupation): void
     {
+        $occupation = strip_tags(ucwords(trim(strtolower($occupation))));
         $this->occupation = $occupation;
     }
 
-    public function getBirthday(): ?string
+    public function getBirthday(): string
     {
         return $this->birthday;
     }
@@ -224,6 +225,7 @@ class User extends SQL
 
     public function setCity(?string $city): void
     {
+        $city = strip_tags(ucwords(trim(strtolower($city))));
         $this->city = $city;
     }
 
@@ -234,6 +236,7 @@ class User extends SQL
 
     public function setWebsite(?string $website): void
     {
+        $website = strip_tags(strtolower(trim($website)));
         $this->website = $website;
     }
 
@@ -244,16 +247,18 @@ class User extends SQL
 
     public function setLink(?string $link): void
     {
+        $link = strip_tags(strtolower(trim($link)));
         $this->link = $link;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return $this->description;
     }
 
     public function setDescription(?string $description): void
     {
+        $description = strip_tags(trim($description));
         $this->description = $description;
     }
 
@@ -264,27 +269,30 @@ class User extends SQL
 
     public function setExperience(?string $experience): void
     {
+        $experience = strip_tags(strtolower(trim($experience)));
         $this->experience = $experience;
     }
 
-    public function getStudy(): ?string
+    public function getFormation(): ?string
     {
-        return $this->study;
+        return $this->formation;
     }
 
-    public function setStudy(?string $study): void
+    public function setFormation(?string $formation): void
     {
-        $this->study = $study;
+        $formation = strip_tags(strtolower(trim($study)));
+        $this->formation = $formation;
     }
 
-    public function getCompetence(): ?string
+    public function getSkill(): ?string
     {
-        return $this->competence;
+        return $this->skill;
     }
 
-    public function setCompetence(?string $competence): void
+    public function setSkill(?string $skill): void
     {
-        $this->competence = $competence;
+        $skill = strip_tags(strtolower(trim($skill)));
+        $this->skill = $skill;
     }
 
     public function getInterest(): ?string
@@ -294,21 +302,11 @@ class User extends SQL
 
     public function setInterest(?string $interest): void
     {
+        $interest = strip_tags(trim($interest));
         $this->interest = $interest;
     }
 
-    public function getUsers()
-    {
-        return $this->getAllData();
-    }
-
-    public function getNbElements()
-    {
+    public function getNbElements() {
         return $this->countElements();
-    }
-
-    public function __sleep()
-    {
-        return array_diff(array_keys(get_object_vars($this)), array('pdo'));
     }
 }
