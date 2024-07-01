@@ -1,36 +1,32 @@
 <?php
 use App\Models\Setting;
 use App\Models\Menu;
-use App\Models\itemMenu;
 
 $setting = new Setting();
+$title = '';
 if ($setting) {
-    $title = $setting->getOneBy(['key' => "title"]) ?? '';
-    $description = $setting->getOneBy(['key' => "description"]) ?? '';
-    $slogan = $setting->getOneBy(['key' => "slogan"]) ?? '';
-    $logo = $setting->getOneBy(['key' => "logo"]) ?? '';
+    $titleData = $setting->getOneBy(['key' => "title"]);
+    $title = $titleData ? $titleData['value'] : '';
 }
+
 $menu = new Menu();
-if ($menu){
-    $header = $menu->getOneBy(['position'=>'header']);
-    if ($header)
-    $position = $header->getPosition();
-    $alignement = $header->getAlignement();
-
-
-    $header = $menu->getOneBy(['position'=>'header']);
-    $position = $header->getPosition();
-    $alignement = $header->getAlignement();
+$header = '';
+$position = '';
+$alignement = '';
+if ($menu) {
+    $header = $menu->getOneBy(['position' => 'header']);
+    if ($header) {
+        $position = $header->getPosition();
+        $alignement = $header->getAlignement();
+    }
 }
-
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
-    <title><?php echo $title; ?></title>
+    <title><?= htmlspecialchars($title) ?></title>
     <meta name="description" content="">
     <link rel="stylesheet" href="/Assets/Style/dist/css/main.css">
     <script type="text/javascript" src="/Assets/Style/dist/js/main.js"></script>
@@ -39,8 +35,6 @@ if ($menu){
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
-
 <body>
     <header id="header" class="back-office-header">
         <nav id="site-menu"></nav>
@@ -50,10 +44,9 @@ if ($menu){
             <button type="submit" id="search">Rechercher</button>
         </form>
     </header>
-   
+
     <main>     
         <?php include "../Views/".$this->view.".php";?>
     </main>
 </body>
-
 </html>

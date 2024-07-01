@@ -169,7 +169,7 @@ class User extends SQL
         $this->modification_date = $modification_date;
     }
 
-    public function setSlug(string $slug)
+    public function setSlug(string $slug = null)
     {
         $fullName = $this->getUserName();
         $slug = strtolower(trim($fullName));
@@ -181,7 +181,7 @@ class User extends SQL
         $slug .= '-' . rand(1000, 9999);
         $this->slug = $slug;
     }
-
+    
     public function getSlug(): string
     {
         return $this->slug;
