@@ -53,6 +53,10 @@ CREATE TABLE {prefix}_user (
 	country					VARCHAR(255),
 	city 					VARCHAR(60),
 	website					VARCHAR(2000),
+	link					VARCHAR(2000),
+	skill					VARCHAR(2000),
+	formation				VARCHAR(2000),
+	experience				VARCHAR(2000),
 	description				VARCHAR(1000),
 	interest				VARCHAR(1000),
 	CONSTRAINT fk_user_role FOREIGN KEY (id_role) REFERENCES {prefix}_role(id)
@@ -76,7 +80,7 @@ CREATE TABLE {prefix}_media (
 	name           		VARCHAR(255) NOT NULL,
 	type 				VARCHAR(255) NOT NULL,
 	size           		INTEGER NOT NULL,
-	url 				VARCHAR(255) NOT NULL UNIQUE,
+	url 				VARCHAR(255) NOT NULL,
 	user_id 			INTEGER NOT NULL,
 	creation_date 		TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	modification_date 	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -113,57 +117,6 @@ CREATE TABLE {prefix}_comment (
     modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES {prefix}_user(id),
 	CONSTRAINT fk_comment_project FOREIGN KEY (project_id) REFERENCES {prefix}_project(id)
-);
-
-CREATE TABLE {prefix}_formation (
-	id        			SERIAL PRIMARY KEY NOT NULL,
-	school           	VARCHAR(255),
-	start_date          DATE,
-	end_date        	DATE,
-	diploma 			VARCHAR(255),
-	mention             VARCHAR(255),
-	domain    			VARCHAR(255),
-	training_center     VARCHAR(255),
-	user_id             INTEGER NOT NULL,
-	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (user_id) REFERENCES {prefix}_user(id)
-);
-
-CREATE TABLE {prefix}_experience (
-	id         			SERIAL PRIMARY KEY NOT NULL,
-	name               	VARCHAR(255),
-	type 				VARCHAR(255),
-	company      		VARCHAR(255),
-	start_date          DATE,
-	end_date           	DATE,
-	domain              VARCHAR(255),
-	description 		VARCHAR(1000),
-	user_id             INTEGER NOT NULL,
-	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (user_id) REFERENCES {prefix}_user(id)
-);
-
-CREATE TABLE {prefix}_skill (
-	id            		SERIAL PRIMARY KEY NOT NULL,
-	title               VARCHAR(255),
-	level 				VARCHAR(255),
-	description   		VARCHAR(1000),
-	user_id             INTEGER NOT NULL,
-	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (user_id) REFERENCES {prefix}_user(id)
-);
-
-CREATE TABLE {prefix}_contact (
-	id        			SERIAL PRIMARY KEY NOT NULL,
-	name      			VARCHAR(255),
-	link      			VARCHAR(2000),
-	user_id	  			INT NOT NULL,
-	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (user_id) REFERENCES {prefix}_user(id)
 );
 
 CREATE TABLE {prefix}_page (
@@ -212,12 +165,16 @@ CREATE TABLE {prefix}_pagehistory (
 
 CREATE TABLE {prefix}_menu (
     id    			SERIAL PRIMARY KEY NOT NULL,
-    menu 			VARCHAR(255),
+    type 			VARCHAR(255),
 	position 		VARCHAR(255),
-	alignement 		VARCHAR(255),
+	alignement 		VARCHAR(255)
+);
+
+CREATE TABLE {prefix}_itemMenu (
+    id    			SERIAL PRIMARY KEY NOT NULL,
+    menu_id 		INT,
     title 			VARCHAR(255) NOT NULL,
     url 			VARCHAR(255) NOT NULL,
-    parent_id 		INT DEFAULT NULL,
     item_position 	INT NOT NULL,
-    FOREIGN KEY (parent_id) REFERENCES {prefix}_menu(id) ON DELETE CASCADE
+    FOREIGN KEY (menu_id) REFERENCES {prefix}_menu(id)
 );
