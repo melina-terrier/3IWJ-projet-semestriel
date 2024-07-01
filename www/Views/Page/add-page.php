@@ -1,5 +1,3 @@
-
-
 <script type="text/javascript">
     const imgLists = [<?php
         if (!empty($this->data['mediasList'])) {
@@ -59,15 +57,14 @@
     });
 </script>
 
-
-<section>
+<section class="add-element">
 
     <h1>Créer une page</h1>
 
     <?= $form ?>
 
     <?php if (!empty($seoAdvices) && !empty($seoStatus)) {
-        echo '<article class="card">
+        echo '<article class="seo">
             <h3>Conseil SEO</h3>
             <p>État SEO : '.htmlentities($seoStatus).'</p>
         <ul>';
@@ -78,22 +75,20 @@
         </article>';
     } ?>
     
-    <?php if (!empty($errorsForm)): ?>
-        <ul>
-            <?php foreach ($errorsForm as $error): ?>
-                <li class="error"><?php echo htmlentities($error); ?></li>
-            <?php endforeach; ?>
-            </ul>
-    <?php endif; ?>
-
-    <?php if (!empty($successForm)): ?>
-        <div>
-            <?php foreach ($successForm as $message): ?>
-                <p class="text"><?php echo htmlspecialchars($message); ?></p>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; 
-
+    <?php
+    if ($errors) {
+            echo "<ul class='errors'>"; 
+            foreach ($errors as $error){
+                echo "<li class='error'>".htmlentities($error)."</li>";
+            }
+            echo "</ul>";
+    } else if ($successes) {
+        echo "<ul class='successes'>"; 
+        foreach ($successes as $success){
+            echo "<li class='success'>".htmlentities($success)."</li>";
+        }
+        echo "</ul>";
+    }
     ?>
 
 </section>

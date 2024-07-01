@@ -1,32 +1,35 @@
+<?php
+    usort($projects, function($a, $b) {
+        return strtotime($a['publication_date']) - strtotime($b['publication_date']);
+    });
+    $projects = array_reverse($projects);
+?>
+
 <section>
-   
 
-    <?php
-    if (isset($title) && isset($content)) {
-        echo '<h1>'.$pageTitle.'</h1>';
-        echo $content;
-    } else {
-        echo "Bienvenue sur la page d'accueil"; 
-        echo '<div class="list">
-        <h3>Les projets de nos utilisateurs</h3>
+        <h1>Bienvenue sur la page d'accueil<h1> 
+        
+        <div class="grid-container">
 
-        <div class="card-container">';
-        if (isset($projects) && !empty($projects)) {
-            foreach ($projects as $project) {
-                echo '<article class="card">
-                    <a href="/projects/' . htmlspecialchars($project['slug']) . '">
-                        <h4>' . htmlspecialchars($project['title']) . '</h4>
-                        <img src="" alt="">
-                    </a>
-                    <a href="/profiles/' . htmlspecialchars($project['userSlug']) . '">' . htmlspecialchars($project['username']) . '</a>
-                </article>';
+            <h3>Les projets de nos utilisateurs</h3>
+
+            <div class="card-container">
+            
+            <?php 
+            if (isset($projects) && !empty($projects)) {
+                foreach ($projects as $project) {
+                    echo '<article class="card">
+                        <a href="/projects/' . htmlentities($project['slug']) . '">
+                            <h4>' . htmlentities($project['title']) . '</h4>
+                            <img src="'.htmlentities($project['featured_image']).'" alt="'.htmlentities($project['image_description']).'">
+                        </a>
+                        <a href="/profiles/' . htmlentities($project['userSlug']) . '">  <img src="'.htmlentities($project['userPhoto']).'" src="'.htmlentities($project['userPhotoDescription']).'" "'. htmlentities($project['username']) . '</a>
+                    </article>';
+                }
+            } else {
+                echo "<p>Aucun projet n'est encore disponible.</p>";
             }
-        } else {
-            echo "<p>Aucun projet n'est encore disponible.</p>";
-        }
-    echo '</div>
-            </div>';
-    }
-    ?>
-
+        echo '</div>
+        </div>';
+?>
 </section>

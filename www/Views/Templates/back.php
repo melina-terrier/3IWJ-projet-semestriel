@@ -3,6 +3,7 @@ use App\Models\Setting;
 $setting = new Setting();
 if ($setting) {
     $title = $setting->getOneBy(['key' => "title"]) ?? '';
+    $content = $setting->getOneBy(['key' => "content"]) ?? '';
 }
 
 use App\Models\User;
@@ -17,7 +18,7 @@ $userSlug = $userId->getSlug();
     <head>
         <meta charset="UTF-8">
         <title><?= $title['value'] ?></title>
-        <meta name="description" content="Dashboard du CMS">
+        <meta name="description" content="<?php echo $content['value'] ?>">
 
         <link rel="stylesheet" href="../Assets/Style/dist/css/style.css">
         <script type="text/javascript" src="../Assets/Style/dist/js/main.js"></script>
@@ -32,13 +33,12 @@ $userSlug = $userId->getSlug();
         
     </head>
     <body>        
-        <header id="header" class="back-office-header">
+        <header class="bo-header">
             <h1><?= $title['value'] ?></h1>
             <nav>
                 <ul>
                     <li><a href="<?php echo $userSlug ?>">Mon profil</a></li>
                     <li><a href="/logout" title="Se déconnecter"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
-
                 </ul>
             </div>
         </nav>

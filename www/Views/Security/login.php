@@ -1,37 +1,36 @@
-
 <section>
-    <header>
-        <h1>Connexion</h1>
-    </header>
+
+    <h1>Connexion</h1>
 
     <article>
         <?php
 
+            echo $form;
+
             if($successes){
                 echo "<ul>"; 
                 foreach ($successes as $success){
-                    echo "<li>$success</li>";
+                    echo "<li>".htmlentities($success)."</li>";
                 }
                 echo "</ul>";
             }
 
-            echo $form;
-
             if ($errors) {
                 echo "<ul>"; 
                 foreach ($errors as $error){
-                    echo "<li>$error</li>";
+                    echo "<li>".htmlentities($error)."</li>";
                 }
                 echo "</ul>";
             } 
-
         ?>
+        
         <a href="/request-password">Mot de passe oublié ?</a>
-        </article>
+    
+    </article>
         
     <footer>
         <p>Vous êtes un nouvel utilisateur ?</p>
-        <a href="/register">Créez un compte</a>
+        <a href="/register" class="secondary-button">Créez un compte</a>
     </footer>
 
 </section>

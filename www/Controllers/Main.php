@@ -18,38 +18,57 @@ class Main
         $view = new View('Main/page', 'front');
         $setting = new Setting();
         $settingId = $setting->getOneBy(['key' => 'homepage'], 'object');
-        if ($settingId){
-            $homepageId = $settingId->getValue();
-            if($homepageId){
-                $page = new Page();
-                $homepage = $page->populate($homepageId);
-                if (!empty($homepage)) {
-                    $title = $homepage->getTitle();
-                    $content = $homepage->getContent();
-                } 
-                $view->assign('content', $content);
-                $view->assign('pageTitle', $title);
-            }
-        } else {
+        // if ($settingId){
+        //     $homepageId = $settingId->getValue();
+        //     if($homepageId){
+        //         $page = new Page();
+        //         $homepage = $page->populate($homepageId);
+        //         if (!empty($homepage)) {
+        //             $title = $homepage->getTitle();
+        //             $content = $homepage->getContent();
+        //         } 
+        //         $view->assign('content', $content);
+        //         $view->assign('pageTitle', $title);
+        //     }
+        // } else {
             $project = new Project();
             $statusModel = new Status();
             $userModel = new User();
+            $mediaModel = new Media();
             $status = $statusModel->getByName('Publié');
             $projects = $project->getAllData(['status_id' => $status]);
             foreach ($projects as &$project) {
                 $userId = $project['user_id'];
+                $mediaSlug = $project['featured_image'];
                 $project['username'] ='';
-                $project['userSlug'] ='';
+                $project['username'] ='';
+                $project['image_description'] ='';
+                $project['userPhoto'] ='';
+                $user['userPhotoDescription'] = '';
                 if ($userId) {
                     $user = $userModel->populate($userId);
                     if ($user) {
                         $project['username'] = $user->getUserName();
                         $project['userSlug'] = $user->getSlug();
-                  }
+                        $project['userPhoto'] = $user->getPhoto();
+
+                        if($project['userPhoto']){
+                            $medias = $mediaModel->getOneBy(['url'=>$project['userPhoto']]);
+                            if($medias){
+                                $project['userPhotoDescription'] = $medias['description'];
+                            }
+                        }
+                    }
+                }
+                if ($mediaSlug){
+                    $media = $mediaModel->getOneBy(['url'=>$mediaSlug], 'object');
+                    if ($media) {
+                        $project['image_description'] = $media->getDescription();
+                    }
                 }
               }
             $view->assign('projects', $projects);
-        }
+        // }
         $view->render();
     }
     

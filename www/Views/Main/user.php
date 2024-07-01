@@ -1,14 +1,22 @@
-<section id="apropos_userProfile" class="apropos-section">
-    <div class="card apropos-user-details">
-        <img src="<?= isset($user['photo']) && !empty($user['photo']) ? $user['photo'] : 'default_profile.jpg' ?>" alt="<?= (isset($media) && is_array($media)) ? $media['description'] : 'Photo de profil' ?>" class="card-img-top apropos-user-photo">
-        <div class="card-body">
-            <h2 class="card-title apropos-user-name"><?= $user['lastname'] ?> <?= $user['firstname'] ?></h2>
-            <p class="card-text apropos-user-occupation"><?= $user['occupation'] ?></p>
-            <a href="mailto:<?= $user['email'] ?>" class="card-link apropos-user-email"><?= $user['email'] ?></a>
-            <p class="card-text apropos-user-location"><?= $user['city'] ?>, <?= $user['country'] ?></p>
-            <!-- <a href="/profile/edit" class="btn btn-primary apropos-edit-profile">Modifier mon profil</a> -->
+<?php 
+usort($projects, function($a, $b) {
+    return strtotime($a['publication_date']) - strtotime($b['publication_date']);
+});
+$projects = array_reverse($projects);
+?>
+?>
+
+<section class="profile">
+
+    <article class="card">
+        <img src="<?= isset($user['photo']) && !empty($user['photo']) ? $user['photo'] : '' ?>" alt="<?= (isset($media) && is_array($media)) ? $media['description'] : 'Photo de profil' ?>" class="user-photo">
+        <div class="user-info">
+            <h2><?= $user['lastname'] ?> <?= $user['firstname'] ?></h2>
+            <p><?= $user['occupation'] ?></p>
+            <a href="mailto:<?= $user['email'] ?>"><?= $user['email'] ?></a>
+            <p><?= $user['city'] ?>, <?= $user['country'] ?></p>
         </div>
-    </div>
+    </article>
 
     <div class="card apropos-user-about">
         <div class="card-body">
