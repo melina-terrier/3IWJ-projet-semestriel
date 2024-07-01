@@ -13,9 +13,7 @@
       font-size: 2rem;
       margin-bottom: 1rem;
     }
-  
-    
-  
+
     &.green {
       @include card-style($green, $white);
     }
@@ -145,4 +143,72 @@
             }
         }
     }
+}
+
+
+//media 
+.card_media {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+  padding: 0; // Suppression du padding pour réduire la hauteur
+  display: flex;
+  flex-direction: column; // Pour assurer que les éléments s'empilent verticalement
+  text-align: center;
+
+  input[type="checkbox"] {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+
+  img {
+    display: block;
+    object-fit: cover;
+    height: 200px; // Vous pouvez ajuster la hauteur selon vos besoins
+    width: 100%;
+  }
+
+  .content {
+    padding: 15px;
+    flex-grow: 1; // Pour occuper l'espace disponible et pousser les actions en bas
+  }
+
+  h1 {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+
+  p {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0;
+  }
+
+  .media-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-top: 1px solid #ddd; // Optionnel : pour séparer visuellement les actions
+    background-color: #f9f9f9; // Optionnel : pour un fond distinct
+
+    a {
+      color: #333;
+      font-size: 16px;
+      text-decoration: none;
+      padding: 10px;
+
+      &:hover {
+        color: #007bff;
+      }
+
+      i {
+        margin-right: 5px;
+      }
+    }
+  }
 }

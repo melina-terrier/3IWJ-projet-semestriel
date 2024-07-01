@@ -54,19 +54,52 @@ form input[type="submit"]:hover {
     background-color: #0056b3;
 }
 
-// Styles pour le bouton spécifique
-.default-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
+// Styles pour les formulaires et messages projet
+.form-common {
+    display: flex;
+    flex-direction: column;
+    input[type="text"], input[type="email"], input[type="password"], select {
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    input[type="submit"], .submit_btn {
+        padding: 12px;
+        background-color: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 10px 0;
+
+        &:hover {
+            background-color: darken($primary-color, $hover-darken-percentage);
+        }
+    }
 }
 
-.default-button:hover {
-    background-color: #0056b3;
+.message-common {
+    padding: 10px;
+    border-radius: 4px;
+    margin: 20px 0;
+
+    &.success-message {
+        background-color: lighten($success-color, 40%);
+        color: darken($success-color, 40%);
+        border: 1px solid lighten($success-color, 20%);
+    }
+
+    &.error-message {
+        background-color: lighten($error-color, 40%);
+        color: darken($error-color, 40%);
+        border: 1px solid lighten($error-color, 20%);
+    }
+
+    p {
+        margin: 0;
+    }
 }

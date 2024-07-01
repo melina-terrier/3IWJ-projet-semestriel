@@ -2,13 +2,13 @@
     <?php
     if ($errors) {
         echo "<ul class='user_errors'>"; 
-        foreach ($errors as $error){
+        foreach ($errors as $error) {
             echo "<li>$error</li>";
         }
         echo "</ul>";
     } else if ($successes) {
         echo "<ul class='user_successes'>"; 
-        foreach ($successes as $success){
+        foreach ($successes as $success) {
             echo "<li>$success</li>";
         }
         echo "</ul>";
@@ -18,11 +18,11 @@
     <h1>Médias</h1>
 
     <?php
-        if (isset($_GET['message']) && $_GET['message'] === 'success') {
-            echo "<p class='user_message'>Le média a été ajouté.</p>";
-        } else if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
-            echo "<p class='user_message'>Le média a été supprimé.</p>";
-        }
+    if (isset($_GET['message']) && $_GET['message'] === 'success') {
+        echo "<p class='user_message'>Le média a été ajouté.</p>";
+    } else if (isset($_GET['message']) && $_GET['message'] === 'delete-success') {
+        echo "<p class='user_message'>Le média a été supprimé.</p>";
+    }
     ?>
 
     <a href="/dashboard/add-media" class="add_user_btn">Ajouter un média</a>
@@ -69,12 +69,14 @@
             }
 
             echo "
-                <article class='card'>
+                <article class='card_media'>
                     <input type='checkbox' class='select_user' id='media_$mediaId'>
                     <img src='$path' alt='$title' />
-                    <h1>$title</h1>
-                    <p>$filename</p>
-                    <p>Ajouté par: $user_id le $date</p>
+                    <div class='content'>
+                        <h1>$title</h1>
+                        <p>$filename</p>
+                        <p>Ajouté par: $user_id le $date</p>
+                    </div>
                     <div class='media-actions'>
                         <a href='/dashboard/edit-media?id=$mediaId' class='media-action edit'><i class='fa fa-pencil'></i></a>
                         <a href='/dashboard/medias?action=delete&id=$mediaId' class='media-action delete' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce média définitivement ?\");'><i class='fa fa-trash'></i></a>
