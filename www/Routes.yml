@@ -44,12 +44,20 @@
   Security: true
   Role: ["Administrateur"]
 
+
 # Comments
+/dashboard/add-coment:
+  Controller: "add-coment"
+  Action: "addComments"
+  Security: true
+  Role: ["Administrateur"]
+
 /dashboard/comments:
   Controller: "Comment"
   Action: "allComments"
   Security: true
   Role: ["Administrateur"]
+ 
 
 # TAGS
 /dashboard/tag:
@@ -103,6 +111,7 @@
   Role: ["Administrateur"]
 
 
+
 # FRONT
 /:
   Controller: "Main"
@@ -111,6 +120,7 @@
 /search: 
   Controller: "Main"
   Action: "displayResult"
+
 
 # USER
 /profile/edit:
@@ -148,3 +158,5 @@
 /request-password:
   Controller: "Security"
   Action: "requestPassword"
+
+  

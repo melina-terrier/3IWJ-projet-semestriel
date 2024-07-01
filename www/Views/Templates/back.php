@@ -32,9 +32,63 @@ if ($setting) {
                 <ul>
                     <li><a href="/dashboard/profile">Mon profil</a></li>
                     <li><a href="/logout" title="Se déconnecter"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
-                </ul>
-            </nav>
 
+                </ul>
+            </div>
+        </nav>
+    </header>
+   
+    <main>
+    <aside class="sidebar">
+    <ul>
+        <li class="menu-item active">
+            <a href="/dashboard"><i class="fas fa-home"></i> Accueil</a>
+        </li>
+        <li class="menu-item">
+            <a href="#"><i class="fas fa-file-alt"></i> Pages</a>
+            <ul class="submenu">
+                <li><a href="/dashboard/pages">Toutes les pages</a></li>
+                <li><a href="/dashboard/add-page">Ajouter une page</a></li>
+            </ul>
+        </li>
+        <li class="menu-item">
+            <a href="#"><i class="fas fa-project-diagram"></i> Projets</a>
+            <ul class="submenu">
+                <li><a href="/dashboard/projects">Tous les projets</a></li>
+                <li><a href="/dashboard/add-project">Ajouter un projet</a></li>
+                <li><a href="/dashboard/categories">Catégories</a></li>
+            </ul>
+        </li>
+        <li class="menu-item">
+            <a href="#"><i class="fas fa-images"></i> Médias</a>
+            <ul class="submenu">
+                <li><a href="/dashboard/medias">Médiathèque</a></li>
+                <li><a href="/dashboard/add-media">Ajouter un média</a></li>
+            </ul>
+        </li>
+        <li class="menu-item">
+            <a href="#"><i class="fas fa-users"></i> Utilisateurs</a>
+            <ul class="submenu">
+                <li><a href="/dashboard/users">Tous les utilisateurs</a></li>
+                <li><a href="/dashboard/add-user">Ajouter un utilisateur</a></li>
+                <li><a href="/dashboard/edit-user">Mon profil</a></li>
+            </ul>
+        </li>
+        <li class="menu-item">
+            <a href="/dashboard/comments"><i class="fas fa-comments"></i> Commentaires</a>
+            <ul class="submenu">
+                <li><a href="/dashboard/comments">Tous les Commentaires</a></li>
+                <li><a href="/dashboard/add-coment">Ajouter un commentaire</a></li>
+                
+            </ul>
+        </li>
+        <li class="menu-item">
+            <a href="/dashboard/settings"><i class="fas fa-cog"></i> Paramètres</a>
+        </li>
+    </ul>
+</aside>
+
+<<<<<<< HEAD
             <nav>
                 <ul>
                     <li><a href="/dashboard">Accueil</a></li>
@@ -76,10 +130,22 @@ if ($setting) {
                 </ul>
             </nav>
         </header>
+=======
+>>>>>>> dev
 
-        <main>
-            <?php include "../Views/".$this->view.".php";?>
-        </main>
+        <?php include "../Views/".$this->view.".php";?>
+    </main>
 
-    </body>
+    <script>
+        window.addEventListener("scroll", function () {
+            console.log(window.scrollY);
+            const header = document.getElementById("header");
+            if (window.scrollY > 0) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+        });
+    </script>
+</body>
 </html>

@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+
 use App\Core\SQL;
 
 class User extends SQL
@@ -32,9 +33,10 @@ class User extends SQL
 
     public function getUserName(): string
     {
-        return $this->getFirstname()." ".$this->getLastname();
+        return $this->getFirstname() . " " . $this->getLastname();
     }
 
+    // Getter et Setter pour les propriétés
     public function getId(): ?int
     {
         return $this->id;
@@ -52,8 +54,7 @@ class User extends SQL
 
     public function setFirstname(string $firstname): void
     {
-        $firstname = ucwords(strtolower(trim($firstname)));
-        $this->firstname = $firstname;
+        $this->firstname = ucwords(strtolower(trim($firstname)));
     }
 
     public function getLastname(): string
@@ -63,8 +64,7 @@ class User extends SQL
 
     public function setLastname(string $lastname): void
     {
-        $lastname = strtoupper(trim($lastname));
-        $this->lastname = $lastname;
+        $this->lastname = strtoupper(trim($lastname));
     }
 
     public function getEmail(): string
@@ -74,19 +74,19 @@ class User extends SQL
 
     public function setEmail(string $email): void
     {
-        $email = strtolower(trim($email));
-        $this->email = $email;
+        $this->email = strtolower(trim($email));
     }
 
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(?string $password): void
     {
-        $password = password_hash($password, PASSWORD_DEFAULT);
-        $this->password = $password;
+        if ($password) {
+            $this->password = password_hash($password, PASSWORD_DEFAULT);
+        }
     }
 
     public function getRole(): int
@@ -108,7 +108,8 @@ class User extends SQL
     {
         $this->status = $status;
     }
-    public function getResetToken(): string
+
+    public function getResetToken(): ?string
     {
         return $this->reset_token;
     }
@@ -118,26 +119,27 @@ class User extends SQL
         $this->reset_token = $reset_token;
     }
 
-    public function getResetExpires(): string
+    public function getResetExpires(): ?string
     {
         return $this->reset_expires;
     }
 
-    public function setResetExpires(?string $reset_expires): void {
+    public function setResetExpires(?string $reset_expires): void
+    {
         $this->reset_expires = $reset_expires;
     }
 
-    public function getActivationToken(): string
+    public function getActivationToken(): ?string
     {
         return $this->activation_token;
     }
 
-    public function setActivationToken(?string $activationtoken): void
+    public function setActivationToken(?string $activation_token): void
     {
-        $this->activation_token = $activationtoken;
+        $this->activation_token = $activation_token;
     }
-    
-    public function getPhoto(): string
+
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }
@@ -170,16 +172,13 @@ class User extends SQL
     public function setSlug(string $slug)
     {
         $fullName = $this->getUserName();
-        $slug = strtolower($fullName);
-        $slug = trim($slug);
+        $slug = strtolower(trim($fullName));
         $slug = str_replace(' ', '-', $slug);
-        $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+        $search = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
         $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
         $slug = str_replace($search, $replace, $slug);
-        $allowedChars = 'abcdefghijklmnopqrstuvwxyz09-';
-        $slug = preg_replace('/[^' . $allowedChars . ']/', '', $slug);
-        $randomDigits = rand(1000, 9999);
-        $slug .= '-' . $randomDigits;
+        $slug = preg_replace('/[^a-z0-9-]/', '', $slug);
+        $slug .= '-' . rand(1000, 9999);
         $this->slug = $slug;
     }
 
@@ -188,7 +187,7 @@ class User extends SQL
         return $this->slug;
     }
 
-    public function getOccupation(): string
+    public function getOccupation(): ?string
     {
         return $this->occupation;
     }
@@ -209,7 +208,7 @@ class User extends SQL
         $this->birthday = $birthday;
     }
 
-    public function getCountry(): string
+    public function getCountry(): ?string
     {
         return $this->country;
     }
@@ -219,7 +218,7 @@ class User extends SQL
         $this->country = $country;
     }
 
-    public function getCity(): string
+    public function getCity(): ?string
     {
         return $this->city;
     }
@@ -230,7 +229,7 @@ class User extends SQL
         $this->city = $city;
     }
 
-    public function getWebsite(): string
+    public function getWebsite(): ?string
     {
         return $this->website;
     }
@@ -251,7 +250,6 @@ class User extends SQL
         $link = strip_tags(strtolower(trim($link)));
         $this->link = $link;
     }
-
 
     public function getDescription(): string
     {
@@ -297,7 +295,7 @@ class User extends SQL
         $this->skill = $skill;
     }
 
-    public function getInterest(): string
+    public function getInterest(): ?string
     {
         return $this->interest;
     }
@@ -311,5 +309,4 @@ class User extends SQL
     public function getNbElements() {
         return $this->countElements();
     }
-  
 }

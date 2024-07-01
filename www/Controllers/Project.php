@@ -199,6 +199,7 @@ class Project{
         $view->assign("successes", $success);
         $view->render();
     }
+<<<<<<< HEAD
 
 
     private function getSeoAdvices(array $seoAnalysis): array
@@ -233,6 +234,157 @@ class Project{
             $advices[] = "La longueur du titre SEO n'est pas optimale. Assurez-vous qu'il soit entre 50 et 60 caractères.";
         }
         return $advices;
+=======
+    
+    public function showProject($slug)
+    {
+        $projectTagsId = [];
+        $slugParts = explode('/', $slug);
+        $slug = end($slugParts);
+        $db = new ProjectModel();
+        $statusModel = new Status();
+        $status = $statusModel->getOneBy(["status" => "Publié"], 'object');
+        $publishedStatusId = $status->getId();
+    
+        $slugTrim = str_replace('/', '', $slug);
+        $arraySlug = ["slug" => $slugTrim];
+        $project = $db->getOneBy($arraySlug);
+    
+        $tags = new Tag();
+        $tag = $tags->getOneBy($arraySlug);
+        $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    
+        if (!empty($project) && ($project["status_id"] === $publishedStatusId || (isset($_GET['preview']) && $_GET['preview'] == true))) {
+            $content = $project["content"];
+            $title = $project["title"];
+    
+            $form = new Form("AddComment");
+            $errors = [];
+            $success = [];
+    
+            $tagName = "";
+            $projectTags = new Project_Tags();
+            $projectTagsId = $projectTags->getAllDataWithWhere(['project_id' => $project['id']]);
+            if ($projectTagsId) {
+                foreach ($projectTagsId as $projectTagId) {
+                    $tagId = $tags->getOneBy(['id' => $projectTagId['tag_id']]);
+                    if ($tagId) {
+                        $tagName .= $tagId['name'] . ', ';
+                    }
+                }
+                $tagName = rtrim($tagName, ', ');
+            }
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+                $comment = new Comment();
+    
+                $comment->setComment($_POST['comment']);
+                $comment->setProject($project['id']);
+                $comment->setStatus(0);
+    
+                if (isset($_SESSION['user'])) {
+                    $user = unserialize($_SESSION['user']);
+                    $userId = $user->getId();
+                    $userEmail = $user->getEmail();
+                    $userName = $user->getUserName();
+                    $comment->setUserId($userId);
+                    $comment->setMail($userEmail);
+                    $comment->setName($userName);
+                    $comment->save();
+                    $success[] = "Votre commentaire a été publié";
+                } else {
+                    $user = new User();
+                    if ($user->emailExists($_POST["email"])) {
+                        $errors[] = "L'email correspond à un compte, merci de bien vouloir vous connecter";
+                    } else {
+                        $comment->setMail($_POST['email']);
+                        $comment->setName($_POST['name']);
+                        $comment->save();
+                        $success[] = "Votre commentaire a été publié";
+                    }
+                }
+            }
+    
+            $commentModel = new Comment();
+            $comments = $commentModel->getAllData();
+            $filteredComments = [];
+            foreach ($comments as $comment) {
+                if ($comment['status'] === 1 && $comment['project_id'] == $project['id']) {
+                    $filteredComments[] = $comment;
+                }
+            }
+    
+            $view = new View("Main/project", "front");
+            $view->assign("content", $content);
+            $view->assign("tagName", $tagName);
+            $view->assign("title", $title);
+            $view->assign("form", $form->build());
+            $view->assign("errorsForm", $errors);
+            $view->assign("successForm", $success);
+            $view->assign("comments", $filteredComments);
+            $view->render();
+        } else if (!empty($tag)) {
+            $title = $tag['name'];
+            $description = $tag['description'];
+    
+            $projects = $db->getAllDataWithWhere(['tag_id' => $tag['id']]);
+            $userModel = new User();
+            foreach ($projects as &$project) {
+                $userId = $project['user_id'];
+                $project['username'] = '';
+                $project['userSlug'] = '';
+                if ($userId) {
+                    $user = $userModel->getOneBy(['id' => $userId], 'object');
+                    if ($user) {
+                        $project['username'] = $user->getUserName();
+                        $project['userSlug'] = $user->getSlug();
+                    }
+                }
+            }
+            $view = new View('Main/all-projects', 'front');
+            $view->assign("title", $title);
+            $view->assign("description", $description);
+            $view->assign("projects", $projects);
+            $view->render();
+        } else if ($requestUrl === '/projects' || $requestUrl === '/projects//') {
+            $projectTags = new Project_Tags();
+            $projects = $db->getAllDataWithWhere(['status_id' => $publishedStatusId]);
+            $userModel = new User();
+            foreach ($projects as &$project) {
+                $userId = $project['user_id'];
+                $project['category_name'] = '';
+                $project['username'] = '';
+                $project['userSlug'] = '';
+                $project['profile_photo'] = '';
+                if ($userId) {
+                    $user = $userModel->getOneBy(['id' => $userId], 'object');
+                    if ($user) {
+                        $project['username'] = $user->getUserName();
+                        $project['userSlug'] = $user->getSlug();
+                        $project['profile_photo'] = $user->getPhoto();
+                    }
+                }
+                if ($projectTagsId) {
+                    foreach ($projectTagsId as $projectTagId) {
+                        $tagId = $tags->getOneBy(['id' => $projectTagId['tag_id']]);
+                        if ($tagId) {
+                            $project['category_name'] .= $tagId['name'] . ', ';
+                        }
+                    }
+                    $project['category_name'] = rtrim($project['category_name'], ', ');
+                }
+            }
+    
+            $view = new View("Main/all-projects", "front");
+            $view->assign("projects", $projects);
+            $view->render();
+        } else {
+            header("Status 404 Not Found", true, 404);
+            $error = new Error();
+            $error->page404();
+        }
+>>>>>>> dev
     }
+    
 }
 ?>

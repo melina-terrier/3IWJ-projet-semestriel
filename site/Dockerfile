@@ -22,3 +22,36 @@ RUN pecl install yamL
 RUN usermod -u 1000 www-data
 
 RUN a2enmod rewrite
+
+
+
+
+
+
+
+
+# # Utilisation de l'image PHP 8.2 avec Apache
+# FROM php:8.2-apache
+
+# # Mise à jour et installation des dépendances nécessaires
+# RUN apt-get update
+
+# # Installation des extensions PHP nécessaires pour PHPMailer et autres dépendances
+# RUN apt-get install -y \
+#     libpq-dev \
+#     libpng-dev \
+#     libfreetype6-dev \
+#     libyaml-dev \
+#     && docker-php-ext-configure gd --with-freetype \
+#     && docker-php-ext-install -j$(nproc) \
+#     pdo pdo_pgsql pgsql \
+#     gd
+
+# # Installation de Composer
+# RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# # Activation du module Apache pour le rewriting d'URLs
+# RUN a2enmod rewrite
+
+# # Redémarrage du service Apache pour appliquer les modifications
+# RUN service apache2 restart

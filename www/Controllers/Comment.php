@@ -1,19 +1,21 @@
 <?php
+
 namespace App\Controllers;
 use App\Core\View;
 use App\Models\Project;
 use App\Models\Comment as CommentModel;
 
-class Comment{
-
+class Comment
+{
     public function allComments(): void
     {
         $comment = new CommentModel();
         $comments = $comment->getAllData();
         $successes = [];
         $errors = [];
-
+    
         if (isset($_GET['action']) && isset($_GET['id'])) {
+<<<<<<< HEAD
             $currentComment = $comment->populate($_GET['id']);
             if ($currentComment) {
                 if ($_GET['action'] === 'permanent-delete') {
@@ -40,9 +42,9 @@ class Comment{
                 $errors[] = 'Commentaire introuvable.';
             }
         }
-
+    
+        $projects = [];
         foreach ($comments as &$comment) {
-            $comment['project'] = '';
             $projectId = $comment['project_id'];
             $projectModel = new Project();
             $project = $projectModel->populate($projectId);

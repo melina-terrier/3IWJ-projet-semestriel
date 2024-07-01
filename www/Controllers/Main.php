@@ -53,6 +53,24 @@ class Main
         $view->render();
     }
 
+
+    
+    public function getNotificationCount()
+    {
+        $comment = new Comment();
+        $notificationCount = $comment->countElements('status', 1);
+        echo json_encode(['count' => $notificationCount]);
+    }
+
+    public function getUnreadComments()
+    {
+        $comment = new Comment();
+        $unreadComments = $comment->getUnreadComments();
+        echo json_encode($unreadComments);
+    }
+    
+    
+
     public function dashboard() {
         $users = new User();
         $page = new Page();
@@ -150,7 +168,8 @@ class Main
             'comments' => $comment->getNbElements(),
             'tags'=>$tag->getNbElements(),
         ];
-
+        $sql = new SQL();
+        $usersProjects = $sql->sql_users_projects();
         $view = new View('Main/dashboard', 'back');
         $view->assign('comments', $comments);
         $view->assign('elementsCount', $elementsCount);

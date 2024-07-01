@@ -181,8 +181,8 @@ class Security{
             $phpmailer->Host = 'sandbox.smtp.mailtrap.io';
             $phpmailer->SMTPAuth = true;
             $phpmailer->Port = 2525;
-            $phpmailer->Username = '4c0c40e0403ac9';
-            $phpmailer->Password = 'bafabb7c681658';
+            $phpmailer->Username = '6ad47fd4dd8185';
+            $phpmailer->Password = '077c164d29a4f5';
             $setting = new Setting();
             $siteSetting = $setting->getOneBy(['key' => 'title']);
             $siteName = '';
@@ -201,17 +201,20 @@ class Security{
         } catch (Exception $e) {
             return ['error' => 'Nous n\'avons pas pu envoyer l\'email de réinitialisation de mot de passe à votre adresse e-mail. Merci de réessayer ultérieurement.'];
         }
+    
+        
     }
-
+    
     public function sendActivationEmail($email, $activationToken) {
         $phpmailer = new PHPMailer(true); 
+        
         try {
             $phpmailer->isSMTP();
             $phpmailer->Host = 'sandbox.smtp.mailtrap.io';
             $phpmailer->SMTPAuth = true;
             $phpmailer->Port = 2525;
-            $phpmailer->Username = '4c0c40e0403ac9';
-            $phpmailer->Password = 'bafabb7c681658';
+            $phpmailer->Username = '6ad47fd4dd8185';
+            $phpmailer->Password = '077c164d29a4f5';
             $setting = new Setting();
             $siteSetting = $setting->getOneBy(['key' => 'title']);
             $siteName = '';
@@ -230,6 +233,7 @@ class Security{
         } catch (Exception $e) {
             return ['error' => 'nous n\'avons pas pu envoyer l\'email d\'activation à votre adresse e-mail.'];
         }
+        
     }
 
     public function resetPassword(): void
@@ -275,7 +279,7 @@ class Security{
             $phpmailer->Host = 'sandbox.smtp.mailtrap.io';
             $phpmailer->SMTPAuth = true;
             $phpmailer->Port = 2525;
-            $phpmailer->Username = '4c0c40e0403ac9';
+            $phpmailer->Username = '6ad47fd4dd8185';
             $phpmailer->Password = 'bafabb7c681658';
             $setting = new Setting();
             $siteSetting = $setting->getOneBy(['key' => 'title']);

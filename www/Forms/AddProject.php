@@ -2,7 +2,6 @@
 namespace App\Forms;
 use App\Models\Tag;
 use App\Models\Media;
-use App\Core\SQL;
 use App\Core\Form;
 
 class AddProject

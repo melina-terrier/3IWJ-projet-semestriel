@@ -12,4 +12,3 @@
             <a href="/bo/user/edit-user?id=<?php echo $userData['id']; ?>"><button class="button button-primary">Modifier</button></a>
         </div>
 </section>
-

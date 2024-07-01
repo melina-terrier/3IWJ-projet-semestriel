@@ -96,4 +96,12 @@ class Tag extends SQL
         return $this->countElements();
     }
 
+<<<<<<< HEAD
 }
+=======
+    public function getElementsByType($column, $value) {
+        return $this->countElements($column, $value);
+    }
+
+}
+>>>>>>> dev

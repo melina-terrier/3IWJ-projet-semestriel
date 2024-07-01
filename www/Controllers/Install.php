@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 namespace App\Controllers;
 use App\Core\View;
@@ -98,5 +99,4 @@ class Install
         $view->assign('successes', $successes);
         $view->render();
     }
-
 }

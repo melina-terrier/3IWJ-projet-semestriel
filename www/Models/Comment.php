@@ -69,12 +69,12 @@ class Comment extends SQL
 
     public function getStatus(): int
     {
-        return $this->status;
+        return $this->is_reported;
     }
 
     public function setStatus(int $status): void
     {
-        $this->status = $status;
+        $this->is_reported = $is_reported;
     }
 
      public function getProject(): int

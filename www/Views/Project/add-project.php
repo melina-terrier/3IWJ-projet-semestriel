@@ -1,5 +1,4 @@
-<script type="text/javascript">
-
+<script>
         tinymce.init({
             selector: '#content',
             width: "100%",
@@ -24,7 +23,7 @@
 </script>
 
 <section>
-    <h1>Ajouter un nouveau projet</h1>
+    <h1>Ajouter un nouveau projettt</h1>
     <?= $form ?>
 
     <?= $mediaForm ?>

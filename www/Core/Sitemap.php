@@ -48,5 +48,4 @@ class Sitemap{
         $xmlContent = $xml->saveXML();
         file_put_contents('sitemap.xml', $xmlContent);
 	}
-    
 }

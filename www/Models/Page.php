@@ -229,4 +229,3 @@ class Page extends SQL
         }
     }
 }
-
