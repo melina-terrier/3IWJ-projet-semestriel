@@ -14,9 +14,9 @@
         foreach($users as $user){
             echo '<article>
                 <p>Utilisateur</p>
-                <img src="'.$user['photo'].'">
-                <h1>'.$user['lastname'].' '.$user['firstname'].'</h1>
-                <p>'.$user['occupation'].'</p>
+                <img src="'.htmlentities($user['photo']).'">
+                <h1>'.htmlentities($user['lastname']).' '.$user['firstname'].'</h1>
+                <p>'.htmlentities($user['occupation']).'</p>
             </article>';
         }
     }
@@ -29,11 +29,11 @@
         foreach($projects as $project){
             echo '<article>
                 <p>Projet</p>
-                <img src="'.$project['featured_image'].'">
-                <h1>'.$project['title'].'</h1>';
+                <img src="'.htmlentities($project['featured_image']).'">
+                <h1>'.htmlentities($project['title']).'</h1>';
                 if ($project['allTags']) {
                     foreach($project['allTags'] as $tag){
-                        echo '<p>' . $tag['name'] . '</p>';
+                        echo '<p>' . htmlentities($tag['name']) . '</p>';
                     }
                 }
             echo '</article>';
@@ -48,7 +48,7 @@
         foreach($pages as $page){
             echo '<article>
                 <p>Page</p>
-                <h1>'.$page['title'].'</h1>
+                <h1>'.htmlentities($page['title']).'</h1>
             </article>';
         }
     }

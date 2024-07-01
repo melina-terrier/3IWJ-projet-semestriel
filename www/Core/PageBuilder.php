@@ -30,7 +30,7 @@ class PageBuilder
         $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $publishedStatusId = $this->statusModel->getByName('Publié');
 
-        $user = $this->userModel->getOneBy(['slug' => $slugTrim]);
+        $user = $this->userModel->getOneBy(['slug' => $slugTrim, 'status'=>1]);
         if ($user && '/profiles/' . $slug === $requestUrl) {
             $this->handleUserProfile($user);
             return;
@@ -49,16 +49,17 @@ class PageBuilder
                 return;
             }
         } elseif ($tag) {
-            // $projectTag = new Project_Tags();
-            // $projects = $projectTag->getAllData(['tag_id' => $tag['id']]);
-            // $projectArray = [];
-            // foreach ($projects as $projectId){
-            //     $projectId = $projects->getOneBy()
-            // }
-            // $this->handleProjectList($projects, $tag['name'], $tag['description']);
+            $projectTag = new Project_Tags();
+            $project = $this->projectModel;
+            $projectIds = [];
+            $tags = $projectTag->getAllData(['tag_id' => $tag['id']]);
+            foreach ($tags as $tagId){
+                $projectsId = $project->getAllData(['id'=>$tagId['project_id']]);
+            }
+            $this->handleProjectList($projectsId, $tag['name'], $tag['description']);
             return;
         } else if ($requestUrl === '/projects' || $requestUrl === '/projects//') {
-            $projects = $this->userModel->getAllData(['status_id' => $publishedStatusId]);
+            $projects = $this->projectModel->getAllData(['status_id' => $publishedStatusId]);
             $this->handleProjects($projects);
             return;
         }
@@ -95,10 +96,31 @@ class PageBuilder
         $media = $mediaModel->getOneBy(['url' => $user['photo']]);
         $project = new Project();
         $projects = $project->getAllData(['user_id'=>$user['id']]);
+        $tags = $this->tagModel;
+        $projectTags = new Project_Tags();
+        foreach ($projects as &$project) {
+            $project['tag_name'] = [];
+            $project['imageDescription'] = '';
+            $featured_image = $project['featured_image'];
+            $projectTagsId = $projectTags->getAllData(['project_id'=>$project['id']]);
+            if(!empty($featured_image)){
+                $media = new Media();
+                $image = $media->getOneBy(['url'=>$featured_image]);
+                $project['imageDescription'] = $image['description'];
+            }
+            if ($projectTagsId) {
+                foreach ($projectTagsId as $projectTagId){
+                    $tagId = $tags->getAllData(['id' => $projectTagId['tag_id']]);
+                    foreach($tagId as $tag) {
+                        $project['tag_name'][] = $tag['name'];
+                    }
+                }
+            }
+        }
         $view = new View('Main/user', 'front');
         $view->assign('user', $user);
         $view->assign('media', $media);
-        $view->assign('projects', $project);
+        $view->assign('projects', $projects);
         $view->render();
     }
 
@@ -108,12 +130,18 @@ class PageBuilder
         $title = $project['title'];
         $form = new Form("AddComment");
         $user = new User();
+        $media = new Media();
         $tagProjects = new Project_Tags();
         $tag = $this->tagModel;
         $errors = [];
         $success = [];
-        $tagName = [];
+        $tagNames = [];
+        $imageDescription = '';
         $featured_image = $project['featured_image'];
+        if(!empty($featured_image)){
+            $image = $media->getOneBy(['url'=>$featured_image]);
+            $imageDescription = $image['description'];
+        }
         $tags = $tagProjects->getAllData(['project_id' => $project['id']], null, 'object');
         if (!empty($tags)) {
             foreach($tags as $uniqueTag){
@@ -153,6 +181,7 @@ class PageBuilder
         $view = new View("Main/project", "front");
         $view->assign('projectContent', $content);
         $view->assign('tagName', $tagNames);
+        $view->assign('imageDescription', $imageDescription);
         $view->assign('featured_image', $featured_image);
         $view->assign('projectTitle', $title);
         $view->assign('form', $form->build());
@@ -165,6 +194,13 @@ class PageBuilder
     private function handleProjectList(array $projects, string $title, string $description): void
     {
         foreach ($projects as &$project) {
+            $featured_image = $project['featured_image'];
+            if(!empty($featured_image)){
+                $media = new Media();
+                $image = $media->getOneBy(['url'=>$featured_image]);
+                $imageDescription = $image['description'];
+            }
+            print_r($project);
             $userId = $project['user_id'];
             $project['username'] = '';
             $project['userSlug'] = '';
@@ -180,19 +216,27 @@ class PageBuilder
         }
     
         $view = new View("Main/all-projects", "front");
-        $view->assign("title", $title);
-        $view->assign("description", $description);
+        $view->assign("tagTitle", $title);
+        $view->assign("imageDescription", $imageDescription);
+        $view->assign("tagDescription", $description);
         $view->assign("projects", $projects);
         $view->render();
     }
 
-    private function handleProjects(array $projects): void
-    {
+    private function handleProjects(array $projects): void {
         $userModel = new User();
+        $tags = $this->tagModel;
+        $projectTags = new Project_Tags();
         foreach ($projects as &$project) {
             $projectTagsId = $projectTags->getAllData(['project_id'=>$project['id']]);
             $userId = $project['user_id'];
-            $project['category_name'] ='';
+            $featured_image = $project['featured_image'];
+            if(!empty($featured_image)){
+                $media = new Media();
+                $image = $media->getOneBy(['url'=>$featured_image]);
+                $projectImageDescription = $image['description'];
+            }
+            $project['tag_name'] = [];
             $project['username'] ='';
             $project['userSlug'] ='';
             $project['profile_photo'] = '';
@@ -206,16 +250,16 @@ class PageBuilder
             }
             if ($projectTagsId) {
                 foreach ($projectTagsId as $projectTagId){
-                    $tagId = $tags->getOneBy(['id' => $projectTagId['tag_id']]);
-                    if ($tagId) {
-                        $project['category_name'] .= $tagId['name'];
+                    $tagId = $tags->getAllData(['id' => $projectTagId['tag_id']]);
+                    foreach($tagId as $tag) {
+                        $project['tag_name'][] = $tag['name'];
                     }
                 }
             }
         }
-
         $view = new View("Main/all-projects", "front");
         $view->assign("projects", $projects);
+        $view->assign("projectImageDescription", $projectImageDescription);
         $view->render();
     }
     
@@ -223,7 +267,6 @@ class PageBuilder
     {
         $content = $page['content'];
         $pageTitle = $page['title'];
-
         $view = new View("Main/page", "front");
         $view->assign("content", $content);
         $view->assign("pageTitle", $pageTitle);

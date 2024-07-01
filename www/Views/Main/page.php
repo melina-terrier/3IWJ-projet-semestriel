@@ -1,11 +1,22 @@
 <?php
-    usort($projects, function($a, $b) {
-        return strtotime($a['publication_date']) - strtotime($b['publication_date']);
-    });
-    $projects = array_reverse($projects);
+    if (!empty($projects)){
+        usort($projects, function($a, $b) {
+            return strtotime($a['publication_date']) - strtotime($b['publication_date']);
+        });
+        $projects = array_reverse($projects);
+    }
 ?>
 
 <section>
+
+        <?php
+
+        if (!empty($pageTitle) || !empty($pageContent)) {
+            echo '<h1>'.$pageTitle.'</h1>';
+            echo $pageContent;
+        } else { ?>
+
+        
 
         <h1>Bienvenue sur la page d'accueil<h1> 
         
@@ -20,10 +31,22 @@
                 foreach ($projects as $project) {
                     echo '<article class="card">
                         <a href="/projects/' . htmlentities($project['slug']) . '">
-                            <h4>' . htmlentities($project['title']) . '</h4>
-                            <img src="'.htmlentities($project['featured_image']).'" alt="'.htmlentities($project['image_description']).'">
-                        </a>
-                        <a href="/profiles/' . htmlentities($project['userSlug']) . '">  <img src="'.htmlentities($project['userPhoto']).'" src="'.htmlentities($project['userPhotoDescription']).'" "'. htmlentities($project['username']) . '</a>
+                            <h3>' . htmlentities($project['title']) . '</h3>';
+                            if (isset($project['featured_image'])) {
+                                echo '<img src="' . htmlentities($project['featured_image']) . '" alt="'.htmlentities($project['image_description']).'">';
+                            }
+                            echo '<div class="project-info">';
+    
+                            if (isset($project['tag_name']) && $project['tag_name']) {
+                                foreach($project['tag_name'] as $tag) {
+                                    echo '<p class="tag">' . htmlentities($tag) . '</p>';
+                                }
+                            }
+            
+                            echo '</div>
+                                <a class="user-info" href="/profiles/'.htmlentities($project['userSlug']).'">
+                                    <img src="' . htmlentities($project['userPhoto']) . '" alt="Photo de profil">' .htmlentities($project['username']) . '
+                            </a>
                     </article>';
                 }
             } else {
@@ -31,5 +54,7 @@
             }
         echo '</div>
         </div>';
+
+        }
 ?>
 </section>
