@@ -22,34 +22,35 @@
         });
 </script>
 
-<section>
-    <h1>Ajouter un nouveau projettt</h1>
+<section class="add-element">
+
+    <h1>Ajouter un nouveau projet</h1>
     <?= $form ?>
 
     <?php if (isset($seoAdvices) && isset($seoStatus)) {
-        echo "<article>
+        echo "<article class='seo'>
             <h3>Conseil SEO</h3>
-            <p>État SEO : ".htmlspecialchars($seoStatus)."</p>
+            <p>État SEO : ".htmlentities($seoStatus)."</p>
             <ul>";
                 foreach ($seoAdvices as $advice) {
-                    echo "<li>".htmlspecialchars($advice)."</li>";
+                    echo "<li>".htmlentities($advice)."</li>";
                 }
             echo "</ul>
         </article>";
     }?>
     
-    <?php if (!empty($errorsForm)): ?>
-        <div>
-            <?php foreach ($errorsForm as $error): ?>
-                <p class="text"><?php echo htmlspecialchars($error); ?></p>
+    <?php if (!empty($errors)): ?>
+        <ul class="errors">
+            <?php foreach ($errors as $error): ?>
+                <li class="error"><?php echo htmlspecialchars($error); ?></li>
             <?php endforeach; ?>
-        </div>
+        </ul>
     <?php endif; ?>
 
-    <?php if (!empty($successForm)): ?>
+    <?php if (!empty($successes)): ?>
         <div>
-            <?php foreach ($successForm as $message): ?>
-                <p class="text"><?php echo htmlspecialchars($message); ?></p>
+            <?php foreach ($successes as $success): ?>
+                <p class="success"><?php echo htmlentities($success); ?></p>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>

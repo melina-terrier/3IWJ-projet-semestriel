@@ -1,4 +1,4 @@
-<section>
+<section  class="add-element">
 
     <h1>Paramêtres du site</h1>
     

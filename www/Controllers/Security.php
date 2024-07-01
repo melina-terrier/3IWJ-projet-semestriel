@@ -109,7 +109,8 @@ class Security{
                 $errors[] = 'Cette adresse e-mail est déjà utilisée pour un autre compte, essayez de vous connecter ou de vous inscrire avec une autre adresse e-mail.';
             } else {
                 print_r($role);
-                $formattedDate = date('Y-m-d H:i:s');
+                $formattedDate = strtotime(date('Y-m-d H:i:s'));
+                print_r($formattedDate);
                 $activationToken = bin2hex(random_bytes(16));
                 $slug = strtolower(trim($_POST['firstname'].' '.$_POST['lastname']));
                 $slug = str_replace(' ', '-', $slug);
@@ -118,18 +119,13 @@ class Security{
                 $slug = str_replace($search, $replace, $slug);
                 $slug = preg_replace('/[^a-z0-9-]/', '', $slug);
                 $slug .= '-' . rand(1000, 9999);
-                $userData = [
-                    'firstname' => $_POST['firstname'],
-                    'lastname' => $_POST['lastname'],
-                    'email' => $_POST['email'],
-                    'id_role' => $role,
-                    'status' => 0, 
-                    'slug'=>$slug,
-                    'modification_date' => $formattedDate,
-                    'password' => $_POST['password'],
-                    'activation_token' => $activationToken,
-                ];
-                $user->setDataFromArray($userData);
+                $user->setFirstName($_POST['firstname']);
+                $user->setLastName($_POST['lastname']);
+                $user->setEmail($_POST['email']);
+                $user->setRole($role);
+                $user->setSlug($slug);
+                $user->setPassword($_POST['password']);
+                $user->setActivationToken($activationToken);
                 print_r($user);
                 $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
                 $user->save();

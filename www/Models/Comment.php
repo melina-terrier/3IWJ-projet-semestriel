@@ -52,7 +52,6 @@ class Comment extends SQL
 
     public function setMail(string $mail): void
     {
-        $email = strip_tags(strtolower(trim($email)));
         $this->mail = $mail;
     }
 
@@ -69,12 +68,12 @@ class Comment extends SQL
 
     public function getStatus(): int
     {
-        return $this->is_reported;
+        return $this->status;
     }
 
     public function setStatus(int $status): void
     {
-        $this->is_reported = $is_reported;
+        $this->status = $status;
     }
 
      public function getProject(): int

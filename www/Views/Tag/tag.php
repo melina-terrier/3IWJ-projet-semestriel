@@ -1,4 +1,4 @@
-<section>
+<section class="add-element">
 
         <h1>Ajouter une catégorie</h1>
 

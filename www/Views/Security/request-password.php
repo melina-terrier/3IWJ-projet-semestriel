@@ -1,6 +1,6 @@
 <section>
     <header>
-        <h3>Réinitialiser votre mot de passe</h3>
+        <h1>Réinitialiser votre mot de passe</h1>
         <p>Saisissez votre adresse e-mail ci-dessous pour récupérer votre mot de passe</p>
     </header>
 
@@ -9,9 +9,9 @@
         echo $form;
 
         if ($errors) {
-            echo "<ul>"; 
+            echo "<ul class='errors'>"; 
             foreach ($errors as $error){
-                echo "<li>$error</li>";
+                echo "<li class='error'>$error</li>";
             }
             echo "</ul>";
         }

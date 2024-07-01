@@ -1,7 +1,7 @@
 <section>
 
     <header>
-        <h3>Nouveau mot de passe</h3>
+        <h1>Nouveau mot de passe</h1>
     </header>
 
     <article>
@@ -9,15 +9,15 @@
          echo $form;
 
         if ($errors) {
-            echo "<ul>"; 
+            echo "<ul class='errors'>"; 
             foreach ($errors as $error){
-                echo "<li>$error</li>";
+                echo "<li class='error'>$error</li>";
             }
             echo "</ul>";
         } else if ($successes) {
-            echo "<ul>"; 
+            echo "<ul class='successes'>"; 
             foreach ($successes as $success){
-                echo "<li>$success</li>";
+                echo "<li class='success'>$success</li>";
             }
             echo "</ul>";
         }
