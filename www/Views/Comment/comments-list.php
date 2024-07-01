@@ -12,7 +12,7 @@
         } else if ($successes) {
             echo "<ul class='successes'>";
             foreach ($successes as $success){
-                echo "<li>$success</li>";
+                echo "<li class='success'>$success</li>";
             }
             echo "</ul>";
         }
