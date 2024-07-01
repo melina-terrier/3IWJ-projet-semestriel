@@ -1,109 +1,118 @@
 <?php
 namespace App\Forms;
-
 use App\Models\Page as PageModel;
 use App\Models\Tag as TagModel;
 use App\Models\Status as StatusModel;
+use App\Models\Media;
+
 class SetSetting
 {
     public static function getConfig(): array
     {
         $page = new PageModel();
         $statusModel = new StatusModel();
-        $status = $statusModel->getOneBy(["status"=>"Publié"], 'object');
+        $status = $statusModel->getOneBy(['status'=>'Publié'], 'object');
         $statusId = $status->getId();
-        $pages = $page->getAllDataWithWhere(["status_id"=>$statusId], 'object');
+        $pages = $page->getAllData(['status_id'=>$statusId], null, 'object');
         $formattedPages = [];
-        $formattedPages[] = ["id"=>"", "name"=>"Page par défaut"];
-        $formattedPages[] = ["id"=>"Projects", "name"=>"Tous les projets"];
-        $formattedPages[] = ["id"=>"Users", "name"=>"Tous les utilisateurs"];
+        $formattedPages[] = ['id'=>'', 'name'=>'Page par défaut', 'selected'=>true];
+        $formattedPages[] = ['id'=>'Projects', 'name'=>'Tous les projets'];
+        $formattedPages[] = ['id'=>'Users', 'name'=>'Tous les utilisateurs'];
         if (!empty($pages)) {
             foreach ($pages as $page) {
                 $formattedPages[] = [
-                    "id" => $page->getId(),
-                    "name" => $page->getTitle(),
+                    'id' => $page->getId(),
+                    'name' => $page->getTitle(),
                 ];
             }
         }
         $tag = new TagModel();
-        $tags = $tag->getAllData('object');
+        $tags = $tag->getAllData(null, null, 'object');
         if (!empty($tags)) {
             foreach ($tags as $tag) {
                 $formattedPages[] = [
-                    "id" => $tag->getId(),
-                    "name" => $tag->getName(),
+                    'id' => $tag->getId(),
+                    'name' => $tag->getName(),
                 ];
             }
         }
 
         $timezones = \DateTimeZone::listIdentifiers();
         $timezone = [];
-        $timezone[] = ["id"=>"défaut", "name"=>"Défaut"];
+        $timezone[] = ['id'=>'défaut', 'name'=>'Défaut', 'selected'=>true, 'disabled'=>true];
         if (!empty($timezones)) {
-        foreach ($timezones as $singleTimezone) {
-            $timezone[] = [
-            "id" => strtolower($singleTimezone),
-            "name" => $singleTimezone,
-            ];
+            foreach ($timezones as $singleTimezone) {
+                $timezone[] = [
+                'id' => strtolower($singleTimezone),
+                'name' => $singleTimezone,
+                ];
+            }
         }
-        } else {
-        $timezone[] = [
-            "id" => '0',
-            "name" => 'Aucune timezone',
-            "selected" => true,
-        ];
+
+        $media = new Media();
+        $medias = $media->getAllData(null, null, 'object');
+        $arrayMedias = [];
+        if (!empty($medias)) {
+            foreach ($medias as $mediaObject) {
+              $arrayMedias[] = [
+                'id' => $mediaObject->getUrl(),
+                'name' => $mediaObject->getName(),
+              ];
+            }
         }
 
         return [
-            "config" => [
-                "action" => "",
-                "method" => "POST",
-                "submit" => "Enregistrer"
+            'config' => [
+                'action' => '',
+                'method' => 'POST',
+                'submit' => 'Enregistrer'
             ],
-            "inputs" => [
-                "title" => [
-                    "type" => "text",
-                    "min" => 2,
-                    "max" => 255,
-                    "label" => "Titre du site",
-                    "required" => true,
-                    "error" => "Le nom du site est requis et dois faire entre 2 et 255 caractères",
-                    "part" => "Information du site web"
+            'inputs' => [
+                'title' => [
+                    'type' => 'text',
+                    'min' => 2,
+                    'max' => 255,
+                    'label' => 'Titre du site',
+                    'required' => true,
+                    'error' => 'Le nom du site doit faire entre 2 et 255 caractères.',
+                    'part' => 'Information du site web'
                 ],
-                "slogan" => [
-                    "type" => "text",
-                    "max" => 500,
-                    "label" => "Slogan",
-                    "error" => "Le slogan doit faire entre 2 et 500 caractères"
+                'logo' => [
+                    'type' => 'media',
+                    'label' => 'Logo du site',
+                    'option'=>$arrayMedias,
+                    'error'=>'Veuillez sélectionner une option valide.'
                 ],
-                "site_description" => [
-                    "type" => "text",
-                    "label" => "Description du site",
-                    "required" => true,
-                    "error" => "La description du site est obligatoire"
+                'slogan' => [
+                    'type' => 'text',
+                    'max' => 500,
+                    'label' => 'Slogan',
+                    'error' => 'Le slogan doit faire au maximum 500 caractères.'
                 ],
-                "timezone" => [
-                    "type" => "select",
-                    "label" => "Fuseau horaire",
-                    "option" => $timezone,
+                'site_description' => [
+                    'type' => 'text',
+                    'max'=>1000,
+                    'label' => 'Description du site',
+                    'error' => 'La description du site doit faire au maximum 1000 caractères.'
+                ],
+                'timezone' => [
+                    'type' => 'select',
+                    'label' => 'Fuseau horaire',
+                    'option' => $timezone,
+                    'error'=>' Veuillez sélectionner une option valide.'
                 ], 
-                "homepage" => [
-                    "type" => "select",
-                    "label" => "Page d'accueil",
-                    "option" => $formattedPages,
-                    "error" => "La page d'accueil est requise"
+                'homepage' => [
+                    'type' => 'select',
+                    'label' => 'Page d\'accueil',
+                    'option' => $formattedPages,
+                    'error'=>' Veuillez sélectionner une option valide.'
                 ],
-                "allow_reviews" => [
-                    "name" => "Autoriser les commentaires",
-                    "type" => "checkbox",
-                    "id" => "allow_reviews",
-                    "class" => "input w-100",
-                    "required" => false,
-                  ],
-                "logo" => [
-                    "type" => "file",
-                    "label" => "Logo",
-                    "error" => ""
+                'comment' => [
+                    'type' => 'radio',
+                    'label' => 'Autoriser les commentaires',
+                    'required'=>true,
+                    'option' => [['id'=>'true', 'name'=>'Activer', 'checked'=>true], ['id'=>'false', 'name'=>'Désactiver']],
+                    'error'=>' Veuillez sélectionner au moins une option.'
                 ],
             ]
         ];

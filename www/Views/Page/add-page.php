@@ -69,6 +69,16 @@
 
     <?= $form ?>
 
+    <article>
+        <h3>Conseil SEO</h3>
+        <p>État SEO : <?= htmlspecialchars($seoStatus) ?></p>
+        <ul>
+            <?php foreach ($seoAdvices as $advice): ?>
+                <li><?= htmlspecialchars($advice) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </article>
+    
     <?php if (!empty($errorsForm)): ?>
         <div>
             <?php foreach ($errorsForm as $error): ?>

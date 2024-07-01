@@ -5,43 +5,50 @@ use App\Core\SQL;
 
 class Menu extends SQL
 {
-
     protected ?int $id = null;
-    protected $place;
-    protected $page;
+    protected string $type;
+    protected string $position;
+    protected string $alignement;
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId($id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
-    public function getPlace()
+    public function getType(): string
     {
-        return $this->place;
+        return $this->type;
     }
 
-    public function setPlace($place): void
+    public function setType(string $type): void
     {
-        $this->place = $place;
+        $this->type = $type;
     }
 
-    public function getPage()
+    public function getPosition(): string
     {
-        return $this->page;
+        return $this->position;
     }
 
-    public function setPage($page): void
+    public function setPosition(string $position): void
     {
-        $this->page = $page;
+        $this->position = $position;
     }
 
-    
-    
+    public function getAlignement(): string
+    {
+        return $this->alignement;
+    }
+
+    public function setAlignement(string $alignement): void
+    {
+        $this->alignement = $alignement;
+    }
 
     public function getNbElements() {
         return $this->countElements();

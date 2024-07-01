@@ -5,39 +5,40 @@ use App\Core\SQL;
 class Tag extends SQL
 {
     protected ?int $id = null;
-    protected $name;
-    protected $slug;
-    protected $description;
-    protected $creation_date;
-    protected $modification_date;
-    protected $user_id;
+    protected string $name;
+    protected string $slug;
+    protected string $description;
+    protected ?string $creation_date = null;
+    protected string $modification_date ;
+    protected int $user_id;
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId($id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName($name): void
+    public function setName(string $name): void
     {
+        $name = strip_tags(ucwords(strtolower(trim($name))));
         $this->name = $name;
     }
 
-    public function getSlug()
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function setSlug($slug): void
+    public function setSlug(string $slug): void
     {
         $slug = strtolower($slug);
         $slug = trim($slug);
@@ -50,52 +51,49 @@ class Tag extends SQL
         $this->slug = $slug;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setDescription($description): void
+    public function setDescription(string $description): void
     {
+        $description = strip_tags(trim($description));
         $this->description = $description;
     }
 
-    public function getCreationDate()
+    public function getCreationDate(): ?string
     {
         return $this->creation_date;
     }
 
-    public function setCreationDate($creation_date): void
+    public function setCreationDate(?string $creation_date): void
     {
         $this->creation_date = $creation_date;
     }
 
-    public function getModificationDate()
+    public function getModificationDate(): ?string
     {
         return $this->modification_date;
     }
 
-    public function setModificationDate($modification_date): void
+    public function setModificationDate(?string $modification_date): void
     {
         $this->modification_date = $modification_date;
     }
 
-    public function getUserId()
+    public function getUserId(): ?int
     {
         return $this->user_id;
     }
 
-    public function setUserId($user_id): void
+    public function setUserId(?int $user_id): void
     {
         $this->user_id = $user_id;
     }
 
     public function getNbElements() {
         return $this->countElements();
-    }
-
-    public function getElementsByType($column, $value) {
-        return $this->countElements($column, $value);
     }
 
 }

@@ -13,7 +13,7 @@
     margin: 5px 0;
     background-color: #f9f9f9;
     cursor: move;
-    display: flex;
+    display: block;
     justify-content: space-between;
     align-items: center;
 }
@@ -23,4 +23,11 @@
 }
 .drop-frame {
     background-color: #eaeaea;
+}
+.menu-list .menu-item ul {
+    padding-left: 20px;
+}
+
+.menu-item input {
+    margin-right: 10px;
 }

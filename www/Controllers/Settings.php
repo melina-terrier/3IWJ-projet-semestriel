@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Controllers;
-
 use App\Core\Form;
 use App\Core\View;
 use App\Models\Menu;
+use App\Models\itemMenu;
 use App\Models\Setting as SettingModel;
 
 class Settings{
@@ -19,151 +19,35 @@ class Settings{
         {
             $formattedDate = date('Y-m-d H:i:s');
 
-            $settingsTitle = $settingsManager->getOneBy(['key'=>'title'], 'object');
-            if ($settingsTitle){
-                $settingsTitle->setValue($_POST['title']);
-                $settingsTitle->setModificationDate($formattedDate);
-            } else {
-                $settingsTitle = new SettingModel();
-                $settingsTitle->setKey('title');
-                $settingsTitle->setValue($_POST['title']);
-                $settingsTitle->setCreationDate($formattedDate);
-                $settingsTitle->setModificationDate($formattedDate);
-            }
-            $settingsTitle->save();
+            $settingKeys = [
+                'title',
+                'logo',
+                'slogan',
+                'site_description',
+                'timezone',
+                'homepage',
+                'comment',
+            ];
 
-            $settingsSlogan = $settingsManager->getOneBy(['key'=>'slogan'], 'object');
-            if ($settingsSlogan){
-                $settingsSlogan->setValue($_POST['slogan']);
-                $settingsSlogan->setModificationDate($formattedDate);
-            } else {
-                $settingsSlogan = new SettingModel();
-                $settingsSlogan->setKey('slogan');
-                $settingsSlogan->setValue($_POST['slogan']);
-                $settingsSlogan->setCreationDate($formattedDate);
-                $settingsSlogan->setModificationDate($formattedDate);
-            }
-            $settingsSlogan->save();
-
-            $settingsDescription = $settingsManager->getOneBy(['key'=>'site_description'], 'object');
-            if ($settingsDescription){
-                $settingsDescription->setValue($_POST['site_description']);
-                $settingsDescription->setModificationDate($formattedDate);
-            } else {
-                $settingsDescription = new SettingModel();
-                $settingsDescription->setKey('site_description');
-                $settingsDescription->setValue($_POST['site_description']);
-                $settingsDescription->setCreationDate($formattedDate);
-                $settingsDescription->setModificationDate($formattedDate);
-            }
-            $settingsDescription->save();
-
-            $settingsLogo = $settingsManager->getOneBy(['key'=>'logo'], 'object');
-            if ($settingsLogo){
-                $settingsLogo->setValue($_POST['logo']);
-                $settingsLogo->setModificationDate($formattedDate);
-            } else {
-                $settingsLogo = new SettingModel();
-                $settingsLogo->setKey('logo');
-                $settingsLogo->setValue($_POST['logo']);
-                $settingsLogo->setCreationDate($formattedDate);
-                $settingsLogo->setModificationDate($formattedDate);
-            }
-            $settingsLogo->save();
-
-            $settingsTimezone = $settingsManager->getOneBy(['key'=>'timezone'], 'object');
-            if ($settingsTimezone){
-                $settingsTimezone->setValue($_POST['timezone']);
-                $settingsTimezone->setModificationDate($formattedDate);
-            } else {
-                $settingsTimezone = new SettingModel();
-                $settingsTimezone->setKey('timezone');
-                $settingsTimezone->setValue($_POST['timezone']);
-                $settingsTimezone->setCreationDate($formattedDate);
-                $settingsTimezone->setModificationDate($formattedDate);
-            }
-            $settingsTimezone->save();
-
-            $settingsHomepage = $settingsManager->getOneBy(['key'=>'homepage'], 'object');
-            if ($settingsHomepage){
-                $settingsHomepage->setValue($_POST['homepage']);
-                $settingsHomepage->setModificationDate($formattedDate);
-            } else {
-                $settingsHomepage = new SettingModel();
-                $settingsHomepage->setKey('homepage');
-                $settingsHomepage->setValue($_POST['homepage']);
-                $settingsHomepage->setCreationDate($formattedDate);
-                $settingsHomepage->setModificationDate($formattedDate);
-            }
-            $settingsHomepage->save();
-
-            $settingsPrimaryColor = $settingsManager->getOneBy(['key'=>'primary_color'], 'object');
-            if ($settingsPrimaryColor){
-                $settingsPrimaryColor->setValue($_POST['primary_color']);
-                $settingsPrimaryColor->setModificationDate($formattedDate);
-            } else {
-                $settingsPrimaryColor = new SettingModel();
-                $settingsPrimaryColor->setKey('primary_color');
-                $settingsPrimaryColor->setValue($_POST['primary_color']);
-                $settingsPrimaryColor->setCreationDate($formattedDate);
-                $settingsPrimaryColor->setModificationDate($formattedDate);
-            }
-            $settingsPrimaryColor->save();
-
-            $settingsSecondaryColor = $settingsManager->getOneBy(['key'=>'secondary_color'], 'object');
-            if ($settingsSecondaryColor){
-                $settingsSecondaryColor->setValue($_POST['secondary_color']);
-                $settingsSecondaryColor->setModificationDate($formattedDate);
-            } else {
-                $settingsSecondaryColor = new SettingModel();
-                $settingsSecondaryColor->setKey('secondary_color');
-                $settingsSecondaryColor->setValue($_POST['secondary_color']);
-                $settingsSecondaryColor->setCreationDate($formattedDate);
-                $settingsSecondaryColor->setModificationDate($formattedDate);
-            }
-            $settingsSecondaryColor->save();
-
-            $settingsAccentColor = $settingsManager->getOneBy(['key'=>'accent_color'], 'object');
-            if ($settingsAccentColor){
-                $settingsAccentColor->setValue($_POST['accent_color']);
-                $settingsAccentColor->setModificationDate($formattedDate);
-            } else {
-                $settingsAccentColor = new SettingModel();
-                $settingsAccentColor->setKey('accent_color');
-                $settingsAccentColor->setValue($_POST['accent_color']);
-                $settingsAccentColor->setCreationDate($formattedDate);
-                $settingsAccentColor->setModificationDate($formattedDate);
-            }
-            $settingsAccentColor->save();
-
-            $settingsPrimaryFont = $settingsManager->getOneBy(['key'=>'primary_font'], 'object');
-            if ($settingsPrimaryFont){
-                $settingsPrimaryFont->setValue($_POST['primary_font']);
-                $settingsPrimaryFont->setModificationDate($formattedDate);
-            } else {
-                $settingsPrimaryFont = new SettingModel();
-                $settingsPrimaryFont->setKey('primary_font');
-                $settingsPrimaryFont->setValue($_POST['primary_font']);
-                $settingsPrimaryFont->setCreationDate($formattedDate);
-                $settingsPrimaryFont->setModificationDate($formattedDate);
-            }
-            $settingsPrimaryFont->save();
-
-            $settingsSecundaryFont = $settingsManager->getOneBy(['key'=>'secundary_font'], 'object');
-            if ($settingsSecundaryFont){
-                $settingsSecundaryFont->setValue($_POST['secundary_font']);
-                $settingsSecundaryFont->setModificationDate($formattedDate);
-            } else {
-                $settingsSecundaryFont = new SettingModel();
-                $settingsSecundaryFont->setKey('secundary_font');
-                $settingsSecundaryFont->setValue($_POST['secundary_font']);
-                $settingsSecundaryFont->setCreationDate($formattedDate);
-                $settingsSecundaryFont->setModificationDate($formattedDate);
-            }
-            $settingsSecundaryFont->save();
-
-        } else {
-            $errors[]="Les settings n'ont pas été mis à jour.";
+            foreach ($settingKeys as $key) {
+                $setting = $settingsManager->getOneBy(['key'=>$key], 'object');
+                if ($setting) {
+                    $setting->setValue($_POST[$key]);
+                    $setting->setId($setting->getId());
+                } else {
+                    $setting = new SettingModel();
+                    $setting->setKey($key);
+                    $setting->setValue($_POST[$key]);
+                    $setting->setCreationDate($formattedDate);
+                }
+                $setting->setModificationDate($formattedDate);
+                $setting->save();
+                if ($setting->save()) {
+                    $success[] = "Les paramètres du site ont été mis à jour.";
+                } else {
+                    $errors[] = "Les paramètres du site n'ont pas pu être mis à jour.";
+                }
+            }          
         }
         $view = new View("Setting/setting", "back");
         $view->assign("form", $form->build());
@@ -171,31 +55,56 @@ class Settings{
         $view->render();
     }
 
+
     public function setMenu(){
-            $errors = [];
-            $settingsManager = new Menu();
-            $form = new Form("SetMenu");
-          
-            if ($form->isSubmitted() && $form->isValid()) {
-              $data = json_decode($this->getRequest()->request->get('data'), true);
-              $menuItemIds = isset($data['menuItems']) ? (array) $data['menuItems'] : [];
-          
-              if (!empty($menuItemIds)) {
-                // Process the menu item IDs
-              } else {
-                $errors[] = "Aucun élément de menu n'a été sélectionné.";
-              }
+        $errors = [];
+        $menu = new Menu();
+        $itemMenu = new itemMenu();
+        $form = new Form("SetMenu");
+
+        if (isset($_GET['id']) && $_GET['id']) {
+            $menuId = $_GET['id'];
+            $selectedMenu = $menu->populate($menuId, 'array');
+            $selectedMenuItem = $itemMenu->getAllData(['menu_id'=>$menuId]);
+            if ($selectedMenu) {
+                $form->setField($selectedMenu);
+                if ($selectedMenu['position'] == 'horizontal'){
+                    $form->setField(['horizontal-alignement'=>$selectedMenu['alignement']]);
+                } else if ($selectedMenu['position'] == 'vertical' || $selectedMenu['position'] == 'burger'){
+                    print_r('true');
+                    $form->setField(['vertical-alignement'=>$selectedMenu['alignement']]);
+                }
+                $form->setField($selectedMenuItem, 'menu', 'menu');
             } else {
-              $errors[] = "Requête invalide.";
+                $errors[] = 'Menu introuvable.';
             }
+        }
           
-            $response = [
-              'success' => empty($errors),
-              'errors' => $errors,
-            ];
-          
-            echo json_encode($response);
-      
+        if( $form->isSubmitted() && $form->isValid() )
+        {
+            if (isset($menuId)){
+                $menu->setId($menuId);
+                foreach($selectedMenuItem as $menuItem){
+                    $itemMenu->delete($menuItem);
+                }
+            }
+            
+            $menu->setType($_POST['type']);
+            $menu->setPosition($_POST['position']);
+            if (isset($_POST['vertical-alignement'])) {
+                $menu->setAlignement($_POST['vertical-alignement']);
+            } else if (isset($_POST['horizontal-alignement'])) {
+                $menu->setAllignement($_POST['horizontal-alignement']);
+            }
+            $menuId = $menu->save();
+            foreach (json_decode($_POST['menu'], true) as $menuItem){
+                $itemMenu->setMenu($menuId);
+                $itemMenu->setTitle($menuItem['title']);
+                $itemMenu->setUrl($menuItem['url']);
+                $itemMenu->setItemPosition($menuItem['position']);
+                $itemMenu->save();
+            }
+        }
         $view = new View("Setting/menu", "back");
         $view->assign("form", $form->build());
         $view->assign("errors", $errors);
@@ -206,78 +115,41 @@ class Settings{
     {
         $errors = [];
         $settingsManager = new SettingModel();
-        $form = new Form("appearanceSetting");
+        $form = new Form("SetAppearance");
 
         if( $form->isSubmitted() && $form->isValid() )
         {
-            $formattedDate = date('Y-m-d H:i:s');
 
-            $settingsPrimaryColor = $settingsManager->getOneBy(['key'=>'primary_color'], 'object');
-            if ($settingsPrimaryColor){
-                $settingsPrimaryColor->setValue($_POST['primary_color']);
-                $settingsPrimaryColor->setModificationDate($formattedDate);
-            } else {
-                $settingsPrimaryColor = new SettingModel();
-                $settingsPrimaryColor->setKey('primary_color');
-                $settingsPrimaryColor->setValue($_POST['primary_color']);
-                $settingsPrimaryColor->setCreationDate($formattedDate);
-                $settingsPrimaryColor->setModificationDate($formattedDate);
-            }
-            $settingsPrimaryColor->save();
+            $settingKeys = [
+                'light_primary_color',
+                'light_accent_color',
+                'light_secondary_color',
+                'dark_primary_color',
+                'dark_secondary_color',
+                'dark_accent_color',
+                'primary_font',
+                'secundary_font',
+            ];
 
-            $settingsSecondaryColor = $settingsManager->getOneBy(['key'=>'secondary_color'], 'object');
-            if ($settingsSecondaryColor){
-                $settingsSecondaryColor->setValue($_POST['secondary_color']);
-                $settingsSecondaryColor->setModificationDate($formattedDate);
-            } else {
-                $settingsSecondaryColor = new SettingModel();
-                $settingsSecondaryColor->setKey('secondary_color');
-                $settingsSecondaryColor->setValue($_POST['secondary_color']);
-                $settingsSecondaryColor->setCreationDate($formattedDate);
-                $settingsSecondaryColor->setModificationDate($formattedDate);
-            }
-            $settingsSecondaryColor->save();
-
-            $settingsAccentColor = $settingsManager->getOneBy(['key'=>'accent_color'], 'object');
-            if ($settingsAccentColor){
-                $settingsAccentColor->setValue($_POST['accent_color']);
-                $settingsAccentColor->setModificationDate($formattedDate);
-            } else {
-                $settingsAccentColor = new SettingModel();
-                $settingsAccentColor->setKey('accent_color');
-                $settingsAccentColor->setValue($_POST['accent_color']);
-                $settingsAccentColor->setCreationDate($formattedDate);
-                $settingsAccentColor->setModificationDate($formattedDate);
-            }
-            $settingsAccentColor->save();
-
-            $settingsPrimaryFont = $settingsManager->getOneBy(['key'=>'primary_font'], 'object');
-            if ($settingsPrimaryFont){
-                $settingsPrimaryFont->setValue($_POST['primary_font']);
-                $settingsPrimaryFont->setModificationDate($formattedDate);
-            } else {
-                $settingsPrimaryFont = new SettingModel();
-                $settingsPrimaryFont->setKey('primary_font');
-                $settingsPrimaryFont->setValue($_POST['primary_font']);
-                $settingsPrimaryFont->setCreationDate($formattedDate);
-                $settingsPrimaryFont->setModificationDate($formattedDate);
-            }
-            $settingsPrimaryFont->save();
-
-            $settingsSecundaryFont = $settingsManager->getOneBy(['key'=>'secundary_font'], 'object');
-            if ($settingsSecundaryFont){
-                $settingsSecundaryFont->setValue($_POST['secundary_font']);
-                $settingsSecundaryFont->setModificationDate($formattedDate);
-            } else {
-                $settingsSecundaryFont = new SettingModel();
-                $settingsSecundaryFont->setKey('secundary_font');
-                $settingsSecundaryFont->setValue($_POST['secundary_font']);
-                $settingsSecundaryFont->setCreationDate($formattedDate);
-                $settingsSecundaryFont->setModificationDate($formattedDate);
-            }
-            $settingsSecundaryFont->save();
-        } else {
-            $errors[]="Les settings n'ont pas été mis à jour.";
+            foreach ($settingKeys as $key) {
+                $setting = $settingsManager->getOneBy(['key'=>$key], 'object');
+                if ($setting) {
+                    $setting->setValue($_POST[$key]);
+                    $setting->setId($setting->getId());
+                } else {
+                    $setting = new SettingModel();
+                    $setting->setKey($key);
+                    $setting->setValue($_POST[$key]);
+                    $setting->setCreationDate($formattedDate);
+                }
+                $setting->setModificationDate($formattedDate);
+                $setting->save();
+                if ($setting->save()) {
+                    $success[] = "Les paramètres du site ont été mis à jour.";
+                } else {
+                    $errors[] = "Les paramètres du site n'ont pas pu être mis à jour.";
+                }
+            }   
         }
         $view = new View("Setting/appearance", "back");
         $view->assign("form", $form->build());

@@ -1,14 +1,11 @@
 <?php
-
 namespace App\Controllers;
-
 use App\Core\View;
 use App\Core\Form;
 use App\Models\User;
-use App\Models\Role as RoleModel;
+use App\Models\Role;
 use App\Controllers\Security;
 use App\Models\Setting;
-
 use PDO;
 use PDOException;
 
@@ -16,52 +13,44 @@ class Install
 {
     public function install()
     {
-        $form = new Form("Installer");
+        $form = new Form('Installer');
         $security = new Security();
         $errors = [];
-        $success = [];
+        $successe = [];
 
         if( $form->isSubmitted() && $form->isValid() ) {
-            $siteTitle = $_POST['site_title']; 
-            $firstname = $_POST['firstname']; 
-            $lastname = $_POST['lastname']; 
-            $email = $_POST['email']; 
-            $password = $_POST['password']; 
-            $passwordConfirm = $_POST['passwordConfirm']; 
-            $dbname = $_POST['dbname'];
-            $dbhost = $_POST['dbhost']; 
-            $dbuser = $_POST['dbuser']; 
-            $dbpassword = $_POST['dbpwd']; 
-            $tablePrefix = $_POST['table_prefix']; 
 
-            $configContent = "<?php\n";
-            $configContent .= "// Configuration de la base de données\n";
-            $configContent .= "define('DB_HOST', '" . addslashes($dbhost) . "');\n";
-            $configContent .= "define('DB_PORT', '5432');\n";
-            $configContent .= "define('DB_NAME', '" . addslashes($dbname) . "');\n";
-            $configContent .= "define('DB_USER', '" . addslashes($dbuser) . "');\n";
-            $configContent .= "define('DB_PASSWORD', '" . addslashes($dbpassword) . "');\n";
-            $configContent .= "define('TABLE_PREFIX', '" . addslashes($tablePrefix) . "');\n";
-
-            $myfile = fopen("../config.php", "w");
-            fwrite($myfile, $configContent);
-            fclose($myfile);
-            $envPath = '../.env';
-
-            $envContent = "POSTGRES_USER={$dbuser}\n";
-            $envContent .= "POSTGRES_PASSWORD={$dbpassword}\n";
-            $envContent .= "POSTGRES_DB={$dbname}\n";
-
-            $myenv = fopen("../.env", "w");
-            fwrite($myenv, $envContent);
-            fclose($myenv);
+            if (file_exists('../config.php') || file_exists('../.env')) {
+                $errors[] = 'Le fichier de configuration existe déjà.';
+            } else {
+                $configContent = '<?php\n';
+                $configContent .= '// Configuration de la base de données\n';
+                $configContent .= 'define("DB_HOST", '' '.addslashes($_POST['dbhost']).' '');\n';
+                $configContent .= 'define("DB_PORT", "5432");\n';
+                $configContent .= 'define("DB_NAME", '' '.addslashes($_POST['dbname']).' '');\n';
+                $configContent .= 'define("DB_USER", '' '.addslashes($_POST['dbuser']).' '');\n';
+                $configContent .= 'define("DB_PASSWORD", '' '.addslashes($_POST['dbpwd']).' '');\n';
+                $configContent .= 'define("TABLE_PREFIX", '' '.addslashes($_POST['table_prefix']).' '');\n';
+                $myfile = fopen('../config.php', 'w');
+                fwrite($myfile, $configContent);
+                fclose($myfile);
+                $envPath = '../.env';
+    
+                $envContent = 'POSTGRES_USER='.$_POST['dbuser'].'\n';
+                $envContent .= 'POSTGRES_PASSWORD='.$_POST['dbpwd'].'\n';
+                $envContent .= 'POSTGRES_DB='.$_POST['dbname'].'\n';
+    
+                $myenv = fopen('../.env', 'w');
+                fwrite($myenv, $envContent);
+                fclose($myenv);
+            }
 
             try {
-                $pdo = new PDO("pgsql:host=$dbhost;dbname=$dbname;port=5432;user=$dbuser;password=$dbpassword");
+                $pdo = new PDO('pgsql:host='.$_POST['dbhost'].';dbname='.$_POST['dbname'].';port=5432;user='.$_POST['dbuser'].';password='.$_POST['dbpwd']);
                 $bddPath = '../Script.sql';
                 $sqlScript = file_get_contents($bddPath);
-                $sqlScript = str_replace("{prefix}", $tablePrefix, $sqlScript);
-                $sqlStatements = explode(";", $sqlScript);
+                $sqlScript = str_replace('{prefix}', $_POST['table_prefix'], $sqlScript);
+                $sqlStatements = explode(';', $sqlScript);
 
                 foreach ($sqlStatements as $statement) {
                     $trimmedStatement = trim($statement);
@@ -71,40 +60,42 @@ class Install
                     }
                 }
             } catch (PDOException $e) {
-                echo('Erreur lors de l\'exécution du script SQL ou de la connexion à la base de données : ' . $e->getMessage());
+                $errors[] = 'Erreur lors de l\'exécution du script SQL ou de la connexion à la base de données : ' . $e->getMessage();
             }
 
-            $user = new User();
-            $formattedDate = date('Y-m-d H:i:s');
-            $user->setFirstname($firstname);
-            $user->setLastname($lastname);
-            $user->setEmail($email);
-            $user->setPassword($password);
-            $roleModel = new RoleModel();
-            $role = $roleModel->getOneBy(['role' => 'Administrateur'], 'object');
-            $roleId = $role->getId();
-            $user->setRole($roleId);
-            $user->setCreationDate($formattedDate);
-            $user->setModificationDate($formattedDate);  
-            $user->setStatus(1);
-            $user->setSlug();
-            $activationToken = bin2hex(random_bytes(16));
-            $user->setActivationToken($activationToken);
-            $emailResult = $security->sendActivationEmail($user->getEmail(), $activationToken);
-            $user->save();
+            if (empty($errors)){
+                $user = new User();
+                $user->setFirstname($_POST['firstname']);
+                $user->setLastname($_POST['lastname']);
+                $user->setEmail($_POST['email']);
+                $user->setPassword($_POST['password']);
+                $roleModel = new Role();
+                $role = $roleModel->getByName('Administrateur');
+                $user->setRole($role);
+                $user->setCreationDate();
+                $user->setModificationDate();  
+                $user->setStatus(0);
+                $user->setSlug();
+                $user->setActivationToken();
+                $setting = new Setting();
+                $setting->setTitle($_POST['site_title']);
+                $setting->setCreationDate();
+                $setting->setModificationDate();  
+            }
 
-            $setting = new Setting();
-            $setting->setTitle($siteTitle);
-            $setting->setCreationDate($formattedDate);
-            $setting->setModificationDate($formattedDate);  
-            $setting->save();
-            
-            header('Location: /dashboard');
+            try {
+                $emailResult = $security->sendActivationEmail($user->getEmail(), $activationToken);
+                $user->save();
+                $setting->save();
+                $successe[] = 'Installation réussie ! Avant de pouvoir vous connecter, nous avons besoin que vous activiez votre compte en cliquant sur le lien d\'activation dans l\'email que nous venons de vous envoyer. <a href="/login">Se connecter</a>';
+            } catch (Exception $e) {
+                $errors[] = 'Erreur lors de la création de l\'utilisateur et des paramètres : ' . $e->getMessage();
+            }
         }
-        $view = new View("Installer/install", "front");
-        $view->assign("form", $form->build());
-        $view->assign("errors", $errors);
-        $view->assign("successes", $success);
+        $view = new View('Installer/install', 'front');
+        $view->assign('form', $form->build());
+        $view->assign('errors', $errors);
+        $view->assign('successes', $successes);
         $view->render();
     }
 

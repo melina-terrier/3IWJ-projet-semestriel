@@ -11,15 +11,12 @@ class Media{
 
     public function addMedia(): void
     {
-        $form = new Form("AddMedia");
+        $form = new Form('AddMedia');
         $errors = [];
-        $success = [];
         
         $formattedDate = date('Y-m-d H:i:s');
-        $userSerialized = $_SESSION['user'];
-        $user = unserialize($userSerialized);
-        $userId = $user->getId();
-
+        $userId = $_SESSION['user_id'];
+       
         if( $form->isSubmitted() && $form->isValid()) { 
             $media = new MediaModel();
             if (isset($_FILES['media']) && $_FILES['media']['error'] === UPLOAD_ERR_OK) {
@@ -35,81 +32,83 @@ class Media{
                     $media->setName($fileName);
                     $media->setUrl('/Assets/uploads/media/'. $fileName); 
                 } else {
-                    $errors[] = "Erreur lors du téléchargement du média.";
+                    $errors[] = 'Erreur lors du téléchargement du média.';
                 }
-              } else {
-                $errors[] = "Erreur lors du téléchargement du média.";
-              }
+            } else {
+                $errors[] = 'Erreur lors du téléchargement du média.';
+            }
             $media->setTitle($_POST['title']);
             $media->setDescription($_POST['description']);
             $media->setCreationDate($formattedDate);
             $media->setModificationDate($formattedDate);
             $media->setUser($userId);
-            $media->save();
-            $success[] = "Le média a été ajouté";
-            header("Location: /dashboard/medias?message=success");
-            exit; 
+            if ($media->save()) {
+                header('Location: /dashboard/medias?message=success');
+                exit;
+            } else {
+                $errors[] = 'Une erreur est survenue lors de l\'ajout du média.';
+            } 
         }
 
-        $view = new View("Media/add-media", "back");
-        $view->assign("form", $form->build());
-        $view->assign("errorsForm", $errors);
-        $view->assign("successForm", $success);
+        $view = new View('Media/add-media', 'back');
+        $view->assign('form', $form->build());
+        $view->assign('errorsForm', $errors);
         $view->render();
     }
 
     public function allMedias(): void
     {
         $media = new MediaModel();
-        $medias = $media->getAllData("array");
+        $medias = $media->getAllData(null, null, 'array');
         $errors = [];
         $success = [];
         $userModel = new UserModel();
-            
         if (isset($_GET['action']) && isset($_GET['id'])) {
-            if ($_GET['action'] === "delete") {
+            if ($_GET['action'] === 'delete') {
+                if (!$media->delete(['id' => $_GET['id']])) {
+                    $errors[] = 'Une erreur est survenue lors de la suppression du média.';
+                }
                 $media->delete(['id' => (int)$_GET['id']]);
-                header('Location: /dashboard/medias?message=delete-success');
-                exit;
+                $success[] = 'Média supprimé avec succès.'; 
+            } else {
+                $errors[] = 'Action invalide.';
             }
         }
-        
         foreach ($medias as &$media) {
             $userId = $media['user_id'];
             $media['user_name'] ='';
             if ($userId) {
-                $user = $userModel->getOneBy(['id' => $userId], 'object');
-                if ($user || $status) {
+                $user = $userModel->populate($userId);
+                if ($user) {
                     $media['user_name'] = $user->getUserName();
                 }
             }
         }
-        $view = new View("Media/medias-list", "back");
-        $view->assign("medias", $medias);
-        $view->assign("errors", $errors);
-        $view->assign("successes", $success);
+        $view = new View('Media/medias-list', 'back');
+        $view->assign('medias', $medias);
+        $view->assign('errors', $errors);
+        $view->assign('successes', $success);
         $view->render();
     }
 
     public function editMedia(){
         $errors = [];
         $success = [];
-        
         $media = new MediaModel();
+
         if (isset($_GET['id']) && $_GET['id']) {
             $mediaId = $_GET['id'];
-            $selectedMedia = $media->getOneBy(['id' => $mediaId], 'object');
+            $selectedMedia = $media->populate($mediaId);
+
             if ($selectedMedia) {
-                $form = new Form("EditMedia");
+                $form = new Form('EditMedia');
                 $form->setField('title', $selectedMedia->getTitle());
                 $form->setField('description', $selectedMedia->getDescription());
                 $formattedDate = date('Y-m-d H:i:s');
-                $userSerialized = $_SESSION['user'];
-                $user = unserialize($userSerialized);
-                $userId = $user->getId();
-                
+
                 if( $form->isSubmitted() && $form->isValid() )
                 {
+                    $userId = $_SESSION['user_id'];
                     $media->setId($selectedMedia->getId());
                     $media->setTitle($_POST['title']);
                     $media->setUrl($selectedMedia->getUrl());
@@ -120,16 +119,20 @@ class Media{
                     $media->setType($selectedMedia->getType());
                     $media->setModificationDate($formattedDate);
                     $media->setUser($userId);
-                    $media->save();
-                    header("Location: /dashboard/medias?message=update-success");
-                    exit; 
+                    if ($media->save()) {
+                        header('Location: /dashboard/medias?message=update-success');
+                        exit;
+                    } else {
+                        $errors[] = 'Une erreur est survenue lors de la modification du média.';
+                    }
                 }
             }
         }
-        $view = new View("Media/add-media", "back");
-        $view->assign("form", $form->build());
-        $view->assign("errorsForm", $errors);
-        $view->assign("successForm", $success);
+        $view = new View('Media/add-media', 'back');
+        $view->assign('form', $form->build());
+        $view->assign('errorsForm', $errors);
+        $view->assign('successForm', $success);
         $view->render();
     }
+
 }

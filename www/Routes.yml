@@ -1,20 +1,3 @@
-/:
-  Controller: "Main"
-  Action: "home"
-
-/profile/edit:
-  Controller: "UserController"
-  Action: "editUser"
-  Security: true
-  Role: ["Utilisateur", "Editeur", "Administrateur"]
-
-/profile/edit-password:
-  Controller: "UserController"
-  Action: "editPassword"
-  Security: true
-  Role: ["Utilisateur", "Editeur", "Administrateur"]
-
-
 # BACK-OFFICE
 /dashboard:
   Controller: "Main"
@@ -29,20 +12,14 @@
   Security: true
   Role: ["Administrateur"]
 
-/dashboard/add-user:
-  Controller: "UserController"
-  Action: "addUser"
-  Security: true
-  Role: ["Administrateur"]
-
-/dashboard/edit-user:
+/dashboard/user:
   Controller: "UserController"
   Action: "addUser"
   Security: true
   Role: ["Administrateur"]
 
 # PROJECT
-/dashboard/add-project:
+/dashboard/project:
   Controller: "Project"
   Action: "addProject"
   Security: true
@@ -54,22 +31,10 @@
   Security: true
   Role: ["Administrateur"]
 
-/dashboard/edit-project:
-  Controller: "Project"
-  Action: "editProject"
-  Security: true
-  Role: ["Administrateur"]
-
 # PAGE
-/dashboard/add-page:
+/dashboard/page:
   Controller: "Page"
   Action: "addPage"
-  Security: true
-  Role: ["Administrateur"]
-
-/dashboard/edit-page:
-  Controller: "Page"
-  Action: "editPage"
   Security: true
   Role: ["Administrateur"]
 
@@ -87,15 +52,9 @@
   Role: ["Administrateur"]
 
 # TAGS
-/dashboard/add-tag:
+/dashboard/tag:
   Controller: "Tag"
   Action: "addTag"
-  Security: true
-  Role: ["Administrateur"]
-
-/dashboard/edit-tag:
-  Controller: "Tag"
-  Action: "editTag"
   Security: true
   Role: ["Administrateur"]
 
@@ -143,7 +102,29 @@
   Security: true
   Role: ["Administrateur"]
 
+
+# FRONT
+/:
+  Controller: "Main"
+  Action: "home"
+
+/search: 
+  Controller: "Main"
+  Action: "displayResult"
+
 # USER
+/profile/edit:
+  Controller: "UserController"
+  Action: "editUser"
+  Security: true
+  Role: ["Utilisateur", "Editeur", "Administrateur"]
+
+/profile/edit-password:
+  Controller: "UserController"
+  Action: "editPassword"
+  Security: true
+  Role: ["Utilisateur", "Editeur", "Administrateur"]
+
 /login:
   Controller: "Security"
   Action: "login"
@@ -167,7 +148,3 @@
 /request-password:
   Controller: "Security"
   Action: "requestPassword"
-
-/search: 
-  Controller: "Search"
-  Action: "displayResult"

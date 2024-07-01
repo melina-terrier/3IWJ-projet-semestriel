@@ -3,11 +3,8 @@
 namespace App;
 
 use App\Controllers\Error;
-use App\Controllers\Main;
-use App\Controllers\UserController;
 use App\Core\SecurityCore;
-use App\Models\User;
-use App\Models\Role;
+use App\Core\PageBuilder;
 use App\Models\Setting;
 use App\Controllers\Page;
 use App\Controllers\Project;
@@ -94,17 +91,8 @@ if( !empty($listOfRoutes[$uri]) ) {
     }
 }
 else if($uri){
-    session_start();
-    if (strpos($uri, 'projects') !== false) {
-        $projectBuilder = new Project();
-        $projectBuilder->showProject($uri);
-    } else if (strpos($uri, 'profiles') !== false) {
-        $userBuilder = new UserController();
-        $userBuilder->showUser($uri);
-    } else {
-        $pageBuilder = new Page();
-        $pageBuilder->showPage($uri);
-    }
+    $projectBuilder = new PageBuilder();
+    $projectBuilder->show($uri);
 }
 else{
     header("Status 404 Not Found", true, 404);

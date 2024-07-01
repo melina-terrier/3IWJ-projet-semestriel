@@ -1,6 +1,8 @@
 <?php
 namespace App\Core;
 use App\Models\Role;
+use App\Models\User;
+
 class SecurityCore
 {
     public function isLogged(): bool
@@ -8,19 +10,24 @@ class SecurityCore
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        return isset($_SESSION['user']) && !empty($_SESSION['user']);
+        return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
     }
 
     public function checkRoute($route): bool
     {
         if (isset($route['Role'])){
             $securityRole = $route['Role'];
-            $user = unserialize($_SESSION['user']);
-            $roleUser = $user->getRole();
-            $role = new Role();
-            $roleDetails = $role->getOneBy(['id'=>$roleUser]);
-            if (in_array($roleDetails['role'], $securityRole)) {
-                return true;
+            $userModel = new User();
+            $user = $userModel->getOneBy(['id'=>$_SESSION['user_id']], 'object');
+            if ($user) {
+                $roleUser = $user->getRole();
+                $role = new Role();
+                $roleDetails = $role->getOneBy(['id'=>$roleUser]);
+                if (in_array($roleDetails['role'], $securityRole)) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
@@ -33,7 +40,7 @@ class SecurityCore
     {
         session_start();
         if (isset($route['Security']) && $route['Security'] === true) {
-            if (!isset($_SESSION['user'])) {
+            if (!isset($_SESSION['user_id'])) {
                 return false;
             } else {
                 return true;

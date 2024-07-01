@@ -10,10 +10,14 @@
     </head>
 
     <body>
+    
     <header>
-        <label for="search-bar">Rechercher : </label>
-        <input type="search" id="search-bar" name="search-term">
-        <button type="submit" id="search">Rechercher</button>
+        <nav id="site-menu"></nav>
+        <form action="/search" method="post">
+            <label for="search-bar">Rechercher : </label>
+            <input type="search" id="search-bar" name="search-term">
+            <button type="submit" id="search">Rechercher</button>
+        </form>
     </header>
     <main>
         <?php include "../Views/".$this->view.".php";?>

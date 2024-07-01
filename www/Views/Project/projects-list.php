@@ -75,6 +75,7 @@ function displayProjects($projects){
         <th>Titre</th>
         <th>Auteur</th>
         <th>Status</th>
+        <th>SEO</th>
         <th>Date</th>
         <th>Actions</th>
       </tr>
@@ -94,6 +95,7 @@ function displayProjects($projects){
           echo "<td>$title</td>";
           echo "<td>$userName</td>";
           echo "<td>$status</td>"; 
+          echo "<td>".$project['seo_status']."</td>";
 
           switch ($status) {
             case "Publié":

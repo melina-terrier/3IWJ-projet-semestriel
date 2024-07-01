@@ -7,13 +7,13 @@ class Media extends SQL
     protected ?int $id = null;
     protected string $title;
     protected string $name;
-    protected $type;
-    protected $size;
-    protected $url;
+    protected string $type;
+    protected int $size;
+    protected string $url;
     protected string $description;
-    protected $creation_date;
-    protected $modification_date;
-    protected $user_id;
+    protected string $creation_date;
+    protected string $modification_date;
+    protected int $user_id;
 
     public function getId(): ?int
     {
@@ -25,42 +25,44 @@ class Media extends SQL
         $this->id = $id;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function setTitle($title): void
+    public function setTitle(string $title): void
     {
+        $title = strip_tags(ucwords(trim(strtolower($title))));
         $this->title = $title;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setDescription($description): void
+    public function setDescription(string $description): void
     {
+        $description = strip_tags(trim($description));
         $this->description = $description;
     }
 
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
 
-    public function setUrl($url): void
+    public function setUrl(string $url): void
     {
         $this->url = $url;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $name = strtolower($name);
         $name = trim($name);
@@ -73,52 +75,52 @@ class Media extends SQL
         $this->name = $name;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function setType($type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
 
-    public function setSize($size): void
+    public function setSize(int $size): void
     {
         $this->size = $size;
     }
 
-    public function getCreationDate()
+    public function getCreationDate(): string
     {
         return $this->creation_date;
     }
 
-    public function setCreationDate($creation_date): void
+    public function setCreationDate(string $creation_date): void
     {
         $this->creation_date = $creation_date;
     }
 
-    public function getModificationDate()
+    public function getModificationDate(): string
     {
         return $this->modification_date;
     }
 
-    public function setModificationDate($modification_date): void
+    public function setModificationDate(string $modification_date): void
     {
         $this->modification_date = $modification_date;
     }
 
-    public function getUser()
+    public function getUser(): int
     {
         return $this->user_id;
     }
 
-    public function setUser($user_id): void
+    public function setUser(int $user_id): void
     {
         $this->user_id = $user_id;
     }

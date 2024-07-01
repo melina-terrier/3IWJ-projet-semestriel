@@ -73,6 +73,7 @@ function displayPages($pages){
                 <th>Titre</th>
                 <th>Auteur</th>
                 <th>Status</th>
+                <th>SEO</th>
                 <th>Date</th>
                 <th>Actions</th>
             </tr>
@@ -92,7 +93,8 @@ function displayPages($pages){
                 echo "<tr>
                     <td>$title</td>
                     <td>$userName</td>
-                    <td>$status</td>"; 
+                    <td>$status</td>
+                    <td>".$page['seo_status']."</td>"; 
 
                     switch ($status) {
                         case "Publié":
