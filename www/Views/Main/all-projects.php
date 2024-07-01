@@ -9,46 +9,40 @@
 
     <header>
         <?php
-        if (isset($title) && isset($description)) {
-            echo '<h1>' . $title . '</h1>
-                  <p>' . $description . '</p>';
+        if (isset($tagTitle) && isset($tagDescription)) {
+            echo '<h1>' . $tagTitle . '</h1>
+                  <p>' . $tagDescription . '</p>';
         }
         ?>
     </header>
 
     <div class="cards-container">
         <?php
+
         foreach ($projects as $project) {
             echo '<article class="card">
-                    <a href="/projects/' . $project['slug'] . '">';
+
+                <a href="/projects/' . htmlentities($project['slug']) . '">';
 
                 if (isset($project['featured_image'])) {
-                    echo '<img src="' . $project['featured_image'] . '" alt="">';
+                    echo '<img src="' . htmlentities($project['featured_image']) . '" alt="'.$projectImageDescription.'">';
                 }
 
-            echo '<div class="project-info">
-                    <h3>' . $project['title'] . '</h3>';
+                echo '<div class="project-info">
+                        <h3>' . htmlentities($project['title']) . '</h3>';
 
-            if (isset($project['category_name']) && $project['category_name']) {
-                echo '<p class="category">' . $project['category_name'] . '</p>';
+                if (isset($project['tag_name']) && $project['tag_name']) {
+                    foreach($project['tag_name'] as $tag) {
+                        echo '<p class="tag">' . htmlentities($tag) . '</p>';
+                    }
+                }
+
+                echo '</div>
+                    <a class="user-info" href="/profiles/'.htmlentities($project['userSlug']).'">
+                        <img src="' . htmlentities($project['profile_photo']) . '" alt="Photo de profil">' .htmlentities($project['username']) . '
+                    </a>';
+            echo '</article>';
             }
-
-            echo '</div>
-                  <div class="user-info">
-                      <img src="' . $project['profile_photo'] . '" alt="Photo de profil">' . $project['username'] . '
-                  </div>
-                  </a>
-                  <div class="additional-info">
-                      <p>Date de publication : ' . date('d/m/Y', strtotime($project['publication_date'])) . '</p>';
-
-            if (isset($project['description'])) {
-                echo '<p class="project-description">' . $project['description'] . '</p>';
-            }
-
-            echo '</div>
-                  </article>';
-            echo '</div>';
-        }
         ?>
     </div>
 </section>

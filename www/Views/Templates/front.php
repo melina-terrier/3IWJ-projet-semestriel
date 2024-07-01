@@ -10,18 +10,18 @@ if ($setting) {
     $slogan = $setting->getOneBy(['key' => "slogan"]) ?? '';
     $logo = $setting->getOneBy(['key' => "logo"]) ?? '';
 }
+
 $menu = new Menu();
+$itemMenu = new itemMenu();
 if ($menu){
-    $header = $menu->getOneBy(['position'=>'header']);
+    $header = $menu->getOneBy(['type'=>'menu-principal']);
+    print_r($header);
     if ($header) {
-        $position = $header->getPosition();
-        $alignement = $header->getAlignement();
-    }  
-
-
-    // $header = $menu->getOneBy(['position'=>'header']);
-    // $position = $header->getPosition();
-    // $alignement = $header->getAlignement();
+        $position = $header['position'];
+        $alignement = $header['alignement'];
+        $items = $itemMenu->getAllData(['menu_id'=>$header['id']]);
+        print_r($items);
+    } 
 }
 
 ?>
@@ -40,7 +40,6 @@ if ($menu){
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
 
 <body>
     <header id="header" class="back-office-header">

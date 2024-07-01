@@ -18,33 +18,44 @@ class Main
         $view = new View('Main/page', 'front');
         $setting = new Setting();
         $settingId = $setting->getOneBy(['key' => 'homepage'], 'object');
-        // if ($settingId){
-        //     $homepageId = $settingId->getValue();
-        //     if($homepageId){
-        //         $page = new Page();
-        //         $homepage = $page->populate($homepageId);
-        //         if (!empty($homepage)) {
-        //             $title = $homepage->getTitle();
-        //             $content = $homepage->getContent();
-        //         } 
-        //         $view->assign('content', $content);
-        //         $view->assign('pageTitle', $title);
-        //     }
-        // } else {
+        if ($settingId){
+            $homepageId = $settingId->getValue();
+            if($homepageId){
+                $page = new Page();
+                $homepage = $page->populate($homepageId);
+                if (!empty($homepage)) {
+                    $title = $homepage->getTitle();
+                    $content = $homepage->getContent();
+                } 
+                $view->assign('pageContent', $content);
+                $view->assign('pageTitle', $title);
+            }
+        } else {
             $project = new Project();
             $statusModel = new Status();
             $userModel = new User();
             $mediaModel = new Media();
+            $tags = new Tag();
+            $projectTags = new Project_Tags();
             $status = $statusModel->getByName('Publié');
             $projects = $project->getAllData(['status_id' => $status]);
             foreach ($projects as &$project) {
                 $userId = $project['user_id'];
+                $projectTagsId = $projectTags->getAllData(['project_id'=>$project['id']]);
                 $mediaSlug = $project['featured_image'];
                 $project['username'] ='';
-                $project['username'] ='';
+                $project['tag_name'] = [];
+                $project['userSlug'] = '';
                 $project['image_description'] ='';
                 $project['userPhoto'] ='';
-                $user['userPhotoDescription'] = '';
+                if ($projectTagsId) {
+                    foreach ($projectTagsId as $projectTagId){
+                        $tagId = $tags->getAllData(['id' => $projectTagId['tag_id']]);
+                        foreach($tagId as $tag) {
+                            $project['tag_name'][] = $tag['name'];
+                        }
+                    }
+                }
                 if ($userId) {
                     $user = $userModel->populate($userId);
                     if ($user) {
@@ -68,7 +79,7 @@ class Main
                 }
               }
             $view->assign('projects', $projects);
-        // }
+        }
         $view->render();
     }
     
