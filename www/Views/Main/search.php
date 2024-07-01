@@ -1,6 +1,10 @@
 <section>
 
     <?php
+
+    if ($errors){
+        echo $errors;
+    }
     if ($users){
         foreach($users as $user){
             echo '<article>

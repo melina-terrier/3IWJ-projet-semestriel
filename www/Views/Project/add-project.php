@@ -26,8 +26,6 @@
     <h1>Ajouter un nouveau projettt</h1>
     <?= $form ?>
 
-    <?= $mediaForm ?>
-
     <?php if (isset($seoAdvices) && isset($seoStatus)) {
         echo "<article>
             <h3>Conseil SEO</h3>

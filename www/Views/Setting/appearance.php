@@ -1,11 +1,11 @@
-<h1>Menu du site</h1>
-
-<?= $form ?>
-
-<?php if (!empty($errors)): ?>
-        <div>
-            <?php foreach ($errors as $error): ?>
-                <p class="text"><?php echo htmlspecialchars($error); ?></p>
-            <?php endforeach; ?>
-        </div>
+<section>
+    <h1>Menu du site</h1>
+    <?= $form ?>
+    <?php if (!empty($errors)): ?>
+            <ul class="errors">
+                <?php foreach ($errors as $error): ?>
+                    <li class="error"><?php echo htmlentities($error); ?></li>
+                <?php endforeach; ?>
+            </ul>
     <?php endif; ?>
+</section>
