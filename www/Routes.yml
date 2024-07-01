@@ -46,12 +46,6 @@
 
 
 # Comments
-/dashboard/add-coment:
-  Controller: "add-coment"
-  Action: "addComments"
-  Security: true
-  Role: ["Administrateur"]
-
 /dashboard/comments:
   Controller: "Comment"
   Action: "allComments"

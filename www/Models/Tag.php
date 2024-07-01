@@ -95,13 +95,4 @@ class Tag extends SQL
     public function getNbElements() {
         return $this->countElements();
     }
-
-<<<<<<< HEAD
 }
-=======
-    public function getElementsByType($column, $value) {
-        return $this->countElements($column, $value);
-    }
-
-}
->>>>>>> dev

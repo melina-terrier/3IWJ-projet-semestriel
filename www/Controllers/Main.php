@@ -168,8 +168,6 @@ class Main
             'comments' => $comment->getNbElements(),
             'tags'=>$tag->getNbElements(),
         ];
-        $sql = new SQL();
-        $usersProjects = $sql->sql_users_projects();
         $view = new View('Main/dashboard', 'back');
         $view->assign('comments', $comments);
         $view->assign('elementsCount', $elementsCount);

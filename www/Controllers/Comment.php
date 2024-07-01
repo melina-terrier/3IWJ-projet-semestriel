@@ -15,7 +15,6 @@ class Comment
         $errors = [];
     
         if (isset($_GET['action']) && isset($_GET['id'])) {
-<<<<<<< HEAD
             $currentComment = $comment->populate($_GET['id']);
             if ($currentComment) {
                 if ($_GET['action'] === 'permanent-delete') {

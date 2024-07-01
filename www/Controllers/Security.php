@@ -113,7 +113,7 @@ class Security{
                 $userData = [
                     'firstname' => $_POST['firstname'],
                     'lastname' => $_POST['lastname'],
-                    'email' => $email,
+                    'email' => $_POST['email'],
                     'role' => $_POST['role'],
                     'status' => 0, 
                     'modification_date' => $formattedDate,
