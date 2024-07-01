@@ -1,10 +1,37 @@
-   
+<?php
+use App\Models\Setting;
+use App\Models\Menu;
+use App\Models\itemMenu;
+
+$setting = new Setting();
+if ($setting) {
+    $title = $setting->getOneBy(['key' => "title"]) ?? '';
+    $description = $setting->getOneBy(['key' => "description"]) ?? '';
+    $slogan = $setting->getOneBy(['key' => "slogan"]) ?? '';
+    $logo = $setting->getOneBy(['key' => "logo"]) ?? '';
+}
+$menu = new Menu();
+if ($menu){
+    $header = $menu->getOneBy(['position'=>'header']);
+    if ($header)
+    $position = $header->getPosition();
+    $alignement = $header->getAlignement();
+
+
+    $header = $menu->getOneBy(['position'=>'header']);
+    $position = $header->getPosition();
+    $alignement = $header->getAlignement();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <meta name="description" content="Dashboard du CMS">
+    <title><?php echo $title; ?></title>
+    <meta name="description" content="">
     <link rel="stylesheet" href="/Assets/Style/dist/css/main.css">
     <script type="text/javascript" src="/Assets/Style/dist/js/main.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -24,45 +51,9 @@
         </form>
     </header>
    
-    <main>
-    <aside class="sidebar">
-            <ul>
-                <li class="menu-item active">
-                    <a href="/"><i class="fas fa-home"></i> Accueil</a>
-                </li>
-                <li class="menu-item">
-                    <a href="#"><i class="fas fa-file-alt"></i> Nos Utilisateurs</a>
-                    <ul class="submenu">
-                        <li><a href="/profiles">Tous les profils</a></li>
-                    </ul>
-                </li>
-                <li class="menu-item">
-                    <a href="/projects"><i class="fas fa-project-diagram"></i> Projets</a>
-                    <ul class="submenu">
-                        <li><a href="/projects">Tous les projets</a></li>
-                    </ul>
-                </li>
-                <li class="menu-item">
-                    <a href="/register">
-                        <img src="Assets/Style/images/register.jpg" alt="Register Icon" style="width: 20px; height: 20px;"> Register
-                    </a>
-                </li>
-            </ul>
-        </aside>
-        
+    <main>     
         <?php include "../Views/".$this->view.".php";?>
     </main>
-
-    <script>
-        window.addEventListener("scroll", function () {
-            console.log(window.scrollY);
-            const header = document.getElementById("header");
-            if (window.scrollY > 0) {
-                header.classList.add("sticky");
-            } else {
-                header.classList.remove("sticky");
-            }
-        });
-    </script>
 </body>
+
 </html>

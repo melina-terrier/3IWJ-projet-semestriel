@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS {prefix}_status CASCADE;
 DROP TABLE IF EXISTS {prefix}_role CASCADE;
 DROP TABLE IF EXISTS {prefix}_user CASCADE;
