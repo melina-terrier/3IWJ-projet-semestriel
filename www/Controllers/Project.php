@@ -103,19 +103,28 @@ class Project{
                 $project->setTitle($_POST['title']);
                 $project->setContent($_POST['content']);
                 $project->setUser($userId);
-                if (!empty($_POST['tag'])) {
-                    $project->setTag($_POST['tag']);
-                }
                 $project->setSeoTitle(isset($_POST['seo_title']) && !empty($_POST['seo_title']) ? $_POST['seo_title'] : $_POST['title']);
                 $project->setSeoDescription($_POST['seo_description']);
                 $project->setSeoKeyword($_POST['seo_keyword']);
-                $project->setFeaturedImage($_POST['featured_image']);
+                if (!empty($_POST['featured_image'])){
+                    $project->setFeaturedImage($_POST['featured_image']);
+                }
 
                 $statusModel = new Status();
                 if (isset($_POST['submit-draft'])) {
                     $statusId = $statusModel->getByName("Brouillon");
                     $project->setStatus($statusId);
                     if ($project->save()){
+                        if (!empty($_POST['tag'])) {
+                            $projectId = $project->save();
+                            foreach($_POST['tag'] as $tag){
+                                $projectTags = new Project_Tags();
+                                $projectTags->setProjectId($projectId);
+                                $projectTags->setTagId($tag);
+                                $projectTags->save();
+                            }
+                        }
+
                         $success[] = "Votre projet a été enregistré en tant que brouillon";
                     } else {
                         $errors[] = "Une erreur est survenue lors de l\'enregistrement du projet";
@@ -125,7 +134,16 @@ class Project{
                     $statusId = $statusModel->getByName("Publié");
                     $project->setPublicationDate($formattedDate);
                     $project->setStatus($statusId);
-                    if ($project->save()) {
+                    $projectId = $project->save();
+                    if (!empty($projectId)){
+                        if (!empty($_POST['tag'])) {
+                            foreach($_POST['tag'] as $tag){
+                                $projectTags = new Project_Tags();
+                                $projectTags->setProjectId($projectId);
+                                $projectTags->setTagId($tag);
+                                $projectTags->save();
+                            }
+                        }
                         header("Location: /dashboard/projects?message=success");
                     } else {
                         $errors[] = "Une erreur est survenue lors de l\'enregistrement du projet";

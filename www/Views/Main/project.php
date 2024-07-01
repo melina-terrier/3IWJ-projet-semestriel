@@ -1,21 +1,45 @@
-<section>
-   
+
+    <h1><?php echo $projectTitle ?></h1>
 
     <?php
-
-        echo '<h1>'.$projectTitle.'</h1>';
-        echo $projectContent;
-        echo $form;
-     
-        foreach($comments as $comment){
-            echo '<article>
-                <p>'.$comment['name'].'</p>
-                <p>'.$comment['creation_date'].'</p>
-                <p>'.$comment['comment'].'</p>
-            </article>';
+        if (!empty($featured_image)){
+            echo '<img src="'.$featured_image.'" alt="">';
         }
-        print_r($successes);
-        print_r($errors);
+        foreach($tagName as $tag){
+            echo '<p class="tag">'.$tag.'</p>';
+        }
+        echo $projectContent;
     ?>
 
-</section>
+    <section class="comments">
+
+        <?php 
+        foreach ($comments as $comment){
+            echo '<p class="comment">'.$comment["comment"].'<p>';
+        }
+        ?>
+
+    </section>
+
+    <section>
+        <h2>Ecrire un commentaire</h2>
+
+        <?php
+
+            echo $form; 
+
+            if (!empty($errors)){
+                echo '<ul class="errors">'; 
+                foreach ($errors as $error){
+                echo '<li class="error">'.htmlentities($error).'</li>';
+                }
+                echo '</ul>';
+            } else if (!empty($successes)){
+                echo '<ul class="successes">'; 
+                foreach ($successes as $success){
+                echo '<li class="success">'.htmlentities($success).'</li>';
+                }
+                echo '</ul>';
+            }
+        ?>
+    </section>

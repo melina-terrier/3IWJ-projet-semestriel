@@ -108,14 +108,20 @@ class PageBuilder
         $title = $project['title'];
         $form = new Form("AddComment");
         $user = new User();
+        $tagProjects = new Project_Tags();
+        $tag = $this->tagModel;
         $errors = [];
         $success = [];
-        $tagName = '';
-        // $tagId = $this->tagModel->getOneBy(['id' => $project['tag_id']], 'object');
-        // if (!empty($tagId)) {
-        //     $tagName = $tagId->getName();
-        // }
-
+        $tagName = [];
+        $featured_image = $project['featured_image'];
+        $tags = $tagProjects->getAllData(['project_id' => $project['id']], null, 'object');
+        if (!empty($tags)) {
+            foreach($tags as $uniqueTag){
+                $tagId = $uniqueTag->getTagId();
+                $tagsId = $tag->populate($tagId);
+                $tagNames[] = $tagsId->getName();
+            }
+        }
         if ($form->isSubmitted() && $form->isValid()) {
              $this->commentModel->setComment($_POST['comment']);
              $this->commentModel->setProject($project['id']);
@@ -146,7 +152,8 @@ class PageBuilder
         $comments = $this->commentModel->getAllData(['status' => 1, 'project_id' => $project['id']]);
         $view = new View("Main/project", "front");
         $view->assign('projectContent', $content);
-        $view->assign('tagName', $tagName);
+        $view->assign('tagName', $tagNames);
+        $view->assign('featured_image', $featured_image);
         $view->assign('projectTitle', $title);
         $view->assign('form', $form->build());
         $view->assign('errors', $errors);

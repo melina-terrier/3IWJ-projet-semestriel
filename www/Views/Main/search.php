@@ -2,9 +2,14 @@
 
     <?php
 
-    if ($errors){
-        echo $errors;
+    if (!empty($errors)){
+        echo '<ul class="errors">'; 
+        foreach ($errors as $error){
+            echo '<li class="error">'.htmlentities($error).'</li>';
+        }
+        echo '</ul>';
     }
+
     if ($users){
         foreach($users as $user){
             echo '<article>
@@ -17,6 +22,10 @@
     }
 
     if ($projects){
+        usort($projects, function($a, $b) {
+            return strtotime($a['publication_date']) - strtotime($b['publication_date']);
+        });
+        $projects = array_reverse($projects);
         foreach($projects as $project){
             echo '<article>
                 <p>Projet</p>
@@ -32,6 +41,10 @@
     }
 
     if ($pages){
+        usort($pages, function($a, $b) {
+            return strtotime($a['publication_date']) - strtotime($b['publication_date']);
+        });
+        $projects = array_reverse($pages);
         foreach($pages as $page){
             echo '<article>
                 <p>Page</p>

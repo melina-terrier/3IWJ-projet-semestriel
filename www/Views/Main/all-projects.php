@@ -1,29 +1,33 @@
-<section class="cards-section">
-    <div class="header" >
+<?php
+    usort($projects, function($a, $b) {
+        return strtotime($a['publication_date']) - strtotime($b['publication_date']);
+    });
+    $projects = array_reverse($projects);
+?>
+
+<section>
+
+    <header>
         <?php
         if (isset($title) && isset($description)) {
             echo '<h1>' . $title . '</h1>
                   <p>' . $description . '</p>';
-        } else {
-            echo '<h1 class="welcome-message">Les projets</h1>';
         }
         ?>
-    </div>
+    </header>
+
     <div class="cards-container">
         <?php
         foreach ($projects as $project) {
-            echo '<div class="affichpro_card">'; 
-            echo '<article>
+            echo '<article class="card">
                     <a href="/projects/' . $project['slug'] . '">';
 
-            if (isset($project['featured_image'])) {
-                echo '<img src="' . $project['featured_image'] . '" alt="Image du projet">';
-            } else {
-                echo '<img src="/path/to/default/image.jpg" alt="Image par défaut">';
-            }
+                if (isset($project['featured_image'])) {
+                    echo '<img src="' . $project['featured_image'] . '" alt="">';
+                }
 
-            echo '<div class="content">
-                    <h4 class="title">' . $project['title'] . '</h4>';
+            echo '<div class="project-info">
+                    <h3>' . $project['title'] . '</h3>';
 
             if (isset($project['category_name']) && $project['category_name']) {
                 echo '<p class="category">' . $project['category_name'] . '</p>';

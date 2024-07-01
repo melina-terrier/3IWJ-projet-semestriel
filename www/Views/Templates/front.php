@@ -31,7 +31,7 @@ if ($menu){
 
 <head>
     <meta charset="UTF-8">
-    <title><?php echo $title; ?></title>
+    <title><?php echo $title['value']; ?></title>
     <meta name="description" content="">
     <link rel="stylesheet" href="/Assets/Style/dist/css/main.css">
     <script type="text/javascript" src="/Assets/Style/dist/js/main.js"></script>

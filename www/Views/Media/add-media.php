@@ -1,19 +1,23 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un média</title>
+<section class="add-element">
 
-</head>
-<body>
+    <h1>Ajouter un média</h1>
 
-<main>
-    <section class="add-media-section">
-        <h1>Ajouter un média</h1>
-        <?= $form ?>
-    </section>
-</main>
+    <?= $form ?>
 
-</body>
-</html>
+    <?php
+     if ($errors) {
+        echo "<ul class='errors'>"; 
+        foreach ($errors as $error){
+            echo "<li class='error'>".htmlentities($error)."</li>";
+        }
+        echo "</ul>";
+    } else if ($successes) {
+        echo "<ul class='successes'>"; 
+        foreach ($successes as $success){
+            echo "<li class='success'>".htmlentities($success)."</li>";
+        }
+        echo "</ul>";
+    }
+    ?>
+    ?>
+</section>

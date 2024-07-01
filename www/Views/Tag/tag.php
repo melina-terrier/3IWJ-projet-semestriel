@@ -8,7 +8,7 @@
         if (!empty($errors)){
             echo '<ul class="errors">'; 
             foreach ($errors as $error){
-               echo '<li class="error"><?php echo htmlentities($error); ?></li>';
+               echo '<li class="error">'.htmlentities($error).'</li>';
             }
             echo '</ul>';
         }
