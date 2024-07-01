@@ -107,13 +107,14 @@ class PageBuilder
         $content = $project['content'];
         $title = $project['title'];
         $form = new Form("AddComment");
+        $user = new User();
         $errors = [];
         $success = [];
         $tagName = '';
-        $tagId = $this->tagModel->getOneBy(['id' => $project['tag_id']], 'object');
-        if ($tagId) {
-            $tagName = $tagId->getName();
-        }
+        // $tagId = $this->tagModel->getOneBy(['id' => $project['tag_id']], 'object');
+        // if (!empty($tagId)) {
+        //     $tagName = $tagId->getName();
+        // }
 
         if ($form->isSubmitted() && $form->isValid()) {
              $this->commentModel->setComment($_POST['comment']);
@@ -122,8 +123,9 @@ class PageBuilder
 
             if (isset($_SESSION['user_id'])) {
                 $userId = $_SESSION['user_id'];
-                $userEmail = $user->getEmail();
-                $userName = $user->getUserName();
+                $actualUser = $user->populate($_SESSION['user_id']);
+                $userEmail = $actualUser->getEmail();
+                $userName = $actualUser->getUserName();
                 $this->commentModel->setUserId($userId);
                 $this->commentModel->setMail($userEmail);
                 $this->commentModel->setName($userName);
@@ -131,26 +133,24 @@ class PageBuilder
                 $success[] = "Votre commentaire a été publié";
             } else {
                 $user = new User();
-                if ($user->emailExists($_POST["email"])) {
+                if ($user->isUnique(['email'=>$_POST["email"]])) {
                     $errors[] = "L'email correspond à un compte, merci de bien vouloir vous connecter";
                 } else {
                     $this->commentModel->setMail($_POST['email']);
                     $this->commentModel->setName($_POST['name']);
                     $this->commentModel->save();
-                    $success[] = "Votre commentaire a été publié";
+                    $success[] = "Votre commentaire a été publié, il sera publié une fois vérifié";
                 }
             }
         }
-
         $comments = $this->commentModel->getAllData(['status' => 1, 'project_id' => $project['id']]);
-
         $view = new View("Main/project", "front");
-        $view->assign('content', $content);
+        $view->assign('projectContent', $content);
         $view->assign('tagName', $tagName);
-        $view->assign('title', $title);
+        $view->assign('projectTitle', $title);
         $view->assign('form', $form->build());
-        $view->assign('errorsForm', $errors);
-        $view->assign('successForm', $success);
+        $view->assign('errors', $errors);
+        $view->assign('successes', $success);
         $view->assign('comments', $comments);
         $view->render();
     }

@@ -1,30 +1,30 @@
 <?php
 
 echo "<section>
-  <header>
-    <h1>S'inscrire</h1>
-  </header>
-  
+      <header>
+        <h1>S'inscrire</h1>
+      </header>
+      
   <article>";
-  echo $form; 
+    echo $form; 
 
   if ($errors) {
-    echo "<ul>"; 
+    echo "<ul class='errors'>"; 
     foreach ($errors as $error){
-        echo "<li>$error</li>";
+        echo "<li class='error'>$error</li>";
     }
     echo "</ul>";
   } else if ($successes) {
-    echo "<ul>"; 
+    echo "<ulclass='successes'>"; 
     foreach ($successes as $success){
-        echo "<li>$success</li>";
+        echo "<li class='success'>$success</li>";
     }
     echo "</ul>";
   }
 
 echo "
     <p>Ou</p>
-    <a href='/login'>Se connecter</a>
+    <a href='/login' class='primary-button'>Se connecter</a>
   </article>
 </section>";
 

@@ -18,7 +18,7 @@ class AddMedia
                     'label'=>'Média',
                     'required'=>true,
                     'error'=>'Le format du fichier n\'est pas pris en compte.',
-                    'accept'=>'image/png, image/jpeg, application/pdf, image/svg'
+                    'accept'=>'image/png, image/jpeg, image/jpg, application/pdf, image/svg'
                 ],
                 'title'=>[
                     'type'=>'text',

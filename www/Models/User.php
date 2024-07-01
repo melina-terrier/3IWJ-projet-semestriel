@@ -27,8 +27,8 @@ class User extends SQL
     protected ?string $formation;
     protected ?string $skill;
     protected ?string $interest;
-    protected string $creation_date;
-    protected string $modification_date;
+    protected $creation_date;
+    protected $modification_date;
 
     public function getUserName(): string
     {
@@ -148,22 +148,22 @@ class User extends SQL
         $this->photo = $photo;
     }
 
-    public function getCreationDate(): string
+    public function getCreationDate()
     {
         return $this->creation_date;
     }
 
-    public function setCreationDate(string $creation_date): void
+    public function setCreationDate($creation_date): void
     {
         $this->creation_date = $creation_date;
     }
 
-    public function getModificationDate(): string
+    public function getModificationDate()
     {
         return $this->modification_date;
     }
 
-    public function setModificationDate(string $modification_date): void
+    public function setModificationDate($modification_date): void
     {
         $this->modification_date = $modification_date;
     }

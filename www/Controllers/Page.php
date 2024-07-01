@@ -230,8 +230,8 @@ class Page {
         $view->assign('seoStatus', $seoStatus);
         $view->assign('seoAdvices', $seoAdvices);
         $view->assign('mediasList', $mediasList ?? []);
-        $view->assign('errorsForm', $errors);
-        $view->assign('successForm', $success);
+        $view->assign('errors', $errors);
+        $view->assign('successes', $success);
         $view->render();
     }
 

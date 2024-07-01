@@ -1,4 +1,4 @@
-<header>
+<header class="dashboard-list">
 
     <?php
     if (!empty($errors)) {
@@ -28,7 +28,7 @@
 
 <section>
 
-  <table class="dashboard-list">
+  <table>
     <thead>
         <tr>
             <th>Nom</th>
@@ -43,9 +43,9 @@
         if ($tags) {
           foreach ($tags as $tag) {
             $tagId = $tag['id'];
-            $tagName = $tag['name'];
-            $tagDescription = $tag['description'];
-            $tagSlug = $tag['slug'];
+            $tagName = htmlentities($tag['name']);
+            $tagDescription = htmlentities($tag['description']);
+            $tagSlug = htmlentities($tag['slug']);
             $projectCount = "";
 
             foreach($projectCounts as $project){
@@ -78,7 +78,7 @@
 <script>
 $(document).ready( function () {
   $('table').DataTable({
-    order: [[ 3, 'desc' ], [ 0, 'asc' ]],
+    order: [[ 1, 'asc' ]],
     pagingType: 'simple_numbers'
   });
 });

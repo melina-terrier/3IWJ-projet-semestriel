@@ -91,7 +91,7 @@ $userSlug = $userId->getSlug();
             <ul class="submenu">
                 <li><a href="/dashboard/settings">Paramêtres généraux</a></li>
                 <li><a href="/dashboard/appearance">Apparence</a></li>
-                <li><a href="/dashboard/menu">Menus</a></li>
+                <li><a href="/dashboard/menus">Menus</a></li>
             </ul>
         </li>
     </ul>

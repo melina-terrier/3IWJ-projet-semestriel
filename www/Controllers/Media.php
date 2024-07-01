@@ -55,7 +55,7 @@ class Media{
 
         $view = new View('Media/add-media', 'back');
         $view->assign('form', $form->build());
-        $view->assign('errorsForm', $errors);
+        $view->assign('errors', $errors);
         $view->render();
     }
 

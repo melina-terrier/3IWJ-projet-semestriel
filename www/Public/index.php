@@ -60,9 +60,9 @@ if( !empty($listOfRoutes[$uri]) ) {
 
     $security = new SecurityCore();
     if (!$security->checkAuth($listOfRoutes[$uri]) || !$security->checkRoute($listOfRoutes[$uri])) {
-            header("Acces denied 403", true, 403);
-            $error = new Error();
-            $error->page403();
+        header("Acces denied 403", true, 403);
+        $error = new Error();
+        $error->page403();
     }
     
     if (!empty($listOfRoutes[$uri]['Controller']) && !empty($listOfRoutes[$uri]['Action'])) {
