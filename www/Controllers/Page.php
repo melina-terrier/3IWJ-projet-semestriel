@@ -80,6 +80,9 @@ class Page {
         $page = new PageModel();
         $media = new Media();
         $medias = $media->getAllData(null, null, 'object');
+        $seoStatus = '';
+        $seoAdvices = '';
+        $seoAnalysis = '';
         
         if (count($medias) > 0) {
             $mediasList = array();
@@ -93,7 +96,11 @@ class Page {
         $success = [];
         
         $formattedDate = date('Y-m-d H:i:s', time());
-        $userId = $_SESSION['user_id'];
+        if (isset($_SESSION['user_id'])){
+            $userId = $_SESSION['user_id'];
+        } else {
+            $userId = null;
+        }
         $historyEntry = new PageHistory();
         
         if (isset($_GET['id']) && $_GET['id']) {

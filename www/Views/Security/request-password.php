@@ -14,12 +14,6 @@
                 echo "<li>$error</li>";
             }
             echo "</ul>";
-        } else if ($successes) {
-            echo "<ul>"; 
-            foreach ($successes as $success){
-                echo "<li>$success</li>";
-            }
-            echo "</ul>";
         }
         ?>
     </article>

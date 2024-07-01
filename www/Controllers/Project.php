@@ -32,34 +32,57 @@ class Project{
         $errors = [];
         $success = [];
         $formattedDate = date('Y-m-d H:i:s');
-        $userId = $_SESSION['user_id'];
+        if ($_SESSION['user_id']){
+            $userId = $_SESSION['user_id'];
+        
+            if (isset($_GET['id']) && $_GET['id']) {
+                $projectId = $_GET['id'];
+                $selectedProject = $project->populate($projectId, 'array');
 
-        if (isset($_GET['id']) && $_GET['id']) {
-            $projectId = $_GET['id'];
-            $selectedProject = $project->populate($projectId, 'array');
+                if ($selectedProject) {
+                    $form->setField($selectedProject);
+                    $seoAnalysis = $selectedProject->getSeoAnalysis();
+                    $seoStatus = $selectedProject->getSeoStatus();
+                    $seoAdvices = $this->getSeoAdvices($seoAnalysis);
 
-            if ($selectedProject) {
-                $form->setField($selectedProject);
-                $seoAnalysis = $selectedProject->getSeoAnalysis();
-                $seoStatus = $selectedProject->getSeoStatus();
-                $seoAdvices = $this->getSeoAdvices($seoAnalysis);
-
-                $view->assign("seoAnalysis", $seoAnalysis);
-                $view->assign("seoStatus", $seoStatus);
-                $view->assign("seoAdvices", $seoAdvices);
-            } else {
-                echo "Projet introuvable.";
+                    $view->assign("seoAnalysis", $seoAnalysis);
+                    $view->assign("seoStatus", $seoStatus);
+                    $view->assign("seoAdvices", $seoAdvices);
+                } else {
+                    echo "Projet introuvable.";
+                }
             }
-        }
 
-        if( $form->isSubmitted() && $form->isValid() )
-        {
-            if(isset($_GET['id']) && $_GET['id']){
-                $project->setId($selectedProject['id']);
-                $project->setModificationDate($formattedDate);
-                $project->setCreationDate($selectedProject['creation_date']);
+            if( $form->isSubmitted() && $form->isValid() )
+            {
+                if(isset($_GET['id']) && $_GET['id']){
+                    $project->setId($selectedProject['id']);
+                    $project->setModificationDate($formattedDate);
+                    $project->setCreationDate($selectedProject['creation_date']);
 
-                if ($_POST['slug'] !== $selectedProject->getSlug()) {
+                    if ($_POST['slug'] !== $selectedProject->getSlug()) {
+                        $slug = $_POST['slug'];
+                        if (!empty($slug) && !$project->isUnique(["slug"=>$_POST['slug']])) {
+                            $errors[] = "Le slug existe déjà pour un autre projet";
+                        } else {
+                            if (empty($slug)){
+                                if (!$project->isUnique(["title"=>$_POST['title']])){
+                                    $existingProjcts = $project->getAllData(["title"=>$_POST['title']]);
+                                    $count = count($existingProjcts);
+                                    $project->setSlug($_POST['title'] . '-' . ($count + 1));    
+                                } else {
+                                    $project->setSlug($_POST['title']);
+                                }
+                            } else {
+                                $project->setSlug($_POST['slug']);
+                            }
+                        }
+                    } else {
+                        $project->setSlug($selectedProject['slug']);
+                    }
+                } else {
+                    $project->setCreationDate($formattedDate);
+                    $project->setModificationDate($formattedDate);
                     $slug = $_POST['slug'];
                     if (!empty($slug) && !$project->isUnique(["slug"=>$_POST['slug']])) {
                         $errors[] = "Le slug existe déjà pour un autre projet";
@@ -76,58 +99,37 @@ class Project{
                             $project->setSlug($_POST['slug']);
                         }
                     }
-                } else {
-                    $project->setSlug($selectedProject['slug']);
                 }
-            } else {
-                $project->setCreationDate($formattedDate);
-                $project->setModificationDate($formattedDate);
-                $slug = $_POST['slug'];
-                if (!empty($slug) && !$project->isUnique(["slug"=>$_POST['slug']])) {
-                    $errors[] = "Le slug existe déjà pour un autre projet";
-                } else {
-                    if (empty($slug)){
-                        if (!$project->isUnique(["title"=>$_POST['title']])){
-                            $existingProjcts = $project->getAllData(["title"=>$_POST['title']]);
-                            $count = count($existingProjcts);
-                            $project->setSlug($_POST['title'] . '-' . ($count + 1));    
-                        } else {
-                            $project->setSlug($_POST['title']);
-                        }
+                $project->setTitle($_POST['title']);
+                $project->setContent($_POST['content']);
+                $project->setUser($userId);
+                if (!empty($_POST['tag'])) {
+                    $project->setTag($_POST['tag']);
+                }
+                $project->setSeoTitle(isset($_POST['seo_title']) && !empty($_POST['seo_title']) ? $_POST['seo_title'] : $_POST['title']);
+                $project->setSeoDescription($_POST['seo_description']);
+                $project->setSeoKeyword($_POST['seo_keyword']);
+                $project->setFeaturedImage($_POST['featured_image']);
+
+                $statusModel = new Status();
+                if (isset($_POST['submit-draft'])) {
+                    $statusId = $statusModel->getByName("Brouillon");
+                    $project->setStatus($statusId);
+                    if ($project->save()){
+                        $success[] = "Votre projet a été enregistré en tant que brouillon";
                     } else {
-                        $project->setSlug($_POST['slug']);
+                        $errors[] = "Une erreur est survenue lors de l\'enregistrement du projet";
+
                     }
-                }
-            }
-            $project->setTitle($_POST['title']);
-            $project->setContent($_POST['content']);
-            $project->setUser($userId);
-            if (!empty($_POST['tag'])) {
-                $project->setTag($_POST['tag']);
-            }
-            $project->setSeoTitle(isset($_POST['seo_title']) && !empty($_POST['seo_title']) ? $_POST['seo_title'] : $_POST['title']);
-            $project->setSeoDescription($_POST['seo_description']);
-            $project->setSeoKeyword($_POST['seo_keyword']);
-            $project->setFeaturedImage($_POST['featured_image']);
-
-            $statusModel = new Status();
-            if (isset($_POST['submit-draft'])) {
-                $statusId = $statusModel->getByName("Brouillon");
-                $project->setStatus($statusId);
-                if ($project->save()){
-                    $success[] = "Votre projet a été enregistré en tant que brouillon";
                 } else {
-                    $errors[] = "Une erreur est survenue lors de l\'enregistrement du projet";
-
-                }
-            } else {
-                $statusId = $statusModel->getByName("Publié");
-                $project->setPublicationDate($formattedDate);
-                $project->setStatus($statusId);
-                if ($project->save()) {
-                    header("Location: /dashboard/projects?message=success");
-                } else {
-                    $errors[] = "Une erreur est survenue lors de l\'enregistrement du projet";
+                    $statusId = $statusModel->getByName("Publié");
+                    $project->setPublicationDate($formattedDate);
+                    $project->setStatus($statusId);
+                    if ($project->save()) {
+                        header("Location: /dashboard/projects?message=success");
+                    } else {
+                        $errors[] = "Une erreur est survenue lors de l\'enregistrement du projet";
+                    }
                 }
             }
         }
@@ -142,10 +144,10 @@ class Project{
     {
         $errors = [];
         $success = [];
-        $allProjects = $projects->getAllData(null, null, "array");
         $projects = new ProjectModel();
         $statusModel = new Status();
         $userModel = new User();
+        $allProjects = $projects->getAllData(null, null, "array");
 
         if (isset($_GET['action']) && isset($_GET['id'])) {
             $currentProject = $projects->populate($_GET['id']);

@@ -1,16 +1,10 @@
 <header>
 
     <?php
-    if ($errors) {
-      echo "<ul>"; 
+    if (!empty($errors)) {
+      echo "<ul class='errors'"; 
       foreach ($errors as $error){
-          echo "<li>$error</li>";
-      }
-      echo "</ul>";
-    } else if ($successes) {
-      echo "<ul>"; 
-      foreach ($successes as $success){
-          echo "<li>$success</li>";
+          echo "<li class='error'>".htmlentities($error)."</li>";
       }
       echo "</ul>";
     }
@@ -20,21 +14,21 @@
 
     <?php
     if (isset($_GET['message']) && $_GET['message'] === 'success') {
-      echo "<p>La catégorie a été ajoutée.</p>";
+      echo "<p class='success'>La catégorie a été ajoutée.</p>";
     } else if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
-      echo "<p>La catégorie a été supprimée.</p>";
+      echo "<p class='success'>La catégorie a été supprimée.</p>";
     } else if (isset($_GET['message']) && $_GET['message'] === 'update-success'){
-      echo "<p>La catégorie a été mise à jour.</p>";
+      echo "<p class='success'>La catégorie a été mise à jour.</p>";
     }
     ?>
 
-    <a href="/dashboard/add-tag">Ajouter une catégorie</a>
+    <a href="/dashboard/add-tag" class="primary-button">Ajouter une catégorie</a>
 
 </header>
 
 <section>
 
-  <table>
+  <table class="dashboard-list">
     <thead>
         <tr>
             <th>Nom</th>

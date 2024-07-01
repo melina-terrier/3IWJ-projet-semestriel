@@ -1,11 +1,15 @@
-<h1>Paramêtres du site</h1>
+<section>
 
-<?= $form ?>
-
-<?php if (!empty($errors)): ?>
-        <div>
+    <h1>Paramêtres du site</h1>
+    
+    <?= $form ?>
+    
+    <?php if (!empty($errors)): ?>
+        <ul class="errors">
             <?php foreach ($errors as $error): ?>
-                <p class="text"><?php echo htmlspecialchars($error); ?></p>
+                <li class="error"><?php htmlentities($error); ?></li>
             <?php endforeach; ?>
-        </div>
+        </ul>
     <?php endif; ?>
+
+</section>

@@ -95,24 +95,11 @@ class SetSetting
                     'label' => 'Description du site',
                     'error' => 'La description du site doit faire au maximum 1000 caractères.'
                 ],
-                'timezone' => [
-                    'type' => 'select',
-                    'label' => 'Fuseau horaire',
-                    'option' => $timezone,
-                    'error'=>' Veuillez sélectionner une option valide.'
-                ], 
                 'homepage' => [
                     'type' => 'select',
                     'label' => 'Page d\'accueil',
                     'option' => $formattedPages,
                     'error'=>' Veuillez sélectionner une option valide.'
-                ],
-                'comment' => [
-                    'type' => 'radio',
-                    'label' => 'Autoriser les commentaires',
-                    'required'=>true,
-                    'option' => [['id'=>'true', 'name'=>'Activer', 'checked'=>true], ['id'=>'false', 'name'=>'Désactiver']],
-                    'error'=>' Veuillez sélectionner au moins une option.'
                 ],
             ]
         ];

@@ -11,14 +11,13 @@ class User extends SQL
     protected string $email;
     protected ?string $password = null;
     protected int $id_role;
-    protected string $slug;
+    protected ?string $slug;
     protected int $status;
     protected ?string $reset_token = null;
     protected ?string $reset_expires = null;
     protected ?string $activation_token = null;
     protected ?string $photo = null;
     protected ?string $occupation;
-    protected ?string $birthday = '';
     protected ?string $country;
     protected ?string $city;
     protected ?string $website;
@@ -169,7 +168,7 @@ class User extends SQL
         $this->modification_date = $modification_date;
     }
 
-    public function setSlug(string $slug)
+    public function setSlug($slug)
     {
         $fullName = $this->getUserName();
         $slug = strtolower(trim($fullName));
@@ -196,16 +195,6 @@ class User extends SQL
     {
         $occupation = strip_tags(ucwords(trim(strtolower($occupation))));
         $this->occupation = $occupation;
-    }
-
-    public function getBirthday(): string
-    {
-        return $this->birthday;
-    }
-
-    public function setBirthday(?string $birthday): void
-    {
-        $this->birthday = $birthday;
     }
 
     public function getCountry(): ?string

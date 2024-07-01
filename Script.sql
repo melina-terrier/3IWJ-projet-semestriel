@@ -49,7 +49,6 @@ CREATE TABLE esgi_user (
     reset_expires           TIMESTAMP,
     activation_token        VARCHAR(255),
 	occupation				VARCHAR(255),
-	birthday				DATE,
 	country					VARCHAR(255),
 	city 					VARCHAR(60),
 	website					VARCHAR(2000),

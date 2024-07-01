@@ -1,38 +1,32 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des commentaires</title>
-    
-</head>
-<body>
 
-<header class="com_header">
-    <?php
-    if ($errors) {
-        echo "<ul class='com_errors'>";
-        foreach ($errors as $error){
-            echo "<li>$error</li>";
+<section class="add-element">
+
+    <header>
+        <?php
+        if ($errors) {
+            echo "<ul class='errors'>";
+            foreach ($errors as $error){
+                echo "<li class='error'>$error</li>";
+            }
+            echo "</ul>";
+        } else if ($successes) {
+            echo "<ul class='successes'>";
+            foreach ($successes as $success){
+                echo "<li class='success'>$success</li>";
+            }
+            echo "</ul>";
         }
-        echo "</ul>";
-    } else if ($successes) {
-        echo "<ul class='com_successes'>";
-        foreach ($successes as $success){
-            echo "<li>$success</li>";
+        ?>
+        <h1>Commentaires</h1>
+        <?php
+        if (isset($_GET['message']) && $_GET['message'] === 'delete-success') {
+            echo "<p class='com_message'>Le commentaire a été supprimé.</p>";
+        } else if (isset($_GET['message']) && $_GET['message'] === 'approve-success') {
+            echo "<p class='com_message'>Le commentaire a été approuvé.</p>";
         }
-        echo "</ul>";
-    }
-    ?>
-    <h1>Commentaires</h1>
-    <?php
-    if (isset($_GET['message']) && $_GET['message'] === 'delete-success') {
-        echo "<p class='com_message'>Le commentaire a été supprimé.</p>";
-    } else if (isset($_GET['message']) && $_GET['message'] === 'approve-success') {
-        echo "<p class='com_message'>Le commentaire a été approuvé.</p>";
-    }
-    ?>
-</header>
+        ?>
+    </header>
+</section>
 
 <section class="com_section">
     <a href="?status=all" class="<?= $status === 'all' ? 'active' : '' ?>">Tous</a>

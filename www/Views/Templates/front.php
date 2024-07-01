@@ -13,14 +13,15 @@ if ($setting) {
 $menu = new Menu();
 if ($menu){
     $header = $menu->getOneBy(['position'=>'header']);
-    if ($header)
-    $position = $header->getPosition();
-    $alignement = $header->getAlignement();
+    if ($header) {
+        $position = $header->getPosition();
+        $alignement = $header->getAlignement();
+    }  
 
 
-    $header = $menu->getOneBy(['position'=>'header']);
-    $position = $header->getPosition();
-    $alignement = $header->getAlignement();
+    // $header = $menu->getOneBy(['position'=>'header']);
+    // $position = $header->getPosition();
+    // $alignement = $header->getAlignement();
 }
 
 ?>

@@ -1,65 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un projet</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
 
-<section>
-
-    <div class="aj_projet_container">
-        <h1 class="aj_projet_title">Ajouter une Page </h1>
-
-        <form action="process_project_form.php" method="post" enctype="multipart/form-data" class="aj_projet_form">
-            <div class="aj_projet_form_group">
-                <label for="title">Titre *</label>
-                <input type="text" id="title" name="title" required>
-            </div>
-
-            <div class="aj_projet_form_group">
-                <label for="content">Contenu *</label>
-                <textarea id="content" name="content" required></textarea>
-            </div>
-
-            <div class="aj_projet_form_group">
-                <label for="slug">slug *</label>
-                <input type="text" id="slug" name="Slug" required>
-            </div>
-
-            <div class="aj_projet_form_group">
-                <label for="status">Statut *</label>
-                <select id="status" name="status" required>
-                    <option value="draft">Brouillon</option>
-                    <option value="published">Publié</option>
-                </select>
-            </div>
-
-            <div class="aj_user_form_button_container">
-                <button class="button button--active button--sm" type="submit">Créer la page</button>
-            </div>
-        </form>
-
-        <?php if (isset($successForm) && !empty($successForm)): ?>
-            <div class="aj_projet_message aj_projet_success-message">
-                <?php foreach ($successForm as $message): ?>
-                    <p><?php echo $message; ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if (isset($errorsForm) && !empty($errorsForm)): ?>
-            <div class="aj_projet_message aj_projet_error-message">
-                <?php foreach ($errorsForm as $message): ?>
-                    <p><?php echo $message; ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-    </div>
-
-</section>
 
 <script type="text/javascript">
     const imgLists = [<?php
@@ -120,28 +59,31 @@
     });
 </script>
 
+
 <section>
 
     <h1>Créer une page</h1>
 
     <?= $form ?>
 
-    <article>
-        <h3>Conseil SEO</h3>
-        <p>État SEO : <?= htmlspecialchars($seoStatus) ?></p>
-        <ul>
-            <?php foreach ($seoAdvices as $advice): ?>
-                <li><?= htmlspecialchars($advice) ?></li>
-            <?php endforeach; ?>
-        </ul>
-    </article>
+    <?php if (!empty($seoAdvices) && !empty($seoStatus)) {
+        echo '<article class="card">
+            <h3>Conseil SEO</h3>
+            <p>État SEO : '.htmlentities($seoStatus).'</p>
+        <ul>';
+            foreach ($seoAdvices as $advice){
+                echo '<li>'.htmlentities($advice).'</li>';
+            }
+        echo '</ul>
+        </article>';
+    } ?>
     
     <?php if (!empty($errorsForm)): ?>
-        <div>
+        <ul>
             <?php foreach ($errorsForm as $error): ?>
-                <p class="text"><?php echo htmlspecialchars($error); ?></p>
+                <li class="error"><?php echo htmlentities($error); ?></li>
             <?php endforeach; ?>
-        </div>
+            </ul>
     <?php endif; ?>
 
     <?php if (!empty($successForm)): ?>
@@ -151,9 +93,7 @@
             <?php endforeach; ?>
         </div>
     <?php endif; 
-    
-    echo $seoScore; 
-    echo $seoSuggestions; 
+
     ?>
 
 </section>

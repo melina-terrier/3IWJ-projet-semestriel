@@ -1,21 +1,17 @@
-<section class="add-tag">
-        <h2>Ajouter une catégorie</h2>
+<section>
+
+        <h1>Ajouter une catégorie</h1>
+
         <?= $form ?>
 
-        <?php if (!empty($errorsForm)): ?>
-        <div>
-            <?php foreach ($errorsForm as $error): ?>
-                <p class="text"><?php echo htmlspecialchars($error); ?></p>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
+        <?php 
+        if (!empty($errors)){
+            echo '<ul class="errors">'; 
+            foreach ($errors as $error){
+               echo '<li class="error"><?php echo htmlentities($error); ?></li>';
+            }
+            echo '</ul>';
+        }
+        ?>
 
-        <?php if (!empty($successForm)): ?>
-            <div>
-                <?php foreach ($successForm as $message): ?>
-                    <p class="text"><?php echo htmlspecialchars($message); ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-
-    </section>
+</section>

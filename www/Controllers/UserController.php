@@ -185,8 +185,6 @@ class UserController
             $user->setFormation($_POST['formation']);
             $user->setExperience($_POST['experience']);
             $user->setLink($_POST['link']);
-
-            $user->setBirthday($_POST['birthday']);
             $user->setOccupation($_POST['occupation']);
             $user->setCountry($_POST['country']);
             $user->setCity($_POST['city']);
@@ -195,8 +193,8 @@ class UserController
             $user->setInterest($_POST['interest']);
             $user->setModificationDate($formattedDate);
             $user->save();
-            // header('Location: /profiles/'.$user->getSlug().'?message=update-success');
-            // exit; 
+            header('Location: /profiles/'.$user->getSlug().'?message=update-success');
+            exit; 
         } 
         
         if (isset($_GET['action']) && $_GET['action'] === 'delete') {
@@ -226,27 +224,29 @@ class UserController
 
         if (!$userId){
             $errors[] = 'Utilisateur inconnu.';
-        }
+        } else {
 
-        $user = new UserModel();
-        $userData = $user->populate($userId);
-        if (!$userData) {
-            $errors[] = 'Utilisateur non trouvé.';
-        }
-
-        $form = new Form('EditPassword');
-        if ($form->isSubmitted() && $form->isValid()) {
-            if (password_verify($_POST['old-password'], $user->getPassword())) {
-                $user->setDataFromArray($userData);
-                $user->setPassword($_POST['password']);
-                if ($user->save()) {
-                    $success[] = 'Le mot de passe de l\'utilisateur a été mis à jour avec succès.';
-                } else {
-                    $errors[] = 'Une erreur est survenue lors de la modification du mot de passe. Veuillez réessayer.';
-                }
-            } else {
-                $errors[] = 'Le mot de passe actuel est incorrect';
+            $user = new UserModel();
+            $userData = $user->populate($userId);
+            if (!$userData) {
+                $errors[] = 'Utilisateur non trouvé.';
             }
+    
+            $form = new Form('EditPassword');
+            if ($form->isSubmitted() && $form->isValid()) {
+                if (password_verify($_POST['old-password'], $user->getPassword())) {
+                    $user->setDataFromArray($userData);
+                    $user->setPassword($_POST['password']);
+                    if ($user->save()) {
+                        $success[] = 'Le mot de passe de l\'utilisateur a été mis à jour avec succès.';
+                    } else {
+                        $errors[] = 'Une erreur est survenue lors de la modification du mot de passe. Veuillez réessayer.';
+                    }
+                } else {
+                    $errors[] = 'Le mot de passe actuel est incorrect';
+                }
+        }
+
         }
         $view = new View('User/edit-password', 'front');
         $view->assign('form', $form->build());
