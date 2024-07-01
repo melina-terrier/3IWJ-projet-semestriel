@@ -28,7 +28,7 @@ class Main
                     $content = $homepage->getContent();
                 } 
                 $view->assign('content', $content);
-                $view->assign('title', $title);
+                $view->assign('pageTitle', $title);
             }
         } else {
             $project = new Project();
@@ -52,23 +52,6 @@ class Main
         }
         $view->render();
     }
-
-
-    
-    public function getNotificationCount()
-    {
-        $comment = new Comment();
-        $notificationCount = $comment->countElements('status', 1);
-        echo json_encode(['count' => $notificationCount]);
-    }
-
-    public function getUnreadComments()
-    {
-        $comment = new Comment();
-        $unreadComments = $comment->getUnreadComments();
-        echo json_encode($unreadComments);
-    }
-    
     
 
     public function dashboard() {
@@ -178,32 +161,39 @@ class Main
     {
         $searchTerm = '%'.$_POST['search-term'].'%';
         $page = new Page();
+        $errors = [];
         $project = new Project();
-        $pages = $page->search(['title'=>$searchTerm, 'content'=>$searchTerm]);
-        $projects = $project->search(['title'=>$searchTerm, 'content'=>$searchTerm]);
-        foreach ($projects as &$project){
-            $project['allTags'] = [];
-            $tag = new Project_Tags();
-            $tagsModel = new Tag();
-            $tags = $tag->getAllData(['project_id'=>$project['id']]);
-            if ($tags){
-                foreach($tags as $tag){
-                    $tagName = $tagsModel->populare($tag['tag_id']);
-                    if ($tagName){
-                        $project['allTags'][] = [
-                            'tag_id' => $tagName->getId(),
-                            'name' => $tagName->getName(),
-                        ];
+        if ($searchTerm){
+
+            $pages = $page->search(['title'=>$searchTerm, 'content'=>$searchTerm]);
+            $projects = $project->search(['title'=>$searchTerm, 'content'=>$searchTerm]);
+            foreach ($projects as &$project){
+                $project['allTags'] = [];
+                $tag = new Project_Tags();
+                $tagsModel = new Tag();
+                $tags = $tag->getAllData(['project_id'=>$project['id']]);
+                if ($tags){
+                    foreach($tags as $tag){
+                        $tagName = $tagsModel->populare($tag['tag_id']);
+                        if ($tagName){
+                            $project['allTags'][] = [
+                                'tag_id' => $tagName->getId(),
+                                'name' => $tagName->getName(),
+                            ];
+                        }
                     }
                 }
             }
+            $user = new User();
+            $users = $user->search(['slug'=>$searchTerm, 'occupation'=>$searchTerm]);
+            $view = new View('Main/search', 'front');
+        } else {
+            $errors = 'veuillez faire une recherche';
         }
-        $user = new User();
-        $users = $user->search(['slug'=>$searchTerm, 'occupation'=>$searchTerm]);
-        $view = new View('Main/search', 'front');
         $view->assign('users', $users);
         $view->assign('projects', $projects);
         $view->assign('pages', $pages);
+        $view->assign('errors', $errors);
         $view->render();
     }
 }

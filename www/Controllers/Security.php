@@ -94,7 +94,7 @@ class Security{
         $errors = [];
         $success = [];
         $role = $roles->getByName('Utilisateur');
-
+        
         if ($security->isLogged()){
             $view = new View('Security/already-login', 'front');
             $view->render();
@@ -105,26 +105,35 @@ class Security{
         {
             $user = new User();
             
-            if ($user->isUnique($_POST['email'])) {
+            if ($user->isUnique(['email'=>$_POST['email']])) {
                 $errors[] = 'Cette adresse e-mail est déjà utilisée pour un autre compte, essayez de vous connecter ou de vous inscrire avec une autre adresse e-mail.';
             } else {
+                print_r($role);
                 $formattedDate = date('Y-m-d H:i:s');
                 $activationToken = bin2hex(random_bytes(16));
+                $slug = strtolower(trim($_POST['firstname'].' '.$_POST['lastname']));
+                $slug = str_replace(' ', '-', $slug);
+                $search = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                $slug = str_replace($search, $replace, $slug);
+                $slug = preg_replace('/[^a-z0-9-]/', '', $slug);
+                $slug .= '-' . rand(1000, 9999);
                 $userData = [
                     'firstname' => $_POST['firstname'],
                     'lastname' => $_POST['lastname'],
                     'email' => $_POST['email'],
-                    'role' => $_POST['role'],
+                    'id_role' => $role,
                     'status' => 0, 
+                    'slug'=>$slug,
                     'modification_date' => $formattedDate,
                     'password' => $_POST['password'],
-                    'slug' => '',
                     'activation_token' => $activationToken,
                 ];
                 $user->setDataFromArray($userData);
+                print_r($user);
                 $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
+                $user->save();
                 if (isset($emailResult['success'])) {
-                    $user->save();
                     $success[] = 'Merci pour votre inscription. Avant de pouvoir vous connecter, nous avons besoin que vous activiez votre compte en cliquant sur le lien d\'activation dans l\'email que nous venons de vous envoyer.';
                 } elseif (isset($emailResult['error'])) {
                     $errors[] = 'Une erreur est survenu lors de votre inscription : '. $emailResult['error'] .' Merci de réessayer ultérieurement.';

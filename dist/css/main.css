@@ -1,0 +1,51 @@
+.menu-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.sortable-menu, .drop-frame {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  min-height: 100px;
+}
+
+.menu-item {
+  padding: 5px;
+  margin: 5px 0;
+  background-color: #f9f9f9;
+  cursor: move;
+  display: block;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu-item button {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.drop-frame {
+  background-color: #eaeaea;
+}
+
+.menu-list .menu-item ul {
+  padding-left: 20px;
+}
+
+.menu-item input {
+  margin-right: 10px;
+}
+
+.modal {
+  display: none;
+}
+
+[name=vertical-alignement], [name=horizontal-alignement] {
+  display: none;
+}
+
+.submenu.dropzone {
+  width: 100px;
+  height: 100px;
+}/*# sourceMappingURL=main.css.map */
