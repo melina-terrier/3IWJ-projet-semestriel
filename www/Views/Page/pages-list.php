@@ -66,39 +66,50 @@ function displayPages($pages, $title) {
             <tr>
                 <th>Titre</th>
                 <th>Auteur</th>
-                <th>Statut</th>
+                <th>Status</th>
+                <th>SEO</th>
                 <th>Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>";
-    foreach ($pages as $page) {
-        $status = $page['status_name'];
-        $pageId = $page['id'];
-        $title = $page['title'];
-        $userName = $page['user_name'];
-        $date = $status === 'Publié' ? $page['publication_date'] : $page['modification_date'];
-        echo "<tr>
-            <td>$title</td>
-            <td>$userName</td>
-            <td>$status</td>
-            <td>$date</td>
-            <td>";
-            switch ($status) {
-                case 'Publié':
-                    echo "<a href='/".$page['slug']."' class='user_action user_edit proj_action'>Voir</a>
-                          <a href='/dashboard/add-page?id=$pageId' class='user_action user_edit proj_action'>Modifier</a>
-                          <a href='/dashboard/pages?action=delete&id=$pageId' class='user_action user_delete proj_action' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer cette page ?\");'>Supprimer</a>";
-                    break;
-                case 'Supprimé':
-                    echo "<a href='/dashboard/pages?action=restore&id=$pageId' class='user_action proj_action'>Restaurer</a>
-                          <a href='/dashboard/pages?action=permanent-delete&id=$pageId' class='user_action user_delete proj_action' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer définitivement cette page ?\");'>Supprimer définitivement</a>";
-                    break;
-                case 'Brouillon':
-                    echo "<a href='/".$page['slug']."?preview=true' class='user_action proj_action'>Prévisualiser</a>
-                          <a href='/dashboard/add-page?id=$pageId' class='user_action user_edit proj_action'>Modifier</a>
-                          <a href='/dashboard/pages?action=delete&id=$pageId' class='user_action user_delete proj_action' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer cette page ?\");'>Supprimer</a>";
-                    break;
+
+        <tbody>"; 
+
+        if ($pages) {
+            foreach ($pages as $page) {
+                $status = $page['status_name'];
+                $pageId = $page['id'];
+                $title = $page['title'];
+                $userName = $page['user_name'];
+                $creationDate = $page['creation_date'];
+                $publicationDate = $page['publication_date'];
+                $modificationDate = $page['modification_date'];
+                echo "<tr>
+                    <td>$title</td>
+                    <td>$userName</td>
+                    <td>$status</td>
+                    <td>".$page['seo_status']."</td>"; 
+
+                    switch ($status) {
+                        case "Publié":
+                            echo "<td>$publicationDate</td>
+                            <td><a href='/".$page['slug']."'>Voir</a>
+                            <a href='/dashboard/add-page?id=$pageId'>Modifier</a>
+                            <a href='/dashboard/pages?action=delete&id=$pageId'>Supprimer</a></td>";
+                            break;
+                        case "Supprimé":
+                            echo "<td>$modificationDate</td>
+                            <td><a href='/dashboard/pages?action=restore&id=$pageId'>Restaurer</a>
+                            <a href='/dashboard/pages?action=permanent-delete&id=$pageId'>Supprimer définitivement</a></td>";
+                            break;
+                        case "Brouillon":
+                            echo "<td>$modificationDate</td>
+                            <td><a href='/".$page['slug']."?preview=true'>Prévisualiser</a>
+                            <a href='/dashboard/add-page?id=$pageId'>Modifier</a>
+                            <a href='/dashboard/pages?action=delete&id=$pageId'>Supprimer</a></td>"; 
+                            break;
+                    }
+                echo "</tr>";
             }
             echo "</td>
         </tr>";

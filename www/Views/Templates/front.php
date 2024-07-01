@@ -1,10 +1,12 @@
+   
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
     <meta name="description" content="Dashboard du CMS">
-    <link rel="stylesheet" href="../Assets/Style/dist/main.css">
+    <link rel="stylesheet" href="/Assets/Style/dist/css/main.css">
+    <script type="text/javascript" src="/Assets/Style/dist/js/main.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.tiny.cloud/1/stqcjxqqgksnn9nkz2g0l1zda7dcsz9o5smv1jpbkbydtlis/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
@@ -13,14 +15,13 @@
 
 
 <body>
-<header id="header" class="back-office-header">
-        <nav>
-            <div class="right-nav">
-                <ul> 
-                <li><a href="/login"><i class="fas fa-sign-in-alt"></i></a></li>
-                </ul>
-            </div>
-        </nav>
+    <header id="header" class="back-office-header">
+        <nav id="site-menu"></nav>
+        <form action="/search" method="post">
+            <label for="search-bar">Rechercher : </label>
+            <input type="search" id="search-bar" name="search-term">
+            <button type="submit" id="search">Rechercher</button>
+        </form>
     </header>
    
     <main>

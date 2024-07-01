@@ -3,11 +3,8 @@
 namespace App;
 
 use App\Controllers\Error;
-use App\Controllers\Main;
-use App\Controllers\User as UserController;
-use App\Controllers\Security;
-use App\Models\User;
-use App\Models\Role;
+use App\Core\SecurityCore;
+use App\Core\PageBuilder;
 use App\Models\Setting;
 use App\Controllers\Page;
 use App\Controllers\Project;
@@ -61,27 +58,13 @@ if(file_exists("../Routes.yml")) {
 
 if( !empty($listOfRoutes[$uri]) ) {
 
-    if (isset($listOfRoutes[$uri]['Security']) && $listOfRoutes[$uri]['Security'] === true) {
-        session_start();
-        if (!isset($_SESSION['user'])) {
+    $security = new SecurityCore();
+    if (!$security->checkAuth($listOfRoutes[$uri]) || !$security->checkRoute($listOfRoutes[$uri])) {
+            header("Acces denied 403", true, 403);
             $error = new Error();
             $error->page403();
-            die();
-        }
-
-        // if (!empty($listOfRoutes[$uri]['Role'])) {
-        //     $user = unserialize($_SESSION['user']);
-        //     $roleId = $user->getRole();
-        //     // $role = new Role(); 
-        //     $roleName = $role->getOneBy(['id'=>$roleId]);
-        //     if (!in_array($roleName['role'], $listOfRoutes[$uri]['Role'])) {
-        //         $error = new Error();
-        //         $error->page403();
-        //         die();
-        //     }
-        // }
     }
-
+    
     if (!empty($listOfRoutes[$uri]['Controller']) && !empty($listOfRoutes[$uri]['Action'])) {
         $controller = $listOfRoutes[$uri]['Controller'];
         $action = $listOfRoutes[$uri]['Action'];
@@ -108,17 +91,8 @@ if( !empty($listOfRoutes[$uri]) ) {
     }
 }
 else if($uri){
-    session_start();
-    if (strpos($uri, 'projects') !== false) {
-        $projectBuilder = new Project();
-        $projectBuilder->showProject($uri);
-    } else if (strpos($uri, 'profiles') !== false) {
-        $userBuilder = new UserController();
-        $userBuilder->showUser($uri);
-    } else {
-        $pageBuilder = new Page();
-        $pageBuilder->showPage($uri);
-    }
+    $projectBuilder = new PageBuilder();
+    $projectBuilder->show($uri);
 }
 else{
     header("Status 404 Not Found", true, 404);

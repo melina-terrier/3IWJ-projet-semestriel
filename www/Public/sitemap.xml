@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset/>
+<urlset>
+  <url>
+    <loc>https://locallhost/test-de-page</loc>
+    <lastmod>2024-06-26 21:41:43</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

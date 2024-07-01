@@ -58,7 +58,21 @@ if (isset($projects)) {
     }
 }
 
+function displayProjects($projects){
+  echo "<table>
+    <thead>
+      <tr>
+        <th>Titre</th>
+        <th>Auteur</th>
+        <th>Status</th>
+        <th>SEO</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>";
+
 $selectedStatus = $_GET['status'] ?? 'all';
+
 
 switch ($selectedStatus) {
     case 'draft':
@@ -104,7 +118,11 @@ function displayProjects($projects, $title) {
         $creationDate = $project['creation_date'];
         $publicationDate = $project['publication_date'];
         $modificationDate = $project['modification_date'];
-
+        echo "<tr>";
+          echo "<td>$title</td>";
+          echo "<td>$userName</td>";
+          echo "<td>$status</td>"; 
+          echo "<td>".$project['seo_status']."</td>";
         echo "<tr>
             <td><input type='checkbox' class='select_user'></td>
             <td>$title</td>
