@@ -9,25 +9,34 @@ if ($setting) {
     $description = $setting->getOneBy(['key' => "description"]) ?? '';
     $slogan = $setting->getOneBy(['key' => "slogan"]) ?? '';
     $logo = $setting->getOneBy(['key' => "logo"]) ?? '';
+    $lightPrimaryColor = $setting->getOneBy(['key' => "light-primary_color"]) ?? '';
+    $lightAccentColor = $setting->getOneBy(['key' => "light-accent_color"]) ?? '';
+    $lightSecondaryColor = $setting->getOneBy(['key' => "light-secondary_color"]) ?? '';
+    $darkPrimaryColor = $setting->getOneBy(['key' => "dark-primary_color"]) ?? '';
+    $darkSecondaryColor = $setting->getOneBy(['key' => "dark-secondary_color"]) ?? '';
+    $darkAccentColor = $setting->getOneBy(['key' => "dark-accent_color"]) ?? '';
+    $primaryFont = $setting->getOneBy(['key' => "primary_font"]) ?? '';
+    $secondaryFont = $setting->getOneBy(['key' => "secundary_font"]) ?? '';
 }
 
 $menu = new Menu();
 $itemMenu = new itemMenu();
 if ($menu){
     $header = $menu->getOneBy(['type'=>'menu-principal']);
-    print_r($header);
     if ($header) {
         $position = $header['position'];
         $alignement = $header['alignement'];
         $items = $itemMenu->getAllData(['menu_id'=>$header['id']]);
-        print_r($items);
+        usort($items, function($a, $b) {
+            return $a['item_position'] - $b['item_position'];
+        });
     } 
 }
 
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -41,7 +50,51 @@ if ($menu){
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
+<style>
+
+<style>
+<?php if (isset($lightPrimaryColor) && isset($lightSecondaryColor) && // Check all color variables
+              isset($darkPrimaryColor) && isset($darkSecondaryColor) &&
+              isset($darkAccentColor) && isset($primaryFont) && isset($secondaryFont)) : ?>
+    :root {
+      --light-primary: <?php echo $lightPrimaryColor; ?>; /* Use echo to output the variable value */
+      --light-secondary: <?php echo $lightSecondaryColor; ?>;
+      --light-accent: <?php echo $lightAccentColor; ?>;
+
+      --dark-primary: <?php echo $darkPrimaryColor; ?>;
+      --dark-secondary: <?php echo $darkSecondaryColor; ?>;
+      --dark-accent: <?php echo $darkAccentColor; ?>;
+
+      @import url("https://fonts.googleapis.com/css2?family=<?php echo str_replace(' ', '+', $secondaryFont); ?>:wght@100..900&display=swap"); /* URL encode font name */
+      @import url("https://fonts.googleapis.com/css2?family=<?php echo str_replace(' ', '+', $primaryFont); ?>:wght@100..900&display=swap");
+    }
+    <?php endif; ?>
+</style>
+
+
+
+</style>
+
 <body>
+
+    <header id="header" class="back-office-header">
+        <nav id="site-menu" class="menu-align-<?php echo $alignement; ?> menu-position-<?php echo $position; ?>">
+        <?php if ($header && $items) : ?>
+            <?php foreach ($items as $item) : ?>
+            <li>
+                <a href="<?php echo $item['url']; ?>"><?php echo $item['title']; ?></a>
+            </li>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        </nav>
+
+        <form action="/search" method="post">
+        <label for="search-bar">Rechercher : </label>
+        <input type="search" id="search-bar" name="search-term">
+        <button type="submit" id="search">Rechercher</button>
+        </form>
+    </header>
+
     <header id="header" class="back-office-header">
         <nav id="site-menu"></nav>
         <form action="/search" method="post">
