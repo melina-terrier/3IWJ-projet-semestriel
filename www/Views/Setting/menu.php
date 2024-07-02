@@ -1,11 +1,17 @@
-<h1>Menu du site</h1>
+<section  class="add-element">
 
-<?= $form ?>
+    <h1>Menu du site</h1>
+    
+    <?= $form ?>
+    
+    <?php 
+        if (!empty($errors)){
+            echo '<ul class="errors">'; 
+            foreach ($errors as $error){
+               echo '<li class="error">'.htmlentities($error).'</li>';
+            }
+            echo '</ul>';
+        }
+     ?>
 
-<?php if (!empty($errors)): ?>
-        <div>
-            <?php foreach ($errors as $error): ?>
-                <p class="text"><?php echo htmlspecialchars($error); ?></p>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
+</section>

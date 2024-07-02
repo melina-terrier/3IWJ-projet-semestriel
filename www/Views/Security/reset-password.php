@@ -1,27 +1,23 @@
 <section>
 
-    <header>
-        <h3>Nouveau mot de passe</h3>
-    </header>
+    <h1>Nouveau mot de passe</h1>
 
-    <article>
-        <?php
-         echo $form;
+    <?php
+        echo $form;
 
-        if ($errors) {
-            echo "<ul>"; 
-            foreach ($errors as $error){
-                echo "<li>$error</li>";
-            }
-            echo "</ul>";
-        } else if ($successes) {
-            echo "<ul>"; 
-            foreach ($successes as $success){
-                echo "<li>$success</li>";
-            }
-            echo "</ul>";
+    if ($errors) {
+        echo "<ul class='errors'>"; 
+        foreach ($errors as $error){
+            echo "<li class='error'>".htmlentities($error)."</li>";
         }
+        echo "</ul>";
+    } else if ($successes) {
+        echo "<ul class='successes'>"; 
+        foreach ($successes as $success){
+            echo "<li class='success'>".htmlentities($success)."</li>";
+        }
+        echo "</ul>";
+    }
+    ?>
 
-        ?>
-    </article>
 </section>

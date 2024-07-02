@@ -1,10 +1,24 @@
-<h3>Modifier utilisateur</h3>
-<section>
-    <h4>Informations de l'utilisateur</h4>
-    <?php echo $form ?>
-</section>
+<section class="user">
 
-<footer>
-    <a href="/profile/edit-password?id=<?php echo $userId; ?>">Modifier mon mot de passe</a>
-    <a href="/profile/edit?action=delete">Supprimer mon compte</a>
-</footer>
+    <h1>Modifier son mot de passe</h1>
+
+    <?php echo $form;
+
+    if ($errors) {
+        echo "<ul>"; 
+        foreach ($errors as $error){
+            echo "<li>".htmlentities($error)."</li>";
+        }
+        echo "</ul>";
+    } 
+
+    if($successes){
+        echo "<ul>"; 
+        foreach ($successes as $success){
+            echo "<li>".htmlentities($success)."</li>";
+        }
+        echo "</ul>";
+    }
+    ?>
+
+</section>

@@ -14,7 +14,7 @@ class Project extends SQL
     protected string $modification_date;
     protected string $publication_date;
     protected int $user_id;
-    protected string $featured_image;
+    protected ?string $featured_image = null;
     protected string $seo_title;
     protected string $seo_keyword;
     protected string $seo_description;
@@ -130,40 +130,6 @@ class Project extends SQL
     public function setFeaturedImage(?string $featured_image): void
     {
         $this->featured_image = $featured_image;
-    }
-
-    public function getTag(): array
-    {
-        $projectId = $this->getId();
-        $tags = [];
-        $projectTag = new Project_Tags();
-        $tagArray = $projectTag->getAllDataWithWhere(['project_id'=>$projectId]);
-        foreach ($tagArray as $tag) {
-            $tags[] = $tag['tag_id'];
-        }
-        return $tags;
-    }
-
-    public function setTag($tag_ids): void
-    {
-        $projectTag = new Project_Tags();
-        $existingTags = $projectTag->getAllDataWithWhere(['project_id' => $this->getId()]);
-        if ($existingTags) {
-            foreach ($existingTags as $tag) {
-                $projectTag->delete($tag);
-            }
-        }
-        $projectTag = new Project_Tags();
-        if (is_array($tag_ids)) {
-            foreach ($tag_ids as $tag_id) {
-                $projectTag->setProjectId($this->getId());
-                $projectTag->setTagId($tag_id);
-            }
-        } else {
-            $projectTag->setProjectId($this->getId());
-            $projectTag->setTagId($tag_ids);
-        }
-        $projectTag->save();
     }
 
     public function getSeoKeyword(): string

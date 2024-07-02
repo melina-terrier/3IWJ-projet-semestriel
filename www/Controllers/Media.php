@@ -12,10 +12,13 @@ class Media{
     public function addMedia(): void
     {
         $form = new Form('AddMedia');
-        $errors = [];
-        
+        $errors = [];  
         $formattedDate = date('Y-m-d H:i:s');
-        $userId = $_SESSION['user_id'];
+        if ($_SESSION('user_id')){
+            $userId = $_SESSION['user_id'];
+        } else {
+            $userId = '';
+        }
        
         if( $form->isSubmitted() && $form->isValid()) { 
             $media = new MediaModel();
@@ -52,7 +55,7 @@ class Media{
 
         $view = new View('Media/add-media', 'back');
         $view->assign('form', $form->build());
-        $view->assign('errorsForm', $errors);
+        $view->assign('errors', $errors);
         $view->render();
     }
 
@@ -126,6 +129,8 @@ class Media{
                         $errors[] = 'Une erreur est survenue lors de la modification du média.';
                     }
                 }
+            } else {
+                $errors[] = 'Aucun média trouvé';
             }
         }
         $view = new View('Media/add-media', 'back');

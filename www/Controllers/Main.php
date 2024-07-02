@@ -18,57 +18,59 @@ class Main
         $view = new View('Main/page', 'front');
         $setting = new Setting();
         $settingId = $setting->getOneBy(['key' => 'homepage'], 'object');
-        if ($settingId){
-            $homepageId = $settingId->getValue();
-            if($homepageId){
-                $page = new Page();
-                $homepage = $page->populate($homepageId);
-                if (!empty($homepage)) {
-                    $title = $homepage->getTitle();
-                    $content = $homepage->getContent();
-                } 
-                $view->assign('content', $content);
-                $view->assign('title', $title);
-            }
-        } else {
+        // if ($settingId){
+        //     $homepageId = $settingId->getValue();
+        //     if($homepageId){
+        //         $page = new Page();
+        //         $homepage = $page->populate($homepageId);
+        //         if (!empty($homepage)) {
+        //             $title = $homepage->getTitle();
+        //             $content = $homepage->getContent();
+        //         } 
+        //         $view->assign('content', $content);
+        //         $view->assign('pageTitle', $title);
+        //     }
+        // } else {
             $project = new Project();
             $statusModel = new Status();
             $userModel = new User();
+            $mediaModel = new Media();
             $status = $statusModel->getByName('Publié');
             $projects = $project->getAllData(['status_id' => $status]);
             foreach ($projects as &$project) {
                 $userId = $project['user_id'];
+                $mediaSlug = $project['featured_image'];
                 $project['username'] ='';
-                $project['userSlug'] ='';
+                $project['username'] ='';
+                $project['image_description'] ='';
+                $project['userPhoto'] ='';
+                $user['userPhotoDescription'] = '';
                 if ($userId) {
                     $user = $userModel->populate($userId);
                     if ($user) {
                         $project['username'] = $user->getUserName();
                         $project['userSlug'] = $user->getSlug();
-                  }
+                        $project['userPhoto'] = $user->getPhoto();
+
+                        if($project['userPhoto']){
+                            $medias = $mediaModel->getOneBy(['url'=>$project['userPhoto']]);
+                            if($medias){
+                                $project['userPhotoDescription'] = $medias['description'];
+                            }
+                        }
+                    }
+                }
+                if ($mediaSlug){
+                    $media = $mediaModel->getOneBy(['url'=>$mediaSlug], 'object');
+                    if ($media) {
+                        $project['image_description'] = $media->getDescription();
+                    }
                 }
               }
             $view->assign('projects', $projects);
-        }
+        // }
         $view->render();
     }
-
-
-    
-    public function getNotificationCount()
-    {
-        $comment = new Comment();
-        $notificationCount = $comment->countElements('status', 1);
-        echo json_encode(['count' => $notificationCount]);
-    }
-
-    public function getUnreadComments()
-    {
-        $comment = new Comment();
-        $unreadComments = $comment->getUnreadComments();
-        echo json_encode($unreadComments);
-    }
-    
     
 
     public function dashboard() {
@@ -80,6 +82,7 @@ class Main
         $tag = new Tag();
         $statusModel = new Status();
         $roleModel = new Role();
+        
 
         $status = $statusModel->getByName('Publié');        
         $userRole = $roleModel->getByName('Utilisateur');
@@ -168,9 +171,17 @@ class Main
             'comments' => $comment->getNbElements(),
             'tags'=>$tag->getNbElements(),
         ];
+
+        $labels = array_keys($userProjectCounts);
+        $data = array_values($userProjectCounts);
+      
         $view = new View('Main/dashboard', 'back');
         $view->assign('comments', $comments);
         $view->assign('elementsCount', $elementsCount);
+
+        $view->assign("labels", $labels);
+        $view->assign("data", $data);
+        
         $view->render();
     }
 
@@ -178,32 +189,39 @@ class Main
     {
         $searchTerm = '%'.$_POST['search-term'].'%';
         $page = new Page();
+        $errors = [];
         $project = new Project();
-        $pages = $page->search(['title'=>$searchTerm, 'content'=>$searchTerm]);
-        $projects = $project->search(['title'=>$searchTerm, 'content'=>$searchTerm]);
-        foreach ($projects as &$project){
-            $project['allTags'] = [];
-            $tag = new Project_Tags();
-            $tagsModel = new Tag();
-            $tags = $tag->getAllData(['project_id'=>$project['id']]);
-            if ($tags){
-                foreach($tags as $tag){
-                    $tagName = $tagsModel->populare($tag['tag_id']);
-                    if ($tagName){
-                        $project['allTags'][] = [
-                            'tag_id' => $tagName->getId(),
-                            'name' => $tagName->getName(),
-                        ];
+        if ($searchTerm){
+
+            $pages = $page->search(['title'=>$searchTerm, 'content'=>$searchTerm]);
+            $projects = $project->search(['title'=>$searchTerm, 'content'=>$searchTerm]);
+            foreach ($projects as &$project){
+                $project['allTags'] = [];
+                $tag = new Project_Tags();
+                $tagsModel = new Tag();
+                $tags = $tag->getAllData(['project_id'=>$project['id']]);
+                if ($tags){
+                    foreach($tags as $tag){
+                        $tagName = $tagsModel->populare($tag['tag_id']);
+                        if ($tagName){
+                            $project['allTags'][] = [
+                                'tag_id' => $tagName->getId(),
+                                'name' => $tagName->getName(),
+                            ];
+                        }
                     }
                 }
             }
+            $user = new User();
+            $users = $user->search(['slug'=>$searchTerm, 'occupation'=>$searchTerm]);
+            $view = new View('Main/search', 'front');
+        } else {
+            $errors = 'veuillez faire une recherche';
         }
-        $user = new User();
-        $users = $user->search(['slug'=>$searchTerm, 'occupation'=>$searchTerm]);
-        $view = new View('Main/search', 'front');
         $view->assign('users', $users);
         $view->assign('projects', $projects);
         $view->assign('pages', $pages);
+        $view->assign('errors', $errors);
         $view->render();
     }
 }

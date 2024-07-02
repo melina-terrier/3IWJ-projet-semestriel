@@ -1,31 +1,25 @@
-<?php
 
-echo "<section>
-  <header>
-    <h1>S'inscrire</h1>
-  </header>
-  
-  <article>";
-  echo $form; 
+<section>
 
-  if ($errors) {
-    echo "<ul>"; 
-    foreach ($errors as $error){
-        echo "<li>$error</li>";
-    }
-    echo "</ul>";
-  } else if ($successes) {
-    echo "<ul>"; 
-    foreach ($successes as $success){
-        echo "<li>$success</li>";
-    }
-    echo "</ul>";
-  }
+  <h1>S'inscrire</h1>
 
-echo "
+  <?php
+    echo $form; 
+
+    if ($errors) {
+      echo "<ul class='errors'>"; 
+      foreach ($errors as $error){
+          echo "<li class='error'>".htmlentities($error)."</li>";
+      }
+      echo "</ul>";
+    } else if ($successes) {
+      echo "<ulclass='successes'>"; 
+      foreach ($successes as $success){
+          echo "<li class='success'>".htmlentities($success)."</li>";
+      }
+      echo "</ul>";
+    } 
+  ?>
     <p>Ou</p>
-    <a href='/login'>Se connecter</a>
-  </article>
-</section>";
-
-?>
+    <a href='/login' class='primary-button'>Se connecter</a>
+</section>

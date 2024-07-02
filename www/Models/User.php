@@ -310,3 +310,4 @@ class User extends SQL
         return $this->countElements();
     }
 }
+

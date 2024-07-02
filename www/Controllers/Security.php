@@ -14,7 +14,6 @@ class Security{
 
     public function login(): void
     {
-        
         $form = new Form('Login');
         $security = new SecurityCore();
         $errors = [];
@@ -87,76 +86,62 @@ class Security{
         exit();
     }
 
-   public function register(): void
-{
-    $form = new Form('Register');
-    $roles = new Role();
-    $security = new SecurityCore();
-    $errors = [];
-    $success = [];
-    $role = $roles->getByName('Utilisateur');
-    
-    if ($security->isLogged()){
-        $view = new View('Security/already-login', 'front');
-        $view->render();
-        return;
-    } 
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $user = new User();
+    public function register(): void
+    {
+        $form = new Form('Register');
+        $roles = new Role();
+        $security = new SecurityCore();
+        $errors = [];
+        $success = [];
+        $role = $roles->getByName('Utilisateur');
         
-        if ($user->isUnique(['email'=>$_POST['email']])) {
-            $errors[] = 'Cette adresse e-mail est déjà utilisée pour un autre compte, essayez de vous connecter ou de vous inscrire avec une autre adresse e-mail.';
-        } else {
-            $formattedDate = date('Y-m-d H:i:s');
-            $activationToken = bin2hex(random_bytes(16));
-            $slug = strtolower(trim($_POST['firstname'].' '.$_POST['lastname']));
-            $slug = str_replace(' ', '-', $slug);
-            $search = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
-            $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
-            $slug = str_replace($search, $replace, $slug);
-            $slug = preg_replace('/[^a-z0-9-]/', '', $slug);
-            $slug .= '-' . rand(1000, 9999);
-            $userData = [
-                'firstname' => $_POST['firstname'],
-                'lastname' => $_POST['lastname'],
-                'email' => $_POST['email'],
-                'id_role' => $role, // Vérifiez que $role est bien l'ID du rôle
-                'status' => 0,
-                'slug' => $slug,
-                'modification_date' => $formattedDate,
-                'creation_date' => $formattedDate,
-                'password' => $_POST['password'],
-                'activation_token' => $activationToken,
-            ];
-            
-            // Assurez-vous que les champs de date sont correctement remplis
-            if (empty($userData['modification_date'])) {
-                $userData['modification_date'] = $formattedDate;
-            }
-            if (empty($userData['creation_date'])) {
-                $userData['creation_date'] = $formattedDate;
-            }
+        if ($security->isLogged()){
+            $view = new View('Security/already-login', 'front');
+            $view->render();
+            return;
+        } 
 
-            $user->setDataFromArray($userData);
-            $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
-            $user->save();
-            if (isset($emailResult['success'])) {
-                $success[] = 'Merci pour votre inscription. Avant de pouvoir vous connecter, nous avons besoin que vous activiez votre compte en cliquant sur le lien d\'activation dans l\'email que nous venons de vous envoyer.';
-            } elseif (isset($emailResult['error'])) {
-                $errors[] = 'Une erreur est survenue lors de votre inscription : '. $emailResult['error'] .' Merci de réessayer ultérieurement.';
+        if( $form->isSubmitted() && $form->isValid() )
+        {
+            $user = new User();
+            
+            if ($user->isUnique(['email'=>$_POST['email']])) {
+                $errors[] = 'Cette adresse e-mail est déjà utilisée pour un autre compte, essayez de vous connecter ou de vous inscrire avec une autre adresse e-mail.';
+            } else {
+                print_r($role);
+                $formattedDate = strtotime(date('Y-m-d H:i:s'));
+                print_r($formattedDate);
+                $activationToken = bin2hex(random_bytes(16));
+                $slug = strtolower(trim($_POST['firstname'].' '.$_POST['lastname']));
+                $slug = str_replace(' ', '-', $slug);
+                $search = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                $slug = str_replace($search, $replace, $slug);
+                $slug = preg_replace('/[^a-z0-9-]/', '', $slug);
+                $slug .= '-' . rand(1000, 9999);
+                $user->setFirstName($_POST['firstname']);
+                $user->setLastName($_POST['lastname']);
+                $user->setEmail($_POST['email']);
+                $user->setRole($role);
+                $user->setSlug($slug);
+                $user->setPassword($_POST['password']);
+                $user->setActivationToken($activationToken);
+                print_r($user);
+                $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
+                $user->save();
+                if (isset($emailResult['success'])) {
+                    $success[] = 'Merci pour votre inscription. Avant de pouvoir vous connecter, nous avons besoin que vous activiez votre compte en cliquant sur le lien d\'activation dans l\'email que nous venons de vous envoyer.';
+                } elseif (isset($emailResult['error'])) {
+                    $errors[] = 'Une erreur est survenu lors de votre inscription : '. $emailResult['error'] .' Merci de réessayer ultérieurement.';
+                }
             }
         }
+        $view = new View('Security/register', 'front');
+        $view->assign('form', $form->build());
+        $view->assign('errors', $errors);
+        $view->assign('successes', $success);
+        $view->render();
     }
-    
-    $view = new View('Security/register', 'front');
-    $view->assign('form', $form->build());
-    $view->assign('errors', $errors);
-    $view->assign('successes', $success);
-    $view->render();
-}
-
-
 
     public function requestPassword(): void {
         $form = new Form('RequestPassword');
@@ -203,15 +188,23 @@ class Security{
             $phpmailer->Port = 2525;
             $phpmailer->Username = '6ad47fd4dd8185';
             $phpmailer->Password = '077c164d29a4f5';
-            $phpmailer->setFrom('azermami8@gmail.com', 'Support cms');
+            $setting = new Setting();
+            $siteSetting = $setting->getOneBy(['key' => 'title']);
+            $siteName = '';
+            if (!$siteSetting) {
+                $siteName = 'FolioPro';
+            } else {
+                $siteName = $siteSetting['value'];
+            }
+            $phpmailer->setFrom($siteName.'@gmail.com', $siteName);
             $phpmailer->addAddress($email);
             $phpmailer->Subject = 'Réinitialisation de votre mot de passe';
-            $resetLink = "http://localhost/reset-password?token=" . $resetToken;
-            $phpmailer->Body = "Bonjour,\n\nVous avez demandé la réinitialisation de votre mot de passe pour votre compte sur [Nom de votre site web].\n\nCliquez sur le lien suivant pour choisir un nouveau mot de passe:\n\n$resetLink\n\nCe lien est valide pendant 1 heure.\n\nSi vous n'avez pas demandé la réinitialisation de votre mot de passe, veuillez ignorer cet email.\n\nCordialement,\nL'équipe de [Nom de votre site web]";
+            $resetLink = 'http://localhost/reset-password?token=' . $resetToken;
+            $phpmailer->Body = 'Bonjour,\n\nVous avez demandé la réinitialisation de votre mot de passe pour votre compte sur '.$siteName.'.\n\nCliquez sur le lien suivant pour choisir un nouveau mot de passe:\n\n$resetLink\n\nCe lien est valide pendant 1 heure.\n\nSi vous n\'avez pas demandé la réinitialisation de votre mot de passe, veuillez ignorer cet email.\n\nCordialement,\nL\'équipe de '.$siteName;
             $phpmailer->send();
             return ['success' => 'Un email de réinitialisation de mot de passe a été envoyé à votre adresse e-mail.'];
         } catch (Exception $e) {
-            return ['error' => "Nous n'avons pas pu envoyer l'email de réinitialisation de mot de passe à votre adresse e-mail. Merci de réessayer ultérieurement."];
+            return ['error' => 'Nous n\'avons pas pu envoyer l\'email de réinitialisation de mot de passe à votre adresse e-mail. Merci de réessayer ultérieurement.'];
         }
     
         
@@ -227,50 +220,60 @@ class Security{
             $phpmailer->Port = 2525;
             $phpmailer->Username = '6ad47fd4dd8185';
             $phpmailer->Password = '077c164d29a4f5';
-            $phpmailer->setFrom('azermami8@gmail.com', 'Support cms');
+            $setting = new Setting();
+            $siteSetting = $setting->getOneBy(['key' => 'title']);
+            $siteName = '';
+            if (!$siteSetting) {
+                $siteName = 'FolioPro';
+            } else {
+                $siteName = $siteSetting['value'];
+            }
+            $phpmailer->setFrom($siteName.'@gmail.com', $siteName);
             $phpmailer->addAddress($email);
-            $phpmailer->Subject = 'Activez votre compte [Nom de votre site web]';
-            $activationLink = "http://localhost/login?token=" . $activationToken;
-            $phpmailer->Body = "Bonjour,\n\nBienvenue sur [Nom de votre site web]! Nous sommes ravis que vous ayez rejoint notre communauté de créateurs.\n\nPour activer votre compte et commencer à explorer toutes les fonctionnalités de notre plateforme, veuillez cliquer sur le lien suivant:\n\n$activationLink\n\nCordialement,\nL'équipe de [Nom de votre site web]";
+            $phpmailer->Subject = 'Activez votre compte'.$siteName;
+            $activationLink = 'http://localhost/login?token=' . $activationToken;
+            $phpmailer->Body = 'Bonjour,\n\nBienvenue sur '.$siteName.'! Nous sommes ravis que vous ayez rejoint notre communauté de créateurs.\n\nPour activer votre compte et commencer à explorer toutes les fonctionnalités de notre plateforme, veuillez cliquer sur le lien suivant:\n\n$activationLink\n\nCordialement,\nL\'équipe de '.$siteName;
             $phpmailer->send();
             return ['success' => 'Le lien d\'activation du compte a été envoyé'];
         } catch (Exception $e) {
-            return ['error' => "nous n'avons pas pu envoyer l'email d'activation à votre adresse e-mail."];
+            return ['error' => 'nous n\'avons pas pu envoyer l\'email d\'activation à votre adresse e-mail.'];
         }
         
     }
 
     public function resetPassword(): void
     {
-        $form = new Form("ResetPassword");
+        $form = new Form('ResetPassword');
         $token = $_GET['token'] ?? '';
-        $config = $form->setField('token', $token);
         $errors = [];
         $success = [];
+
+        if (empty($token)) {
+            $errors[] = 'Le lien de réinitialisation de votre mot de passe est invalide. Veuillez réessayer.';
+        }
+
+        $userModel = new User();
+        $user = $userModel->getOneBy(['reset_token' => $token]);
+        if (!$user || strtotime($user['reset_expires']) < time()) {
+            $errors[] = 'Le lien de réinitialisation de votre mot de passe est incorrect ou a expiré. Veuillez demander un nouveau lien.';
+        }
+        
         if( $form->isSubmitted() && $form->isValid() ) {
-            $token = $_POST['token'] ?? '';
-            if (empty($token)) {
-                $errors[] = "Le lien de réinitialisation de votre mot de passe est invalide. Veuillez réessayer.";
+            $pwd = $_POST['password'];
+            $userModel->setDataFromArray($user);
+            $userModel->setPassword($pwd);
+            $userModel->setResetToken(null);
+            $userModel->setResetExpires(null);
+            if ($userModel->save()) {
+                $success[] = 'Votre mot de passe a été modifié avec succès !';
             } else {
-                $userModel = new User();
-                $user = $userModel->getOneBy(['reset_token' => $token]);
-                if (!$user || strtotime($user['reset_expires']) < time()) {
-                    $errors[] = "Le lien de réinitialisation de votre mot de passe est incorrect ou a expiré. Veuillez demander un nouveau lien.";
-                } else {
-                    $pwd = $_POST['password'];
-                    $userModel->setDataFromArray($user);
-                    $userModel->setPassword($pwd);
-                    $userModel->setResetToken(null);
-                    $userModel->setResetExpires(null);
-                    $userModel->save();
-                    $success[] = "Votre mot de passe a été modifié avec succès !";
-                }
+                $errors[] = 'Une erreur est survenue lors de la modification de votre mot de passe. Veuillez réessayer.';
             }
         }
-        $view = new View("Security/reset-password", "front");
-        $view->assign("form", $form->build());
-        $view->assign("errors", $errors);
-        $view->assign("successes", $success);
+        $view = new View('Security/reset-password', 'front');
+        $view->assign('form', $form->build());
+        $view->assign('errors', $errors);
+        $view->assign('successes', $success);
         $view->render();
     }
 
@@ -283,15 +286,23 @@ class Security{
             $phpmailer->Port = 2525;
             $phpmailer->Username = '6ad47fd4dd8185';
             $phpmailer->Password = 'bafabb7c681658';
-            $phpmailer->setFrom('azermami8@gmail.com', 'Support cms');
+            $setting = new Setting();
+            $siteSetting = $setting->getOneBy(['key' => 'title']);
+            $siteName = '';
+            if (!$siteSetting) {
+                $siteName = 'FolioPro';
+            } else {
+                $siteName = $siteSetting['value'];
+            }
+            $phpmailer->setFrom($siteName.'@gmail.com', $siteName);
             $phpmailer->addAddress($email);
             $phpmailer->Subject = 'Activation de votre compte';
-            $activationLink = "http://localhost/reset-password?token=" . $activationToken;
-            $phpmailer->Body = "Bonjour,\n\Un compte a été créé pour vous sur [Nom de votre site web].\n\nPour finaliser la création de votre compte et commencer à explorer toutes les fonctionnalités de notre plateforme, veuillez cliquer sur le lien suivant:\n\n$activationLink\n\nCordialement,\nL'équipe de [Nom de votre site web]";
+            $activationLink = 'http://localhost/reset-password?token=' . $activationToken;
+            $phpmailer->Body = 'Bonjour,\n\Un compte a été créé pour vous sur '.$siteName.'.\n\nPour finaliser la création de votre compte et commencer à explorer toutes les fonctionnalités de notre plateforme, veuillez cliquer sur le lien suivant:\n\n$activationLink\n\nCordialement,\nL\'équipe de '.$siteName;
             $phpmailer->send();
             return ['success' => 'Le lien d\'activation du compte a été envoyé'];
         } catch (Exception $e) {
-            return ['error' => "Nous n'avons pas pu envoyer l'email d'activation à l'adresse e-mail."];
+            return ['error' => 'Nous n\'avons pas pu envoyer l\'email d\'activation à l\'adresse e-mail.'];
         }
     }
 }

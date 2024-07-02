@@ -1,21 +1,16 @@
-<h1>Ajouter un utilisateur</h1>
-<?php echo $form; 
+<section class="add-element">
 
-if (isset($successForm) && !empty($successForm)) {
-  echo "<div class='success-message'>";
-  foreach ($successForm as $message) {
-    echo "<p>$message</p>";
+  <h1>Ajouter un utilisateur</h1>
+
+  <?php echo $form; 
+
+  if (isset($errors) && !empty($errors)) {
+      echo "<ul class='errors'>";
+      foreach ($errorsForm as $message) {
+        echo "<li class='error'>".htmlentities($message)."</li>";
+      }
+      echo "</ul>";
   }
-  echo "</div>";
-}
+  ?>
 
-if (isset($errorsForm) && !empty($errorsForm)) {
-    echo "<div class='success-message'>";
-    foreach ($errorsForm as $message) {
-      echo "<p>$message</p>";
-    }
-    echo "</div>";
-}
-
-
-?>
+</section>
