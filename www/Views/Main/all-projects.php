@@ -9,17 +9,21 @@
 
     <header>
         <?php
+
         if (isset($title) && isset($description)) {
             echo '<h1>' . $title . '</h1>
                   <p>' . $description . '</p>';
+
         }
         ?>
     </header>
 
     <div class="cards-container">
         <?php
+
         foreach ($projects as $project) {
             echo '<article class="card">
+
                     <a href="/projects/' . $project['slug'] . '">';
 
                 if (isset($project['featured_image'])) {
@@ -49,6 +53,7 @@
                   </article>';
             echo '</div>';
         }
+
         ?>
     </div>
 </section>

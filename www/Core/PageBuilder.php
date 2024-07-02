@@ -30,7 +30,7 @@ class PageBuilder
         $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $publishedStatusId = $this->statusModel->getByName('Publié');
 
-        $user = $this->userModel->getOneBy(['slug' => $slugTrim]);
+        $user = $this->userModel->getOneBy(['slug' => $slugTrim, 'status'=>1]);
         if ($user && '/profiles/' . $slug === $requestUrl) {
             $this->handleUserProfile($user);
             return;
@@ -49,16 +49,17 @@ class PageBuilder
                 return;
             }
         } elseif ($tag) {
-            // $projectTag = new Project_Tags();
-            // $projects = $projectTag->getAllData(['tag_id' => $tag['id']]);
-            // $projectArray = [];
-            // foreach ($projects as $projectId){
-            //     $projectId = $projects->getOneBy()
-            // }
-            // $this->handleProjectList($projects, $tag['name'], $tag['description']);
+            $projectTag = new Project_Tags();
+            $project = $this->projectModel;
+            $projectIds = [];
+            $tags = $projectTag->getAllData(['tag_id' => $tag['id']]);
+            foreach ($tags as $tagId){
+                $projectsId = $project->getAllData(['id'=>$tagId['project_id']]);
+            }
+            $this->handleProjectList($projectsId, $tag['name'], $tag['description']);
             return;
         } else if ($requestUrl === '/projects' || $requestUrl === '/projects//') {
-            $projects = $this->userModel->getAllData(['status_id' => $publishedStatusId]);
+            $projects = $this->projectModel->getAllData(['status_id' => $publishedStatusId]);
             $this->handleProjects($projects);
             return;
         }
@@ -95,10 +96,31 @@ class PageBuilder
         $media = $mediaModel->getOneBy(['url' => $user['photo']]);
         $project = new Project();
         $projects = $project->getAllData(['user_id'=>$user['id']]);
+        $tags = $this->tagModel;
+        $projectTags = new Project_Tags();
+        foreach ($projects as &$project) {
+            $project['tag_name'] = [];
+            $project['imageDescription'] = '';
+            $featured_image = $project['featured_image'];
+            $projectTagsId = $projectTags->getAllData(['project_id'=>$project['id']]);
+            if(!empty($featured_image)){
+                $media = new Media();
+                $image = $media->getOneBy(['url'=>$featured_image]);
+                $project['imageDescription'] = $image['description'];
+            }
+            if ($projectTagsId) {
+                foreach ($projectTagsId as $projectTagId){
+                    $tagId = $tags->getAllData(['id' => $projectTagId['tag_id']]);
+                    foreach($tagId as $tag) {
+                        $project['tag_name'][] = $tag['name'];
+                    }
+                }
+            }
+        }
         $view = new View('Main/user', 'front');
         $view->assign('user', $user);
         $view->assign('media', $media);
-        $view->assign('projects', $project);
+        $view->assign('projects', $projects);
         $view->render();
     }
 
@@ -107,14 +129,27 @@ class PageBuilder
         $content = $project['content'];
         $title = $project['title'];
         $form = new Form("AddComment");
+        $user = new User();
+        $media = new Media();
+        $tagProjects = new Project_Tags();
+        $tag = $this->tagModel;
         $errors = [];
         $success = [];
-        $tagName = '';
-        $tagId = $this->tagModel->getOneBy(['id' => $project['tag_id']], 'object');
-        if ($tagId) {
-            $tagName = $tagId->getName();
+        $tagNames = [];
+        $imageDescription = '';
+        $featured_image = $project['featured_image'];
+        if(!empty($featured_image)){
+            $image = $media->getOneBy(['url'=>$featured_image]);
+            $imageDescription = $image['description'];
         }
-
+        $tags = $tagProjects->getAllData(['project_id' => $project['id']], null, 'object');
+        if (!empty($tags)) {
+            foreach($tags as $uniqueTag){
+                $tagId = $uniqueTag->getTagId();
+                $tagsId = $tag->populate($tagId);
+                $tagNames[] = $tagsId->getName();
+            }
+        }
         if ($form->isSubmitted() && $form->isValid()) {
              $this->commentModel->setComment($_POST['comment']);
              $this->commentModel->setProject($project['id']);
@@ -122,8 +157,9 @@ class PageBuilder
 
             if (isset($_SESSION['user_id'])) {
                 $userId = $_SESSION['user_id'];
-                $userEmail = $user->getEmail();
-                $userName = $user->getUserName();
+                $actualUser = $user->populate($_SESSION['user_id']);
+                $userEmail = $actualUser->getEmail();
+                $userName = $actualUser->getUserName();
                 $this->commentModel->setUserId($userId);
                 $this->commentModel->setMail($userEmail);
                 $this->commentModel->setName($userName);
@@ -131,26 +167,26 @@ class PageBuilder
                 $success[] = "Votre commentaire a été publié";
             } else {
                 $user = new User();
-                if ($user->emailExists($_POST["email"])) {
+                if ($user->isUnique(['email'=>$_POST["email"]])) {
                     $errors[] = "L'email correspond à un compte, merci de bien vouloir vous connecter";
                 } else {
                     $this->commentModel->setMail($_POST['email']);
                     $this->commentModel->setName($_POST['name']);
                     $this->commentModel->save();
-                    $success[] = "Votre commentaire a été publié";
+                    $success[] = "Votre commentaire a été publié, il sera publié une fois vérifié";
                 }
             }
         }
-
         $comments = $this->commentModel->getAllData(['status' => 1, 'project_id' => $project['id']]);
-
         $view = new View("Main/project", "front");
-        $view->assign('content', $content);
-        $view->assign('tagName', $tagName);
-        $view->assign('title', $title);
+        $view->assign('projectContent', $content);
+        $view->assign('tagName', $tagNames);
+        $view->assign('imageDescription', $imageDescription);
+        $view->assign('featured_image', $featured_image);
+        $view->assign('projectTitle', $title);
         $view->assign('form', $form->build());
-        $view->assign('errorsForm', $errors);
-        $view->assign('successForm', $success);
+        $view->assign('errors', $errors);
+        $view->assign('successes', $success);
         $view->assign('comments', $comments);
         $view->render();
     }
@@ -158,6 +194,13 @@ class PageBuilder
     private function handleProjectList(array $projects, string $title, string $description): void
     {
         foreach ($projects as &$project) {
+            $featured_image = $project['featured_image'];
+            if(!empty($featured_image)){
+                $media = new Media();
+                $image = $media->getOneBy(['url'=>$featured_image]);
+                $imageDescription = $image['description'];
+            }
+            print_r($project);
             $userId = $project['user_id'];
             $project['username'] = '';
             $project['userSlug'] = '';
@@ -173,19 +216,27 @@ class PageBuilder
         }
     
         $view = new View("Main/all-projects", "front");
-        $view->assign("title", $title);
-        $view->assign("description", $description);
+        $view->assign("tagTitle", $title);
+        $view->assign("imageDescription", $imageDescription);
+        $view->assign("tagDescription", $description);
         $view->assign("projects", $projects);
         $view->render();
     }
 
-    private function handleProjects(array $projects): void
-    {
+    private function handleProjects(array $projects): void {
         $userModel = new User();
+        $tags = $this->tagModel;
+        $projectTags = new Project_Tags();
         foreach ($projects as &$project) {
             $projectTagsId = $projectTags->getAllData(['project_id'=>$project['id']]);
             $userId = $project['user_id'];
-            $project['category_name'] ='';
+            $featured_image = $project['featured_image'];
+            if(!empty($featured_image)){
+                $media = new Media();
+                $image = $media->getOneBy(['url'=>$featured_image]);
+                $projectImageDescription = $image['description'];
+            }
+            $project['tag_name'] = [];
             $project['username'] ='';
             $project['userSlug'] ='';
             $project['profile_photo'] = '';
@@ -199,16 +250,16 @@ class PageBuilder
             }
             if ($projectTagsId) {
                 foreach ($projectTagsId as $projectTagId){
-                    $tagId = $tags->getOneBy(['id' => $projectTagId['tag_id']]);
-                    if ($tagId) {
-                        $project['category_name'] .= $tagId['name'];
+                    $tagId = $tags->getAllData(['id' => $projectTagId['tag_id']]);
+                    foreach($tagId as $tag) {
+                        $project['tag_name'][] = $tag['name'];
                     }
                 }
             }
         }
-
         $view = new View("Main/all-projects", "front");
         $view->assign("projects", $projects);
+        $view->assign("projectImageDescription", $projectImageDescription);
         $view->render();
     }
     
@@ -216,7 +267,6 @@ class PageBuilder
     {
         $content = $page['content'];
         $pageTitle = $page['title'];
-
         $view = new View("Main/page", "front");
         $view->assign("content", $content);
         $view->assign("pageTitle", $pageTitle);

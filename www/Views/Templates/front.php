@@ -77,6 +77,8 @@ if ($menu){
 
 <body>
 
+
+
     <header id="header" class="back-office-header">
         <nav id="site-menu" class="menu-align-<?php echo $alignement; ?> menu-position-<?php echo $position; ?>">
         <?php if ($header && $items) : ?>

@@ -4,6 +4,7 @@ usort($projects, function($a, $b) {
 });
 $projects = array_reverse($projects);
 ?>
+
 ?>
 
 <section class="profile">
@@ -18,49 +19,68 @@ $projects = array_reverse($projects);
         </div>
     </article>
 
-    <div class="card apropos-user-about">
+
+<section class="profile">
+
+    <article class="card">
+        <img src="<?= isset($user['photo']) && !empty($user['photo']) ? htmlentities($user['photo']) : '' ?>" alt="<?= (isset($media) && is_array($media)) ? htmlentities($media['description']) : 'Photo de profil' ?>" class="user-photo">
+        <div class="user-info">
+            <h2><?= htmlentities($user['lastname']) ?> <?= htmlentities($user['firstname']) ?></h2>
+            <p><?= htmlentities($user['occupation']) ?></p>
+            <a href="mailto:<?= htmlentities($user['email']) ?>"><?= htmlentities($user['email']) ?></a>
+            <p><?= htmlentities($user['city']) ?>, <?= htmlentities($user['country']) ?></p>
+        </div>
+    </article>
+
+    <div class="card">
         <div class="card-body">
             <h3 class="card-title">À propos de l'utilisateur</h3>
-            <p class="card-text apropos-user-description"><?= $user['description'] ?></p>
+            <p class="card-text"><?= htmlentities($user['description']) ?></p>
 
             <h4 class="card-title">Expérience professionnelle</h4>
-            <p class="card-text apropos-user-experience"><?= $user['experience'] ?></p>
+            <p class="card-text"><?=htmlentities($user['experience']) ?></p>
 
             <h4 class="card-title">Formations</h4>
-            <p class="card-text apropos-user-study"><?= $user['study'] ?></p>
+            <p class="card-text"><?= htmlentities($user['study']) ?></p>
 
             <h4 class="card-title">Compétences</h4>
-            <p class="card-text apropos-user-competence"><?= $user['competence'] ?></p>
+            <p class="card-text"><?= htmlentities($user['competence']) ?></p>
 
             <h4 class="card-title">Intérêts</h4>
-            <p class="card-text apropos-user-interest"><?= $user['interest'] ?></p>
+            <p class="card-text"><?= htmlentities($user['interest']) ?></p>
         </div>
     </div>
 
-    <div class="card apropos-user-web">
+    <div class="card">
         <div class="card-body">
             <h3 class="card-title">Sur le web</h3>
-            <a href="<?= $user['website'] ?>" class="card-link apropos-website">Portfolio</a>
+            <a href="<?= htmlentities($user['website']) ?>" class="card-link">Portfolio</a>
 
             <?php if (isset($user['link']) && !empty($user['link'])) : ?>
-                <a href="<?= $user['link'] ?>" class="card-link apropos-web-link">Lien</a>
+                <a href="<?= htmlentities($user['link']) ?>" class="card-link">Linkedin</a>
             <?php endif; ?>
         </div>
     </div>
 </section>
 
-<!-- <section id="apropos_userProjects" class="apropos-section">
-    <h2 class="apropos-section-title">Projets</h2>
+<section class="projects">
+    <h2 class="">Projets</h2>
 
-    <div class="card-deck apropos-project-cards">
+    <div class="card">
         <?php foreach ($projects as $project) : ?>
-            <div class="card apropos-project-card">
-                <img src="<?= $project['image'] ?>" class="card-img-top apropos-project-image" alt="<?= $project['title'] ?>">
+            <div class="card">
+                <img src="<?= $project['featured_image'] ?>" class="project-image" alt="<?= htmlentities($project['imageDescription']) ?>">
                 <div class="card-body">
-                    <h5 class="card-title"><?= $project['title'] ?></h5>
-                    <a href="/projects/<?= $project['slug'] ?>" class="btn btn-primary">Voir le projet</a>
+                    <h3 class="card-title"><?= htmlentities($project['title']) ?></h3>
+                    <?php
+                        if (isset($project['tag_name']) && $project['tag_name']) {
+                            foreach($project['tag_name'] as $tag) {
+                                echo '<p class="tag">' . $tag . '</p>';
+                            }
+                        } ?>
+                    <a href="/projects/<?= htmlentities($project['slug']) ?>" class="primary-button">Voir le projet</a>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
-</section> -->
+</section>

@@ -1,4 +1,5 @@
 
+
     <h1><?php echo $projectTitle ?></h1>
 
     <?php
@@ -7,6 +8,7 @@
         }
         foreach($tagName as $tag){
             echo '<p class="tag">'.$tag.'</p>';
+
         }
         echo $projectContent;
     ?>
@@ -15,7 +17,9 @@
 
         <?php 
         foreach ($comments as $comment){
+
             echo '<p class="comment">'.$comment["comment"].'<p>';
+
         }
         ?>
 

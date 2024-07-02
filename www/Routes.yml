@@ -155,6 +155,11 @@
   Security: true
   Role: ["Administrateur"]
 
+/dashboard/menus:
+  Controller: "Settings"
+  Action: "allMenu"
+  Security: true
+  Role: ["Administrateur"]
 
 # USER
 /login:

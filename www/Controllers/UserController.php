@@ -21,7 +21,6 @@ class UserController
     public function allUsers(): void
     {
         $errors = [];
-        $success = [];
         $user = new UserModel();
         $allUsers = $user->getAllData(null, null, 'array');
 
@@ -177,8 +176,8 @@ class UserController
                 $media->setCreationDate($formattedDate);
                 $media->setModificationDate($formattedDate);
                 $media->setUser($userId);
-                $media->save();
                 $user->setPhoto('/Assets/Uploads/users/'. $fileName);
+                $media->save();
             }
 
             $user->setSkill($_POST['skill']);

@@ -15,6 +15,7 @@ $userSlug = $userId->getSlug();
 
 <!DOCTYPE HTML>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
@@ -34,10 +35,6 @@ $userSlug = $userId->getSlug();
                 <ul>
                     <li><a href="<?php echo $userSlug; ?>">Mon profil</a></li>
                     <li><a href="/logout" title="Se déconnecter"><i class="fas fa-sign-out-alt"></i></a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
 
 
     <main>
