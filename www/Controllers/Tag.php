@@ -19,7 +19,12 @@ class Tag{
             if ($_GET['action'] === 'delete') {
                 $tagToDelete = $tag->populate($_GET['id']);
                 if($tagToDelete){
-                    $tag->delete(['id' => (int)$_GET['id']]);
+                    $projectsTag = new Project_Tags();
+                    $tagsToDelete = $projectsTag->getAllData(['tag_id'=>$tagToDelete->getId()]);
+                    foreach($tagsToDelete as $tags){
+                        $projectsTag->delete(['id' => $tags['id']]);
+                    }
+                    $tag->delete(['id' => $tagToDelete->getId()]);
                     header('Location: /dashboard/tags?message=delete-success');
                 } else {
                     $errors[] = 'La catégorie n\'existe pas.';
