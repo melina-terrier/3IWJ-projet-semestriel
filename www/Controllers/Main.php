@@ -27,35 +27,19 @@ class Main
                     $title = $homepage->getTitle();
                     $content = $homepage->getContent();
                 } 
-                $view->assign('pageContent', $content);
+                $view->assign('content', $content);
                 $view->assign('pageTitle', $title);
             }
         } else {
             $project = new Project();
             $statusModel = new Status();
             $userModel = new User();
-            $mediaModel = new Media();
-            $tags = new Tag();
-            $projectTags = new Project_Tags();
             $status = $statusModel->getByName('Publié');
             $projects = $project->getAllData(['status_id' => $status]);
             foreach ($projects as &$project) {
                 $userId = $project['user_id'];
-                $projectTagsId = $projectTags->getAllData(['project_id'=>$project['id']]);
-                $mediaSlug = $project['featured_image'];
                 $project['username'] ='';
-                $project['tag_name'] = [];
-                $project['userSlug'] = '';
-                $project['image_description'] ='';
-                $project['userPhoto'] ='';
-                if ($projectTagsId) {
-                    foreach ($projectTagsId as $projectTagId){
-                        $tagId = $tags->getAllData(['id' => $projectTagId['tag_id']]);
-                        foreach($tagId as $tag) {
-                            $project['tag_name'][] = $tag['name'];
-                        }
-                    }
-                }
+                $project['userSlug'] ='';
                 if ($userId) {
                     $user = $userModel->populate($userId);
                     if ($user) {
@@ -82,7 +66,6 @@ class Main
         }
         $view->render();
     }
-    
 
     public function dashboard() {
         $users = new User();
@@ -93,6 +76,7 @@ class Main
         $tag = new Tag();
         $statusModel = new Status();
         $roleModel = new Role();
+        
 
         $status = $statusModel->getByName('Publié');        
         $userRole = $roleModel->getByName('Utilisateur');
@@ -181,9 +165,17 @@ class Main
             'comments' => $comment->getNbElements(),
             'tags'=>$tag->getNbElements(),
         ];
+
+        $labels = array_keys($userProjectCounts);
+        $data = array_values($userProjectCounts);
+      
         $view = new View('Main/dashboard', 'back');
         $view->assign('comments', $comments);
         $view->assign('elementsCount', $elementsCount);
+
+        $view->assign("labels", $labels);
+        $view->assign("data", $data);
+        
         $view->render();
     }
 

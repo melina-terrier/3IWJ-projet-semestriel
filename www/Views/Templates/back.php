@@ -94,5 +94,16 @@ $userSlug = $userId->getSlug();
         <?php include "../Views/".$this->view.".php";?>
     </main>
     
+    <script>
+        window.addEventListener("scroll", function () {
+            console.log(window.scrollY);
+            const header = document.getElementById("header");
+            if (window.scrollY > 0) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+        });
+    </script>
 </body>
 </html>

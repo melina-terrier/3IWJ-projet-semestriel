@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Forms;
-session_start();
 
 class AddComment
 {
@@ -25,7 +24,7 @@ class AddComment
             ]
         ];
         
-        if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+        if (!isset($_SESSION['user'])) {
             $config['inputs']['email'] = [
                 'type'=>'email',
                 'min'=>8,
@@ -45,5 +44,6 @@ class AddComment
         }
         return $config;
     }
+
 
 }

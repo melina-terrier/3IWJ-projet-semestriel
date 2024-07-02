@@ -5,6 +5,21 @@ usort($projects, function($a, $b) {
 $projects = array_reverse($projects);
 ?>
 
+?>
+
+<section class="profile">
+
+    <article class="card">
+        <img src="<?= isset($user['photo']) && !empty($user['photo']) ? $user['photo'] : '' ?>" alt="<?= (isset($media) && is_array($media)) ? $media['description'] : 'Photo de profil' ?>" class="user-photo">
+        <div class="user-info">
+            <h2><?= $user['lastname'] ?> <?= $user['firstname'] ?></h2>
+            <p><?= $user['occupation'] ?></p>
+            <a href="mailto:<?= $user['email'] ?>"><?= $user['email'] ?></a>
+            <p><?= $user['city'] ?>, <?= $user['country'] ?></p>
+        </div>
+    </article>
+
+
 <section class="profile">
 
     <article class="card">

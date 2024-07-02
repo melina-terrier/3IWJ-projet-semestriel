@@ -277,25 +277,7 @@ class Form
                     }
                 }
             }
-
-            // verifier le format de la date des input de type date
-            // if ($this->config['inputs'][$name]['type'] === 'date' && isset($dataSent)) {
-            //     try {
-            //         $dateTime = new \DateTime($dataSent);
-            //     } catch (\Exception $e) {
-            //         $this->errors[] = $this->config['inputs'][$name]['error'];
-            //     }
-            // }
            
-            if ($name === 'birthday' && !empty($dataSent)) {
-                $birthDate = new \DateTime($dataSent);
-                $interval = $birthDate->diff(new \DateTime());
-                $age = $interval->y;
-                if ($birthDate > new \DateTime()) {
-                    $this->errors[] = 'La date doit être inférieure à celle d\'aujourd\'hui';
-                }
-            }
-            
             if ($name === 'db-prefix' && isset($dataSent)) {
                 $pattern = '/^[a-zA-Z_][a-zA-Z0-9_]*$/';
                 if (!preg_match($pattern, $dataSent)) {

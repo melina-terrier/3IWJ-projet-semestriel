@@ -157,24 +157,4 @@ class Settings{
         $view->render();
     }
 
-    public function allMenu(){
-        $menu = new Menu();
-        $menus = $menu->getAllData();
-        $errors = [];
-        $success = [];
-        if (isset($_GET['action']) && isset($_GET['id'])) {
-            if ($_GET['action'] === "delete") {
-                $menu->delete(['id' => $_GET['id']]);
-                header('Location: /dashboard/menus?message=delete-success');
-                exit;
-            }
-        }
-        $projectCounts = [];
-        $view = new View("Setting/menus-list", "back");
-        $view->assign("errors", $errors);
-        $view->assign("successes", $success);
-        $view->assign("menus", $menus);
-        $view->render();
-    }
-
 }

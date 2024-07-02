@@ -11,13 +11,14 @@ class User extends SQL
     protected string $email;
     protected ?string $password = null;
     protected int $id_role;
-    protected ?string $slug;
+    protected string $slug;
     protected int $status;
     protected ?string $reset_token = null;
     protected ?string $reset_expires = null;
     protected ?string $activation_token = null;
     protected ?string $photo = null;
     protected ?string $occupation;
+    protected ?string $birthday = '';
     protected ?string $country;
     protected ?string $city;
     protected ?string $website;
@@ -27,8 +28,8 @@ class User extends SQL
     protected ?string $formation;
     protected ?string $skill;
     protected ?string $interest;
-    protected $creation_date;
-    protected $modification_date;
+    protected string $creation_date;
+    protected string $modification_date;
 
     public function getUserName(): string
     {
@@ -148,27 +149,27 @@ class User extends SQL
         $this->photo = $photo;
     }
 
-    public function getCreationDate()
+    public function getCreationDate(): string
     {
         return $this->creation_date;
     }
 
-    public function setCreationDate($creation_date): void
+    public function setCreationDate(string $creation_date): void
     {
         $this->creation_date = $creation_date;
     }
 
-    public function getModificationDate()
+    public function getModificationDate(): string
     {
         return $this->modification_date;
     }
 
-    public function setModificationDate($modification_date): void
+    public function setModificationDate(string $modification_date): void
     {
         $this->modification_date = $modification_date;
     }
 
-    public function setSlug($slug)
+    public function setSlug(string $slug = null)
     {
         $fullName = $this->getUserName();
         $slug = strtolower(trim($fullName));
@@ -180,7 +181,7 @@ class User extends SQL
         $slug .= '-' . rand(1000, 9999);
         $this->slug = $slug;
     }
-
+    
     public function getSlug(): string
     {
         return $this->slug;
@@ -195,6 +196,16 @@ class User extends SQL
     {
         $occupation = strip_tags(ucwords(trim(strtolower($occupation))));
         $this->occupation = $occupation;
+    }
+
+    public function getBirthday(): string
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday(?string $birthday): void
+    {
+        $this->birthday = $birthday;
     }
 
     public function getCountry(): ?string
@@ -299,3 +310,4 @@ class User extends SQL
         return $this->countElements();
     }
 }
+

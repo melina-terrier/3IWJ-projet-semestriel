@@ -1,12 +1,14 @@
 
-    <h1><?php echo htmlentities($projectTitle) ?></h1>
+
+    <h1><?php echo $projectTitle ?></h1>
 
     <?php
         if (!empty($featured_image)){
-            echo '<img src="'.htmlentities($featured_image).'" alt="'.isset($imageDescription) ? $imageDescription : ''.'">';
+            echo '<img src="'.$featured_image.'" alt="">';
         }
         foreach($tagName as $tag){
-            echo '<p class="tag">'.htmlentities($tag).'</p>';
+            echo '<p class="tag">'.$tag.'</p>';
+
         }
         echo $projectContent;
     ?>
@@ -15,7 +17,9 @@
 
         <?php 
         foreach ($comments as $comment){
-            echo '<p class="comment">'.htmlentities($comment["comment"]).'<p>';
+
+            echo '<p class="comment">'.$comment["comment"].'<p>';
+
         }
         ?>
 
