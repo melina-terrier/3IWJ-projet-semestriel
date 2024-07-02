@@ -16,29 +16,29 @@ class Install
         $form = new Form('Installer');
         $security = new Security();
         $errors = [];
-        $successe = [];
+        $successes = [];
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
             if (file_exists('../config.php') || file_exists('../.env')) {
                 $errors[] = 'Le fichier de configuration existe déjà.';
             } else {
-                $configContent = '<?php\n';
-                $configContent .= '// Configuration de la base de données\n';
-                $configContent .= 'define("DB_HOST", '' '.addslashes($_POST['dbhost']).' '');\n';
-                $configContent .= 'define("DB_PORT", "5432");\n';
-                $configContent .= 'define("DB_NAME", '' '.addslashes($_POST['dbname']).' '');\n';
-                $configContent .= 'define("DB_USER", '' '.addslashes($_POST['dbuser']).' '');\n';
-                $configContent .= 'define("DB_PASSWORD", '' '.addslashes($_POST['dbpwd']).' '');\n';
-                $configContent .= 'define("TABLE_PREFIX", '' '.addslashes($_POST['table_prefix']).' '');\n';
+                $configContent = "<?php\n";
+                $configContent .= "// Configuration de la base de données\n";
+                $configContent .= "define('DB_HOST', '".addslashes($_POST['dbhost'])."');\n";
+                $configContent .= "define('DB_PORT', '5432');\n";
+                $configContent .= "define('DB_NAME', '".addslashes($_POST['dbname'])."');\n";
+                $configContent .= "define('DB_USER', '".addslashes($_POST['dbuser'])."');\n";
+                $configContent .= "define('DB_PASSWORD', '".addslashes($_POST['dbpwd'])."');\n";
+                $configContent .= "define('TABLE_PREFIX', '".addslashes($_POST['table_prefix'])."');\n";
                 $myfile = fopen('../config.php', 'w');
                 fwrite($myfile, $configContent);
                 fclose($myfile);
                 $envPath = '../.env';
     
-                $envContent = 'POSTGRES_USER='.$_POST['dbuser'].'\n';
-                $envContent .= 'POSTGRES_PASSWORD='.$_POST['dbpwd'].'\n';
-                $envContent .= 'POSTGRES_DB='.$_POST['dbname'].'\n';
+                $envContent = "POSTGRES_USER=".$_POST['dbuser']."\n";
+                $envContent .= "POSTGRES_PASSWORD=".$_POST['dbpwd']."\n";
+                $envContent .= "POSTGRES_DB=".$_POST['dbname']."\n";
     
                 $myenv = fopen('../.env', 'w');
                 fwrite($myenv, $envContent);
@@ -64,6 +64,7 @@ class Install
             }
 
             if (empty($errors)){
+                $formattedDate =  date('Y-m-d H:i:s');
                 $user = new User();
                 $user->setFirstname($_POST['firstname']);
                 $user->setLastname($_POST['lastname']);
@@ -72,24 +73,21 @@ class Install
                 $roleModel = new Role();
                 $role = $roleModel->getByName('Administrateur');
                 $user->setRole($role);
-                $user->setCreationDate();
-                $user->setModificationDate();  
-                $user->setStatus(0);
+                $user->setCreationDate($formattedDate);
+                $user->setModificationDate($formattedDate);  
+                $user->setStatus(1);
                 $user->setSlug();
-                $user->setActivationToken();
                 $setting = new Setting();
-                $setting->setTitle($_POST['site_title']);
-                $setting->setCreationDate();
-                $setting->setModificationDate();  
-            }
-
-            try {
-                $emailResult = $security->sendActivationEmail($user->getEmail(), $activationToken);
-                $user->save();
+                $setting->setKey('title');
+                $setting->setValue($_POST['site_title']);
+                $setting->setCreationDate($formattedDate);
+                $setting->setModificationDate($formattedDate);  
+                $userId = $user->save();
+                $_SESSION['user_id'] = $userId;
                 $setting->save();
-                $successe[] = 'Installation réussie ! Avant de pouvoir vous connecter, nous avons besoin que vous activiez votre compte en cliquant sur le lien d\'activation dans l\'email que nous venons de vous envoyer. <a href="/login">Se connecter</a>';
-            } catch (Exception $e) {
-                $errors[] = 'Erreur lors de la création de l\'utilisateur et des paramètres : ' . $e->getMessage();
+                header('Location: /dashboard');
+            } else {
+                $errors[] = 'Erreur lors de la création de l\'utilisateur et des paramètres.';
             }
         }
         $view = new View('Installer/install', 'front');
