@@ -111,7 +111,7 @@ class Tag{
         }
         $view = new View('Tag/tag', 'back');
         $view->assign('form', $form->build());
-        $view->assign('errors', $errors);
+        $view->assign('errorsForm', $errors);
         $view->render();
     }
 }

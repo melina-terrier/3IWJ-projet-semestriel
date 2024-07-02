@@ -77,6 +77,8 @@ if ($menu){
 
 <body>
 
+
+
     <header id="header" class="back-office-header">
         <nav id="site-menu" class="menu-align-<?php echo $alignement; ?> menu-position-<?php echo $position; ?>">
         <?php if ($header && $items) : ?>
@@ -95,17 +97,46 @@ if ($menu){
         </form>
     </header>
 
-    <header id="header" class="back-office-header">
-        <nav id="site-menu"></nav>
-        <form action="/search" method="post">
-            <label for="search-bar">Rechercher : </label>
-            <input type="search" id="search-bar" name="search-term">
-            <button type="submit" id="search">Rechercher</button>
-        </form>
-    </header>
    
-    <main>     
+   
+    <main>   
+    <aside class="sidebar">
+            <ul>
+                <li class="menu-item active">
+                    <a href="/"><i class="fas fa-home"></i> Accueil</a>
+                </li>
+                <li class="menu-item">
+                    <a href="#"><i class="fas fa-file-alt"></i> Nos Utilisateurs</a>
+                    <ul class="submenu">
+                        <li><a href="/profiles">Tous les profils</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item">
+                    <a href="/projects"><i class="fas fa-project-diagram"></i> Projets</a>
+                    <ul class="submenu">
+                        <li><a href="/projects">Tous les projets</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item">
+                    <a href="/register">
+                        <img src="Assets/Style/images/register.jpg" alt="Register Icon" style="width: 20px; height: 20px;"> Register
+                    </a>
+                </li>
+            </ul>
+        </aside>
         <?php include "../Views/".$this->view.".php";?>
+
+        <script>
+        window.addEventListener("scroll", function () {
+            console.log(window.scrollY);
+            const header = document.getElementById("header");
+            if (window.scrollY > 0) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+        });
+    </script>  
     </main>
 </body>
 

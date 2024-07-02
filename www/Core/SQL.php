@@ -146,10 +146,13 @@ class SQL
         return array_diff_key(get_object_vars($this), get_class_vars(get_class()));
     }
 
-    public function setDataFromArray(array $data): void 
+    public function setDataFromArray(array $data): void
     {
         foreach ($data as $key => $value) {
-            if (property_exists($this, $key)) {
+            $method = 'set' . ucfirst($key);
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            } else {
                 $this->$key = $value;
             }
         }
@@ -209,4 +212,6 @@ class SQL
         }
         return $queryPrepared->fetchAll();
     }
+
+    
 }

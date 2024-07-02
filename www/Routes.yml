@@ -1,3 +1,20 @@
+/:
+  Controller: "Main"
+  Action: "home"
+
+/profile/edit:
+  Controller: "User"
+  Action: "editUser"
+  Security: true
+  Role: ["Utilisateur", "Editeur", "Administrateur"]
+
+/profile/edit-password:
+  Controller: "User"
+  Action: "editPassword"
+  Security: true
+  Role: ["Utilisateur", "Editeur", "Administrateur"]
+
+
 # BACK-OFFICE
 /dashboard:
   Controller: "Main"
@@ -7,19 +24,25 @@
 
 # USER
 /dashboard/users:
-  Controller: "UserController"
+  Controller: "User"
   Action: "allUsers"
   Security: true
   Role: ["Administrateur"]
 
-/dashboard/user:
-  Controller: "UserController"
+/dashboard/add-user:
+  Controller: "User"
   Action: "addUser"
   Security: true
   Role: ["Administrateur"]
 
+/dashboard/edit-user:
+  Controller: "User"
+  Action: "editUser"
+  Security: true
+  Role: ["Administrateur"]
+
 # PROJECT
-/dashboard/project:
+/dashboard/add-project:
   Controller: "Project"
   Action: "addProject"
   Security: true
@@ -31,10 +54,22 @@
   Security: true
   Role: ["Administrateur"]
 
+/dashboard/edit-project:
+  Controller: "Project"
+  Action: "editProject"
+  Security: true
+  Role: ["Administrateur"]
+
 # PAGE
-/dashboard/page:
+/dashboard/add-page:
   Controller: "Page"
   Action: "addPage"
+  Security: true
+  Role: ["Administrateur"]
+
+/dashboard/edit-page:
+  Controller: "Page"
+  Action: "editPage"
   Security: true
   Role: ["Administrateur"]
 
@@ -46,6 +81,12 @@
 
 
 # Comments
+/dashboard/add-coment:
+  Controller: "add-coment"
+  Action: "addComments"
+  Security: true
+  Role: ["Administrateur"]
+
 /dashboard/comments:
   Controller: "Comment"
   Action: "allComments"
@@ -54,9 +95,15 @@
  
 
 # TAGS
-/dashboard/tag:
+/dashboard/add-tag:
   Controller: "Tag"
   Action: "addTag"
+  Security: true
+  Role: ["Administrateur"]
+
+/dashboard/edit-tag:
+  Controller: "Tag"
+  Action: "editTag"
   Security: true
   Role: ["Administrateur"]
 
@@ -92,15 +139,19 @@
   Security: true
   Role: ["Administrateur"]
 
-/dashboard/menu:
-  Controller: "Settings"
-  Action: "setMenu"
+
+
+
+# NOTIFICATIONS
+/notifications/getNotificationCount:
+  Controller: "Main"
+  Action: "getNotificationCount"
   Security: true
   Role: ["Administrateur"]
 
-/dashboard/appearance:
-  Controller: "Settings"
-  Action: "setAppearance"
+/notifications/getUnreadComments:
+  Controller: "Main"
+  Action: "getUnreadComments"
   Security: true
   Role: ["Administrateur"]
 
@@ -110,30 +161,7 @@
   Security: true
   Role: ["Administrateur"]
 
-
-# FRONT
-/:
-  Controller: "Main"
-  Action: "home"
-
-/search: 
-  Controller: "Main"
-  Action: "displayResult"
-
-
 # USER
-/profile/edit:
-  Controller: "UserController"
-  Action: "editUser"
-  Security: true
-  Role: ["Utilisateur", "Editeur", "Administrateur"]
-
-/profile/edit-password:
-  Controller: "UserController"
-  Action: "editPassword"
-  Security: true
-  Role: ["Utilisateur", "Editeur", "Administrateur"]
-
 /login:
   Controller: "Security"
   Action: "login"
