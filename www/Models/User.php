@@ -19,17 +19,17 @@ class User extends SQL
     protected ?string $photo = null;
     protected ?string $occupation;
     protected ?string $birthday = '';
-    protected ?string $country;
-    protected ?string $city;
-    protected ?string $website;
-    protected ?string $link;
-    protected ?string $description;
-    protected ?string $experience;
-    protected ?string $formation;
-    protected ?string $skill;
-    protected ?string $interest;
-    protected string $creation_date;
-    protected string $modification_date;
+    protected ?string $country = null;
+    protected ?string $city = null;
+    protected ?string $website = null;
+    protected ?string $link = null;
+    protected ?string $description = null;
+    protected ?string $experience = null;
+    protected ?string $formation = null;
+    protected ?string $skill = null;
+    protected ?string $interest = null;
+    protected $creation_date;
+    protected $modification_date;
 
     public function getUserName(): string
     {
@@ -149,22 +149,22 @@ class User extends SQL
         $this->photo = $photo;
     }
 
-    public function getCreationDate(): string
+    public function getCreationDate()
     {
         return $this->creation_date;
     }
 
-    public function setCreationDate(string $creation_date): void
+    public function setCreationDate($creation_date): void
     {
         $this->creation_date = $creation_date;
     }
 
-    public function getModificationDate(): string
+    public function getModificationDate()
     {
         return $this->modification_date;
     }
 
-    public function setModificationDate(string $modification_date): void
+    public function setModificationDate($modification_date): void
     {
         $this->modification_date = $modification_date;
     }

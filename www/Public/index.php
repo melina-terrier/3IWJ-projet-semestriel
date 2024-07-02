@@ -64,6 +64,7 @@ if( !empty($listOfRoutes[$uri]) ) {
         header("Acces denied 403", true, 403);
         $error = new Error();
         $error->page403();
+        exit();
     }
     
     if (!empty($listOfRoutes[$uri]['Controller']) && !empty($listOfRoutes[$uri]['Action'])) {

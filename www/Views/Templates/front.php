@@ -3,35 +3,35 @@ use App\Models\Setting;
 use App\Models\Menu;
 use App\Models\itemMenu;
 
-$setting = new Setting();
-if ($setting) {
-    $title = $setting->getOneBy(['key' => "title"]) ?? '';
-    $description = $setting->getOneBy(['key' => "description"]) ?? '';
-    $slogan = $setting->getOneBy(['key' => "slogan"]) ?? '';
-    $logo = $setting->getOneBy(['key' => "logo"]) ?? '';
-    $lightPrimaryColor = $setting->getOneBy(['key' => "light-primary_color"]) ?? '';
-    $lightAccentColor = $setting->getOneBy(['key' => "light-accent_color"]) ?? '';
-    $lightSecondaryColor = $setting->getOneBy(['key' => "light-secondary_color"]) ?? '';
-    $darkPrimaryColor = $setting->getOneBy(['key' => "dark-primary_color"]) ?? '';
-    $darkSecondaryColor = $setting->getOneBy(['key' => "dark-secondary_color"]) ?? '';
-    $darkAccentColor = $setting->getOneBy(['key' => "dark-accent_color"]) ?? '';
-    $primaryFont = $setting->getOneBy(['key' => "primary_font"]) ?? '';
-    $secondaryFont = $setting->getOneBy(['key' => "secundary_font"]) ?? '';
-}
+// $setting = new Setting();
+// if ($setting) {
+//     $title = $setting->getOneBy(['key' => "title"]) ?? '';
+//     $description = $setting->getOneBy(['key' => "description"]) ?? '';
+//     $slogan = $setting->getOneBy(['key' => "slogan"]) ?? '';
+//     $logo = $setting->getOneBy(['key' => "logo"]) ?? '';
+//     $lightPrimaryColor = $setting->getOneBy(['key' => "light-primary_color"]) ?? '';
+//     $lightAccentColor = $setting->getOneBy(['key' => "light-accent_color"]) ?? '';
+//     $lightSecondaryColor = $setting->getOneBy(['key' => "light-secondary_color"]) ?? '';
+//     $darkPrimaryColor = $setting->getOneBy(['key' => "dark-primary_color"]) ?? '';
+//     $darkSecondaryColor = $setting->getOneBy(['key' => "dark-secondary_color"]) ?? '';
+//     $darkAccentColor = $setting->getOneBy(['key' => "dark-accent_color"]) ?? '';
+//     $primaryFont = $setting->getOneBy(['key' => "primary_font"]) ?? '';
+//     $secondaryFont = $setting->getOneBy(['key' => "secundary_font"]) ?? '';
+// }
 
-$menu = new Menu();
-$itemMenu = new itemMenu();
-if ($menu){
-    $header = $menu->getOneBy(['type'=>'menu-principal']);
-    if ($header) {
-        $position = $header['position'];
-        $alignement = $header['alignement'];
-        $items = $itemMenu->getAllData(['menu_id'=>$header['id']]);
-        usort($items, function($a, $b) {
-            return $a['item_position'] - $b['item_position'];
-        });
-    } 
-}
+// $menu = new Menu();
+// $itemMenu = new itemMenu();
+// if (!empty($menu) && is_object($menu)) {
+//     $header = $menu->getOneBy(['type'=>'menu-principal']);
+//     if ($header) {
+//         $position = $header['position'];
+//         $alignement = $header['alignement'];
+//         $items = $itemMenu->getAllData(['menu_id'=>$header['id']]);
+//         usort($items, function($a, $b) {
+//             return $a['item_position'] - $b['item_position'];
+//         });
+//     } 
+// }
 
 ?>
 
@@ -78,7 +78,6 @@ if ($menu){
 <body>
 
 
-
     <header id="header" class="back-office-header">
         <nav id="site-menu" class="menu-align-<?php echo $alignement; ?> menu-position-<?php echo $position; ?>">
         <?php if ($header && $items) : ?>
@@ -95,6 +94,12 @@ if ($menu){
         <input type="search" id="search-bar" name="search-term">
         <button type="submit" id="search">Rechercher</button>
         </form>
+
+        <?php 
+        if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])){
+            echo "<a href='/logout'>Se déconnecter</a>";
+        }
+        ?>
     </header>
    
    
