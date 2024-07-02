@@ -11,8 +11,8 @@ class Comment extends SQL
     protected string $name;
     protected int $status;
     protected int $project_id;
-    protected string $creation_date;
-    protected string $modification_date;
+    protected $creation_date;
+    protected $modification_date;
 
     public function getId(): ?int
     {
@@ -86,22 +86,22 @@ class Comment extends SQL
         $this->project_id = $project_id;
     }
 
-    public function getCreationDate(): string
+    public function getCreationDate()
     {
         return $this->creation_date;
     }
 
-    public function setCreationDate(string $creation_date): void
+    public function setCreationDate($creation_date): void
     {
         $this->creation_date = $creation_date;
     }
 
-    public function getModificationDate(): string
+    public function getModificationDate()
     {
         return $this->modification_date;
     }
 
-    public function setModificationDate(string $modification_date): void
+    public function setModificationDate($modification_date): void
     {
         $this->modification_date = $modification_date;
     }
