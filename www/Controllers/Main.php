@@ -63,10 +63,9 @@ class Main
                 }
               }
             $view->assign('projects', $projects);
-        // }
+        }
         $view->render();
     }
-}
 
     public function dashboard() {
         $users = new User();
