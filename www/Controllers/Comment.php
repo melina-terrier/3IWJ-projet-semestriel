@@ -11,7 +11,6 @@ class Comment
     {
         $comment = new CommentModel();
         $comments = $comment->getAllData();
-        $successes = [];
         $errors = [];
     
         if (isset($_GET['action']) && isset($_GET['id'])) {
@@ -19,7 +18,7 @@ class Comment
             if ($currentComment) {
                 if ($_GET['action'] === 'permanent-delete') {
                     $comment->delete(['id' => $_GET['id']]);
-                    $successes[] = 'Commentaire définitivement supprimé.';
+                    header('Location: /dashboard/comments?message=permanent-delete-success');
                 } else {
                     $validActions = ['approuved', 'disapprouved', 'restore', 'delete'];
                     if (!in_array($_GET['action'], $validActions)) {
@@ -28,14 +27,7 @@ class Comment
                     $newStatus = ($_GET['action'] === 'approuved') ? 1 : (($_GET['action'] === 'disapprouved') ? -1 : (($_GET['action'] === 'delete') ? -2 : 0));
                     $currentComment->setStatus($newStatus);
                     $currentComment->save();
-
-                    $successMessages = [
-                        'approuved' => 'Commentaire approuvé avec succès.',
-                        'disapprouved' => 'Commentaire désapprouvé avec succès.',
-                        'restore' => 'Commentaire restauré avec succès.',
-                        'delete' => 'Commentaire supprimé avec succès.',
-                    ];
-                    $successes[] = $successMessages[$_GET['action']];
+                    header('Location: /dashboard/comments?message='.$_GET['action'].'-success');
                 }
             } else {
                 $errors[] = 'Commentaire introuvable.';
@@ -55,7 +47,6 @@ class Comment
         $view = new View('Comment/comments-list', 'back');
         $view->assign('comments', $comments);
         $view->assign('errors', $errors);
-        $view->assign('successes', $successes);
         $view->render();
     }
 }

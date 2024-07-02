@@ -80,6 +80,7 @@
                         <th>Titre</th>
                         <th>Auteur</th>
                         <th>Status</th>
+                        <th>SEO</th>
                         <th>Date</th>
                         <th>Actions</th>
                     </tr>

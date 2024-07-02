@@ -2,6 +2,12 @@
 
     <h1>Ajouter un média</h1>
 
+    <?php
+        if (!empty($media)){
+            echo '<img src="'.$media['url'].'">';
+        }
+    ?>
+
     <?= $form ?>
 
     <?php
@@ -11,13 +17,6 @@
             echo "<li class='error'>".htmlentities($error)."</li>";
         }
         echo "</ul>";
-    } else if ($successes) {
-        echo "<ul class='successes'>"; 
-        foreach ($successes as $success){
-            echo "<li class='success'>".htmlentities($success)."</li>";
-        }
-        echo "</ul>";
     }
-    ?>
     ?>
 </section>

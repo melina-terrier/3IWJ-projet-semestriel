@@ -151,9 +151,11 @@ class PageBuilder
             }
         }
         if ($form->isSubmitted() && $form->isValid()) {
+            $formattedDate = date('Y-m-d H:i:s');
              $this->commentModel->setComment($_POST['comment']);
              $this->commentModel->setProject($project['id']);
              $this->commentModel->setStatus(0);
+             $this->commentModel->setCreationDate($formattedDate);
 
             if (isset($_SESSION['user_id'])) {
                 $userId = $_SESSION['user_id'];
@@ -164,7 +166,7 @@ class PageBuilder
                 $this->commentModel->setMail($userEmail);
                 $this->commentModel->setName($userName);
                 $this->commentModel->save();
-                $success[] = "Votre commentaire a été publié";
+                $success[] = "Merci pour votre commentaire, il sera publié une fois vérifié.";
             } else {
                 $user = new User();
                 if ($user->isUnique(['email'=>$_POST["email"]])) {

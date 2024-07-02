@@ -84,11 +84,11 @@ class Project{
                     $project->setCreationDate($formattedDate);
                     $project->setModificationDate($formattedDate);
                     $slug = $_POST['slug'];
-                    if (!empty($slug) && !$project->isUnique(["slug"=>$_POST['slug']])) {
+                    if (!empty($slug) && $project->isUnique(["slug"=>$_POST['slug']])>0) {
                         $errors[] = "Le slug existe déjà pour un autre projet";
                     } else {
                         if (empty($slug)){
-                            if (!$project->isUnique(["title"=>$_POST['title']])){
+                            if ($project->isUnique(["title"=>$_POST['title']])>0){
                                 $existingProjcts = $project->getAllData(["title"=>$_POST['title']]);
                                 $count = count($existingProjcts);
                                 $project->setSlug($_POST['title'] . '-' . ($count + 1));    

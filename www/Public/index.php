@@ -59,6 +59,7 @@ if(file_exists("../Routes.yml")) {
 if( !empty($listOfRoutes[$uri]) ) {
 
     $security = new SecurityCore();
+    session_start();
     if (!$security->checkAuth($listOfRoutes[$uri]) || !$security->checkRoute($listOfRoutes[$uri])) {
         header("Acces denied 403", true, 403);
         $error = new Error();

@@ -208,9 +208,6 @@ class Form
             if (!isset($inputConfig['required']) && isset($_POST[$name])) {
                 $expectedFieldsCount++;
             }
-            if ($inputConfig['type']=='file') {
-                $expectedFieldsCount++;
-            }
         }
         
         $submittedDataCount = 0;

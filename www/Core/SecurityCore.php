@@ -38,7 +38,6 @@ class SecurityCore
 
     public function checkAuth($route): bool
     {
-        session_start();
         if (isset($route['Security']) && $route['Security'] === true) {
             if (!isset($_SESSION['user_id'])) {
                 return false;

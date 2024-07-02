@@ -22,7 +22,7 @@
     }
     ?>
 
-    <a href="/dashboard/add-tag" class="primary-button">Ajouter une catégorie</a>
+    <a href="/dashboard/tag" class="primary-button">Ajouter une catégorie</a>
 
 </header>
 
@@ -61,7 +61,7 @@
                     <td>$tagDescription</td>
                     <td>$projectCount</td>
                     <td>
-                        <a href='/dashboard/edit-tag?id=$tagId'>Modifier</a>
+                        <a href='/dashboard/tag?id=$tagId'>Modifier</a>
                         <a href='/dashboard/tags?action=delete&id=$tagId' onclick='return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');'>
                             Supprimer
                         </a>

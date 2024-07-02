@@ -62,20 +62,33 @@ class Tag{
 
         if( $form->isSubmitted() && $form->isValid() )
         {
-
+            $formattedDate = date('Y-m-d H:i:s');
             if (isset($_GET['id']) && $_GET['id']) {
                 $tag->setId($currentTag['id']);
-                $tag->setModificationDate(date('Y-m-d H:i:s', time()));
                 $tag->setCreationDate($currentTag['creation_date']);
-                
+
                 if ($_POST['slug'] !== $currentTag['slug']) {
                     $slug = $_POST['slug'];
-                    if (!empty($slug) && $tag->isUnique(['slug'=>$_POST['slug']])>0) {
-                        $errors[] = 'Le slug existe déjà pour un autre projet';
+                    $slug = trim(strtolower($slug));
+                    $slug = str_replace(' ', '-', $slug);
+                    $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                    $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                    $slug = str_replace($search, $replace, $slug);
+                    $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                    $slug = preg_replace('[' . $pattern . ']', '', $slug);
+                    if (!empty($slug) && $tag->isUnique(['slug'=>$slug])>0) {
+                        $errors[] = 'Le slug existe déjà pour une autre catégorie';
                     } else {
                         if (empty($slug)) {
-                            if ($tag->isUnique(['name'=>$_POST['name']])>0){
-                                $existingTags = $tag->getAllData(['name'=>$_POST['name']]);
+                            $name = trim(strtolower($_POST['name']));
+                            $name = str_replace(' ', '-', $name);
+                            $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                            $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                            $name = str_replace($search, $replace, $name);
+                            $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                            $name = preg_replace('[' . $pattern . ']', '', $name);
+                            if ($tag->isUnique(['slug'=>$name.'-%'], 'ILIKE')>0){
+                                $existingTags = $tag->getAllData(['slug'=>$name.'-%'], null, 'array', 'ILIKE');
                                 $count = count($existingTags);
                                 $tag->setSlug($_POST['name'] . '-' . ($count + 1));    
                             } else {
@@ -89,25 +102,48 @@ class Tag{
                     $tag->setSlug($currentTag['slug']);
                 }
             } else {
-                $tag->setModificationDate(date('Y-m-d H:i:s', time()));
-                if (empty($slug)){
-                   if ($tag->isUnique(['name'=>$_POST['name']])>0){
-                        $existingTags = $tag->getAllData(['name'=>$_POST['name']]);
+                $slug = $_POST['slug'];
+                $tag->setCreationDate($formattedDate);
+                if (!empty($slug)){
+                    $slug = $_POST['slug'];
+                    $slug = trim(strtolower($slug));
+                    $slug = str_replace(' ', '-', $slug);
+                    $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                    $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                    $slug = str_replace($search, $replace, $slug);
+                    $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                    $slug = preg_replace('[' . $pattern . ']', '', $slug);
+                    if ($tag->isUnique(['slug'=>$slug])>0) {
+                        $errors[] = 'Le slug existe déjà pour une autre catégorie';
+                    } else {
+                        $tag->setSlug($slug);
+                    }
+                } else {
+                    $name = trim(strtolower($_POST['name']));
+                    $name = str_replace(' ', '-', $name);
+                    $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                    $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                    $name = str_replace($search, $replace, $name);
+                    $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                    $name = preg_replace('[' . $pattern . ']', '', $name);
+                    if ($tag->isUnique(['slug'=>$name.'-%'], 'ILIKE')>0){
+                        $existingTags = $tag->getAllData(['slug'=>$name.'-%'], null, 'array', 'ILIKE');
                         $count = count($existingTags);
                         $tag->setSlug($_POST['name'] . '-' . ($count + 1));    
                     } else {
                         $tag->setSlug($_POST['name']);
                     }
-                } else {
-                    $tag->setSlug($_POST['slug']);
                 }
             }
+            $tag->setModificationDate($formattedDate);
             $tag->setName($_POST['name']);
             $tag->setDescription($_POST['description']);
             $tag->setUserId($_SESSION['user_id']);
-            $tag->save();
-            header('Location: /dashboard/tags?message=success');
-            exit();
+            if (empty($errors)){
+                $tag->save();
+                header('Location: /dashboard/tags?message=success');
+                exit();
+            }
         }
         $view = new View('Tag/tag', 'back');
         $view->assign('form', $form->build());

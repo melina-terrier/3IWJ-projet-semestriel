@@ -9,12 +9,6 @@
             echo "<li class='error'>".htmlentities($error)."</li>";
         }
         echo "</ul>";
-      } else if ($successes) {
-        echo "<ul class='successes'>"; 
-        foreach ($successes as $success){
-            echo "<li class='success'>".htmlentities($success)."</li>";
-        }
-        echo "</ul>";
       }
       ?>
 
@@ -103,6 +97,11 @@
           echo "<tbody>";
 
           if ($comments) {
+
+            usort($comments, function($a, $b) {
+              return strtotime($b['creation_date']) - strtotime($a['creation_date']);
+            });
+
             foreach ($comments as $comment) {
               $commentId = htmlentities($comment['id']);
               $content = htmlentities($comment['comment']);
