@@ -11,8 +11,8 @@ class Media extends SQL
     protected int $size;
     protected string $url;
     protected string $description;
-    protected $creation_date;
-    protected $modification_date;
+    protected string $creation_date;
+    protected string $modification_date;
     protected int $user_id;
 
     public function getId(): ?int
@@ -95,22 +95,22 @@ class Media extends SQL
         $this->size = $size;
     }
 
-    public function getCreationDate()
+    public function getCreationDate(): string
     {
         return $this->creation_date;
     }
 
-    public function setCreationDate($creation_date): void
+    public function setCreationDate(string $creation_date): void
     {
         $this->creation_date = $creation_date;
     }
 
-    public function getModificationDate()
+    public function getModificationDate(): string
     {
         return $this->modification_date;
     }
 
-    public function setModificationDate($modification_date): void
+    public function setModificationDate(string $modification_date): void
     {
         $this->modification_date = $modification_date;
     }

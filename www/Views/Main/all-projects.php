@@ -5,7 +5,7 @@
     $projects = array_reverse($projects);
 ?>
 
-<section>
+<section class="cards-section">
 
     <header>
         <?php
@@ -14,24 +14,27 @@
             echo '<h1>' . $title . '</h1>
                   <p>' . $description . '</p>';
 
+        }else {
+            echo '<h1 class="welcome-message">Les projets</h1>';
         }
         ?>
     </header>
 
     <div class="cards-container">
         <?php
-
         foreach ($projects as $project) {
-            echo '<article class="card">
-
+            echo '<div class="affichpro_card">'; 
+            echo '<article>
                     <a href="/projects/' . $project['slug'] . '">';
 
-                if (isset($project['featured_image'])) {
-                    echo '<img src="' . $project['featured_image'] . '" alt="">';
-                }
+            if (isset($project['featured_image'])) {
+                echo '<img src="' . $project['featured_image'] . '" alt="Image du projet">';
+            } else {
+                echo '<img src="/path/to/default/image.jpg" alt="Image par défaut">';
+            }
 
-            echo '<div class="project-info">
-                    <h3>' . $project['title'] . '</h3>';
+            echo '<div class="content">
+                    <h4 class="title">' . $project['title'] . '</h4>';
 
             if (isset($project['category_name']) && $project['category_name']) {
                 echo '<p class="category">' . $project['category_name'] . '</p>';
@@ -53,7 +56,6 @@
                   </article>';
             echo '</div>';
         }
-
         ?>
     </div>
 </section>

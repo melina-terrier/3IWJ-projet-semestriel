@@ -21,7 +21,7 @@ class Page {
         $allPages = $pageModel->getAllData(null, null, 'array'); 
         $statusModel = new Status();
         $userModel = new User();
-        
+
         if (isset($_GET['action']) && isset($_GET['id'])) {
             $currentPage = $pageModel->populate($_GET['id']);
             if ($currentPage) {

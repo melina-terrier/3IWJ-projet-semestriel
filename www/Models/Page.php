@@ -17,7 +17,7 @@ class Page extends SQL
     protected string $user_id;
     protected string $seo_title;
     protected string $seo_keyword;
-    protected ?string $seo_description = "";
+    protected string $seo_description;
 
     public function getId(): ?int
     {
@@ -122,7 +122,7 @@ class Page extends SQL
         $this->user_id = $user_id;
     }
 
-    public function getSeoKeyword(): ?string
+    public function getSeoKeyword(): string
     {
         return $this->seo_keyword;
     }
