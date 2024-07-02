@@ -113,7 +113,6 @@ CREATE TABLE esgi_comment (
 	name 				VARCHAR(110) NOT NULL,
 	project_id			INTEGER NOT NULL,
 	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES esgi_user(id),
 	CONSTRAINT fk_comment_project FOREIGN KEY (project_id) REFERENCES esgi_project(id)
 );
