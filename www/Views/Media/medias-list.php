@@ -1,6 +1,6 @@
 <section class="dashboard-list">
 
-    <header>
+    <header class="header-media">
 
         <?php
         if ($errors) {
@@ -16,13 +16,13 @@
 
         <?php
             if (isset($_GET['message']) && $_GET['message'] === 'success') {
-                echo "<p class='success'>Le média a été ajouté.</p>";
+                echo "<p class='user_message'>Le média a été ajouté.</p>";
             } else if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
-                echo "<p class='success'>Le média a été supprimé.</p>";
+                echo "<p class='user_message'>Le média a été supprimé.</p>";
             }
         ?>
 
-        <a href="/dashboard/add-media" class="primary-button">Ajouter un média</a>
+        <a href="/dashboard/add-media" class="add_user_btn">Ajouter un média</a>
     
     </header>
 

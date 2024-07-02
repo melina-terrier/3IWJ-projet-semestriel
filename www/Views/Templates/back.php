@@ -36,7 +36,7 @@ $userSlug = $userId->getSlug();
                     <li><a href="<?php echo $userSlug; ?>">Mon profil</a></li>
                     <li><a href="/logout" title="Se déconnecter"><i class="fas fa-sign-out-alt"></i></a></li>
 
-
+</header>
     <main>
         <aside class="sidebar">
         <ul>
