@@ -60,4 +60,9 @@ class Setting extends SQL{
     {
         $this->modification_date = $modification_date;
     }
+
+    public function getNbElements() {
+        return $this->countElements();
+    }
+    
 }
