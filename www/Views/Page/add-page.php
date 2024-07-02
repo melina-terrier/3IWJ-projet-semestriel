@@ -1,4 +1,5 @@
 <script type="text/javascript">
+
     const imgLists = [<?php
         if (!empty($this->data['mediasList'])) {
             foreach ($this->data['mediasList'] as $media) {
@@ -55,6 +56,7 @@
         content_css: useDarkMode ? 'dark' : 'default',
         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
     });
+    
 </script>
 
 <section class="add-element">

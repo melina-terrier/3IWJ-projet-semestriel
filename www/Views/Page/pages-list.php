@@ -118,8 +118,6 @@
                         }
                     echo "</tr>";
                 }
-                echo "</td>
-            </tr>";
         }
         echo "</tbody>
         </table>
@@ -130,10 +128,10 @@
 </section>
 
 <script>
-$(document).ready(function() {
-    $('table').DataTable({
-        order: [[1, 'asc']],
-        pagingType: 'simple_numbers'
-    });
+$(document).ready( function () {
+  $('table').DataTable({
+    order: [[ 3, 'desc' ], [ 0, 'asc' ]],
+    pagingType: 'simple_numbers'
+  });
 });
 </script>

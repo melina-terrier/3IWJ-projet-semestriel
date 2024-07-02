@@ -29,6 +29,11 @@
     <div class="media-grid">
         <?php
         if ($medias) {
+
+            usort($medias, function($a, $b) {
+                return strtotime($b['creation_date']) - strtotime($a['creation_date']);
+            });
+
             foreach ($medias as $media) {
                 $mediaId = $media['id'];
                 $path = htmlentities($media['url']);
@@ -54,13 +59,13 @@
 
                 echo "
                     <article class='card'>
-                        <img src='$path' alt='$title' />
+                        <img src='".$path."' alt='$title' />
                         <h1>$title</h1>
                         <p>$filename</p>
                         <p>Ajouté par: $user_id le $date</p>
                         <div class='media-actions'>
                             <a href='/dashboard/edit-media?id=$mediaId'><i class='fa fa-pencil'></i></a>
-                            <a href='/dashboard/medias?action=delete&id=$mediaId' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce média définitivement ?\");'><i class='fa fa-trash'></i></a>
+                            <a href='/dashboard/medias?action=delete&id=$mediaId'><i class='fa fa-trash'></i></a>
                             <a href='$path'><i class='fa fa-eye'></i></a>
                             <a href='$path' download='$path'><i class='fa fa-download'></i></a>
                         </div>

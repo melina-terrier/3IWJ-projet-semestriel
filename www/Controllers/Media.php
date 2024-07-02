@@ -14,7 +14,7 @@ class Media{
         $form = new Form('AddMedia');
         $errors = [];  
         $formattedDate = date('Y-m-d H:i:s');
-        if ($_SESSION('user_id')){
+        if (!empty($_SESSION['user_id'])){
             $userId = $_SESSION['user_id'];
         } else {
             $userId = '';
@@ -28,12 +28,23 @@ class Media{
                 $fileSize = $mediaFile['size'];
                 $fileType = $mediaFile['type']; 
                 $tmpName = $mediaFile['tmp_name'];                
-                $destinationPath = '../Public/Assets/Uploads/media/' . $fileName;
+                $slug = trim(strtolower($fileName));
+                $slug = str_replace(' ', '-', $slug);
+                $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                $url = str_replace($search, $replace, $slug);
+                $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                $slug = preg_replace('[' . $pattern . ']', '', $slug);
+                $destinationPath = '../Public/Assets/Uploads/media/' . $slug;
                 if (move_uploaded_file($tmpName, $destinationPath)) {
                     $media->setType($fileType);
                     $media->setSize($fileSize);
-                    $media->setName($fileName);
-                    $media->setUrl('/Assets/uploads/media/'. $fileName); 
+                    $media->setName($slug);
+                    if (!$media->isUnique(['url'=>'/Assets/Uploads/media/'. $slug])>0) {
+                        $media->setUrl('/Assets/Uploads/media/'. $slug); 
+                    } else {
+                        $errors[] = 'Un média avec ce nom existe déjà.';
+                    }
                 } else {
                     $errors[] = 'Erreur lors du téléchargement du média.';
                 }
@@ -45,14 +56,12 @@ class Media{
             $media->setCreationDate($formattedDate);
             $media->setModificationDate($formattedDate);
             $media->setUser($userId);
-            if ($media->save()) {
+            if (empty($errors)) {
+                $media->save();
                 header('Location: /dashboard/medias?message=success');
                 exit;
-            } else {
-                $errors[] = 'Une erreur est survenue lors de l\'ajout du média.';
-            } 
-        }
-
+            }
+        } 
         $view = new View('Media/add-media', 'back');
         $view->assign('form', $form->build());
         $view->assign('errors', $errors);
@@ -68,11 +77,11 @@ class Media{
         $userModel = new UserModel();
         if (isset($_GET['action']) && isset($_GET['id'])) {
             if ($_GET['action'] === 'delete') {
-                if (!$media->delete(['id' => $_GET['id']])) {
+                if ( $media->delete(['id' => (int)$_GET['id']])) {
+                    header('Location: /dashboard/medias?message=delete-success');
+                } else {
                     $errors[] = 'Une erreur est survenue lors de la suppression du média.';
                 }
-                $media->delete(['id' => (int)$_GET['id']]);
-                $success[] = 'Média supprimé avec succès.'; 
             } else {
                 $errors[] = 'Action invalide.';
             }
@@ -96,30 +105,28 @@ class Media{
 
     public function editMedia(){
         $errors = [];
-        $success = [];
         $media = new MediaModel();
 
         if (isset($_GET['id']) && $_GET['id']) {
             $mediaId = $_GET['id'];
-            $selectedMedia = $media->populate($mediaId);
+            $selectedMedia = $media->populate($mediaId, 'array');
 
             if ($selectedMedia) {
                 $form = new Form('EditMedia');
-                $form->setField('title', $selectedMedia->getTitle());
-                $form->setField('description', $selectedMedia->getDescription());
+                $form->setField($selectedMedia);
                 $formattedDate = date('Y-m-d H:i:s');
 
                 if( $form->isSubmitted() && $form->isValid() )
                 {
                     $userId = $_SESSION['user_id'];
-                    $media->setId($selectedMedia->getId());
+                    $media->setId($selectedMedia['id']);
                     $media->setTitle($_POST['title']);
-                    $media->setUrl($selectedMedia->getUrl());
+                    $media->setUrl($selectedMedia['url']);
                     $media->setDescription($_POST['description']);
-                    $media->setCreationDate($selectedMedia->getCreationDate());
-                    $media->setName($selectedMedia->getName());
-                    $media->setSize($selectedMedia->getSize());
-                    $media->setType($selectedMedia->getType());
+                    $media->setCreationDate($selectedMedia['creation_date']);
+                    $media->setName($selectedMedia['name']);
+                    $media->setSize($selectedMedia['size']);
+                    $media->setType($selectedMedia['type']);
                     $media->setModificationDate($formattedDate);
                     $media->setUser($userId);
                     if ($media->save()) {
@@ -135,8 +142,8 @@ class Media{
         }
         $view = new View('Media/add-media', 'back');
         $view->assign('form', $form->build());
-        $view->assign('errorsForm', $errors);
-        $view->assign('successForm', $success);
+        $view->assign('errors', $errors);
+        $view->assign('media', $selectedMedia);
         $view->render();
     }
 

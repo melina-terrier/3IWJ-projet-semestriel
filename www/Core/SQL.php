@@ -54,10 +54,10 @@ class SQL
         return $this->pdo->lastInsertId();
     }
 
-    public function isUnique(array $data): bool {
+    public function isUnique(array $data, string $whereCondition = '='): bool {
         $sql = 'SELECT COUNT(*) FROM ' . $this->table . ' WHERE'; 
         foreach ($data as $column => $value) {
-            $sql .= ' '.$column.'=:'.$column. ' AND';
+            $sql .= ' '.$column.' '.$whereCondition.' :'.$column. ' AND';
         }
         $sql = substr($sql, 0, -3);
         $queryPrepared = $this->pdo->prepare($sql);
@@ -104,7 +104,7 @@ class SQL
         }
     }
 
-    public function getAllData(array $where = null, array $groupBy = null, string $return = 'array')
+    public function getAllData(array $where = null, array $groupBy = null, string $return = 'array', string $whereCondition = '=')
     {
         $sql = 'SELECT '; 
         if ($groupBy){
@@ -117,7 +117,7 @@ class SQL
             $sql .= ' WHERE ';
             $conditions = []; 
             foreach ($where as $column => $value) {
-              $conditions[] = $column.' = :'.$column;
+              $conditions[] = $column.' '.$whereCondition.' :'.$column;
             }
             $whereString = implode(' AND ', $conditions);
             $sql .= $whereString;
@@ -141,18 +141,10 @@ class SQL
         return $queryPrepared->fetchAll();
     }
 
-    public function getDataObject(): array
-    {
-        return array_diff_key(get_object_vars($this), get_class_vars(get_class()));
-    }
-
-    public function setDataFromArray(array $data): void
+    public function setDataFromArray(array $data): void 
     {
         foreach ($data as $key => $value) {
-            $method = 'set' . ucfirst($key);
-            if (method_exists($this, $method)) {
-                $this->$method($value);
-            } else {
+            if (property_exists($this, $key)) {
                 $this->$key = $value;
             }
         }
@@ -212,6 +204,4 @@ class SQL
         }
         return $queryPrepared->fetchAll();
     }
-
-    
 }

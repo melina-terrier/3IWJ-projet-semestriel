@@ -96,37 +96,12 @@ if ($menu){
         <button type="submit" id="search">Rechercher</button>
         </form>
     </header>
-
    
    
     <main>   
-    <aside class="sidebar">
-            <ul>
-                <li class="menu-item active">
-                    <a href="/"><i class="fas fa-home"></i> Accueil</a>
-                </li>
-                <li class="menu-item">
-                    <a href="#"><i class="fas fa-file-alt"></i> Nos Utilisateurs</a>
-                    <ul class="submenu">
-                        <li><a href="/profiles">Tous les profils</a></li>
-                    </ul>
-                </li>
-                <li class="menu-item">
-                    <a href="/projects"><i class="fas fa-project-diagram"></i> Projets</a>
-                    <ul class="submenu">
-                        <li><a href="/projects">Tous les projets</a></li>
-                    </ul>
-                </li>
-                <li class="menu-item">
-                    <a href="/register">
-                        <img src="Assets/Style/images/register.jpg" alt="Register Icon" style="width: 20px; height: 20px;"> Register
-                    </a>
-                </li>
-            </ul>
-        </aside>
         <?php include "../Views/".$this->view.".php";?>
 
-        <script>
+        <!-- <script>
         window.addEventListener("scroll", function () {
             console.log(window.scrollY);
             const header = document.getElementById("header");
@@ -136,8 +111,9 @@ if ($menu){
                 header.classList.remove("sticky");
             }
         });
-    </script>  
+    </script>   -->
     </main>
+    
 </body>
 
 </html>

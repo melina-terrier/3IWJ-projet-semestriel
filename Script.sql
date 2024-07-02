@@ -156,10 +156,15 @@ CREATE TABLE msnu_comment (
 	name 				VARCHAR(50) NOT NULL,
 	project_id			INTEGER,
 	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+<<<<<<< HEAD
+	CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES esgi_user(id),
+	CONSTRAINT fk_comment_project FOREIGN KEY (project_id) REFERENCES esgi_project(id)
+=======
     modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (id),
 	CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES msnu_user(id),
 	CONSTRAINT fk_comment_project FOREIGN KEY (project_id) REFERENCES msnu_project(id)
+>>>>>>> Dev
 );
 
 -- Define the msnu_notification table
