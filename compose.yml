@@ -21,7 +21,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-        - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     networks:
       - default
 
@@ -41,9 +41,11 @@ services:
     image: nginx:latest
     ports:
       - "8080:80"
+      - "8443:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # Adjusted path to nginx.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./www:/var/www/html
+      - ./nginx/certs:/etc/nginx/certs:ro  # Mount the certs directory
     depends_on:
       - web
     networks:
@@ -53,4 +55,3 @@ networks:
   default:
     external:
       name: challenge-3iwj_default
-      
