@@ -66,6 +66,7 @@ class Form
                                 }
                             }
                         } else if ($value) {
+                            print_r($value);
                             if ($value == $option['id']){
                                 $selected = 'selected';
                             }
@@ -206,6 +207,9 @@ class Form
                 $expectedFieldsCount++;
             }
             if (!isset($inputConfig['required']) && isset($_POST[$name])) {
+                $expectedFieldsCount++;
+            }
+            if ($inputConfig['type']=='file' && !isset($inputConfig['required'])) {
                 $expectedFieldsCount++;
             }
         }

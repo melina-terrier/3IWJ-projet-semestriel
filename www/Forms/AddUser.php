@@ -50,7 +50,7 @@ class AddUser
                     'required'=>true,
                     'error'=>'Cette adresse e-mail n\'est pas valide.'
                 ],
-                 'role'=>[
+                 'id_role'=>[
                     'type'=>'select',
                     'label'=>'Rôle',
                     'required'=>true,

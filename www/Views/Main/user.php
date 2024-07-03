@@ -5,60 +5,70 @@ usort($projects, function($a, $b) {
 $projects = array_reverse($projects);
 ?>
 
-?>
-
-<section class="profile">
-
-    <article class="card">
-        <img src="<?= isset($user['photo']) && !empty($user['photo']) ? $user['photo'] : '' ?>" alt="<?= (isset($media) && is_array($media)) ? $media['description'] : 'Photo de profil' ?>" class="user-photo">
-        <div class="user-info">
-            <h2><?= $user['lastname'] ?> <?= $user['firstname'] ?></h2>
-            <p><?= $user['occupation'] ?></p>
-            <a href="mailto:<?= $user['email'] ?>"><?= $user['email'] ?></a>
-            <p><?= $user['city'] ?>, <?= $user['country'] ?></p>
-        </div>
-    </article>
-
-
 <section class="profile">
 
     <article class="card">
         <img src="<?= isset($user['photo']) && !empty($user['photo']) ? htmlentities($user['photo']) : '' ?>" alt="<?= (isset($media) && is_array($media)) ? htmlentities($media['description']) : 'Photo de profil' ?>" class="user-photo">
         <div class="user-info">
             <h2><?= htmlentities($user['lastname']) ?> <?= htmlentities($user['firstname']) ?></h2>
-            <p><?= htmlentities($user['occupation']) ?></p>
+            <p><?= isset($user['occupation']) ? htmlentities($user['occupation']) : '' ?></p>
             <a href="mailto:<?= htmlentities($user['email']) ?>"><?= htmlentities($user['email']) ?></a>
-            <p><?= htmlentities($user['city']) ?>, <?= htmlentities($user['country']) ?></p>
+            <p><?= isset($user['city']) ? htmlentities($user['city']) : '' ?> <?= isset($user['country']) ? htmlentities($user['country']) : '' ?></p>
         </div>
+
+        <?php
+            if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) && $_SESSION['user_id'] == $user['id']){
+                echo '<a href="/profile/edit">Modifier mon profil</a>';
+            }
+        ?>
     </article>
 
     <div class="card">
         <div class="card-body">
-            <h3 class="card-title">À propos de l'utilisateur</h3>
-            <p class="card-text"><?= htmlentities($user['description']) ?></p>
+            <?php
 
-            <h4 class="card-title">Expérience professionnelle</h4>
-            <p class="card-text"><?=htmlentities($user['experience']) ?></p>
+                if(isset($user['description'])){
+                    echo '<h3 class="card-title">À propos de l\'utilisateur</h3>
+                    <p class="card-text">'.htmlentities($user['description']).'</p>';
+                }
 
-            <h4 class="card-title">Formations</h4>
-            <p class="card-text"><?= htmlentities($user['study']) ?></p>
+                if(isset($user['experience'])){
+                    echo '<h4 class="card-title">Expérience professionnelle</h4>
+                    <p class="card-text">'.htmlentities($user['experience']).'</p>';
+                }
 
-            <h4 class="card-title">Compétences</h4>
-            <p class="card-text"><?= htmlentities($user['competence']) ?></p>
+                if(isset($user['formation'])){
+                    echo '<h4 class="card-title">Formations</h4>
+                    <p class="card-text">'.htmlentities($user['formation']).'</p>';
+                }
 
-            <h4 class="card-title">Intérêts</h4>
-            <p class="card-text"><?= htmlentities($user['interest']) ?></p>
+                if(isset($user['skill'])){
+                    echo '<h4 class="card-title">Compétences</h4>
+                    <p class="card-text">'.htmlentities($user['skill']).'</p>';
+                }
+
+                if(isset($user['interest'])){
+                    echo '<h4 class="card-title">Intérêts</h4>
+                    <p class="card-text">'.htmlentities($user['interest']).'</p>';
+                }
+
+            ?>
         </div>
     </div>
 
     <div class="card">
         <div class="card-body">
-            <h3 class="card-title">Sur le web</h3>
-            <a href="<?= htmlentities($user['website']) ?>" class="card-link">Portfolio</a>
 
-            <?php if (isset($user['link']) && !empty($user['link'])) : ?>
-                <a href="<?= htmlentities($user['link']) ?>" class="card-link">Linkedin</a>
-            <?php endif; ?>
+            <?php
+                if(isset($user['website'])){
+                    echo '<h3 class="card-title">Sur le web</h3>
+                    <a href="'.htmlentities($user['website']).'" class="card-link">Portfolio</a>';
+                }
+
+                if(isset($user['link'])){
+                    echo '<a href="'.htmlentities($user['link']).'" class="card-link">Linkedin</a>';
+                }
+            ?>
         </div>
     </div>
 </section>

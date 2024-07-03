@@ -10,7 +10,7 @@ class Tag extends SQL
     protected string $description;
     protected ?string $creation_date = null;
     protected string $modification_date ;
-    protected int $user_id;
+    protected ?int $user_id = null;
 
     public function getId(): ?int
     {

@@ -2,14 +2,15 @@
   Controller: "Main"
   Action: "home"
 
+
 /profile/edit:
-  Controller: "User"
+  Controller: "UserController"
   Action: "editUser"
   Security: true
   Role: ["Utilisateur", "Editeur", "Administrateur"]
 
 /profile/edit-password:
-  Controller: "User"
+  Controller: "UserController"
   Action: "editPassword"
   Security: true
   Role: ["Utilisateur", "Editeur", "Administrateur"]
@@ -24,25 +25,19 @@
 
 # USER
 /dashboard/users:
-  Controller: "User"
+  Controller: "UserController"
   Action: "allUsers"
   Security: true
   Role: ["Administrateur"]
 
-/dashboard/add-user:
-  Controller: "User"
+/dashboard/user:
+  Controller: "UserController"
   Action: "addUser"
   Security: true
   Role: ["Administrateur"]
 
-/dashboard/edit-user:
-  Controller: "User"
-  Action: "editUser"
-  Security: true
-  Role: ["Administrateur"]
-
 # PROJECT
-/dashboard/add-project:
+/dashboard/project:
   Controller: "Project"
   Action: "addProject"
   Security: true
@@ -54,22 +49,10 @@
   Security: true
   Role: ["Administrateur"]
 
-/dashboard/edit-project:
-  Controller: "Project"
-  Action: "editProject"
-  Security: true
-  Role: ["Administrateur"]
-
 # PAGE
-/dashboard/add-page:
+/dashboard/page:
   Controller: "Page"
   Action: "addPage"
-  Security: true
-  Role: ["Administrateur"]
-
-/dashboard/edit-page:
-  Controller: "Page"
-  Action: "editPage"
   Security: true
   Role: ["Administrateur"]
 
@@ -81,12 +64,6 @@
 
 
 # Comments
-/dashboard/add-coment:
-  Controller: "add-coment"
-  Action: "addComments"
-  Security: true
-  Role: ["Administrateur"]
-
 /dashboard/comments:
   Controller: "Comment"
   Action: "allComments"
@@ -95,15 +72,9 @@
  
 
 # TAGS
-/dashboard/add-tag:
+/dashboard/tag:
   Controller: "Tag"
   Action: "addTag"
-  Security: true
-  Role: ["Administrateur"]
-
-/dashboard/edit-tag:
-  Controller: "Tag"
-  Action: "editTag"
   Security: true
   Role: ["Administrateur"]
 
@@ -139,25 +110,15 @@
   Security: true
   Role: ["Administrateur"]
 
-
-
-
-# NOTIFICATIONS
-/notifications/getNotificationCount:
-  Controller: "Main"
-  Action: "getNotificationCount"
-  Security: true
-  Role: ["Administrateur"]
-
-/notifications/getUnreadComments:
-  Controller: "Main"
-  Action: "getUnreadComments"
-  Security: true
-  Role: ["Administrateur"]
-
 /dashboard/menus:
   Controller: "Settings"
   Action: "allMenu"
+  Security: true
+  Role: ["Administrateur"]
+
+/dashboard/appearance:
+  Controller: "Settings"
+  Action: "setAppearance"
   Security: true
   Role: ["Administrateur"]
 

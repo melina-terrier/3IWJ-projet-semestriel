@@ -24,7 +24,7 @@ class Security{
             $user = new User();
             $userModel = $user->getOneBy(['activation_token' => $token]);
             if ($userModel) {
-                if ($userModel->getStatus() === 0) {
+                if ($userModel['status'] === 0) {
                     $user->setDataFromArray($userModel);
                     $user->setStatus(1);
                     $user->setActivationToken(null);
@@ -104,29 +104,18 @@ class Security{
         if( $form->isSubmitted() && $form->isValid() )
         {
             $user = new User();
-            
             if ($user->isUnique(['email'=>$_POST['email']])) {
                 $errors[] = 'Cette adresse e-mail est déjà utilisée pour un autre compte, essayez de vous connecter ou de vous inscrire avec une autre adresse e-mail.';
             } else {
-                print_r($role);
-                $formattedDate = strtotime(date('Y-m-d H:i:s'));
-                print_r($formattedDate);
-                $activationToken = bin2hex(random_bytes(16));
-                $slug = strtolower(trim($_POST['firstname'].' '.$_POST['lastname']));
-                $slug = str_replace(' ', '-', $slug);
-                $search = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
-                $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
-                $slug = str_replace($search, $replace, $slug);
-                $slug = preg_replace('/[^a-z0-9-]/', '', $slug);
-                $slug .= '-' . rand(1000, 9999);
-                $user->setFirstName($_POST['firstname']);
                 $user->setLastName($_POST['lastname']);
+                $user->setFirstName($_POST['firstname']);
                 $user->setEmail($_POST['email']);
                 $user->setRole($role);
-                $user->setSlug($slug);
                 $user->setPassword($_POST['password']);
+                $user->setStatus(0);
+                $user->setSlug();
+                $activationToken = bin2hex(random_bytes(16));
                 $user->setActivationToken($activationToken);
-                print_r($user);
                 $emailResult = $this->sendActivationEmail($user->getEmail(), $activationToken);
                 $user->save();
                 if (isset($emailResult['success'])) {

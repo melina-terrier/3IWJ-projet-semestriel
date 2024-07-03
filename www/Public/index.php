@@ -10,6 +10,7 @@ use App\Controllers\Page;
 use App\Controllers\Project;
 use App\Controllers\Install;
 
+session_start();
 //Autoloader
 spl_autoload_register("App\myAutoloader");
 
@@ -40,7 +41,7 @@ date_default_timezone_set('Europe/paris');
 if (!file_exists('../config.php')) {
     $controller = new Install();
     $controller->install();
-    die();
+    exit();
 }
 
 $uri = $_SERVER["REQUEST_URI"];
@@ -59,7 +60,6 @@ if(file_exists("../Routes.yml")) {
 if( !empty($listOfRoutes[$uri]) ) {
 
     $security = new SecurityCore();
-    session_start();
     if (!$security->checkAuth($listOfRoutes[$uri]) || !$security->checkRoute($listOfRoutes[$uri])) {
         header("Acces denied 403", true, 403);
         $error = new Error();

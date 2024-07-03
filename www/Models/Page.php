@@ -14,7 +14,7 @@ class Page extends SQL
     protected string $creation_date;
     protected string $modification_date;
     protected string $publication_date;
-    protected string $user_id;
+    protected ?int $user_id = null;
     protected string $seo_title;
     protected string $seo_keyword;
     protected ?string $seo_description = "";
@@ -112,12 +112,12 @@ class Page extends SQL
         $this->publication_date = $publication_date;
     }
 
-    public function getUser(): int
+    public function getUser(): ?int
     {
         return $this->user_id;
     }
 
-    public function setUser(int $user_id): void
+    public function setUser(?int $user_id): void
     {
         $this->user_id = $user_id;
     }
