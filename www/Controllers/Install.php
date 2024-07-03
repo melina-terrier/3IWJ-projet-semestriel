@@ -61,33 +61,36 @@ class Install
                 }
             } catch (PDOException $e) {
                 $errors[] = 'Erreur lors de l\'exécution du script SQL ou de la connexion à la base de données : ' . $e->getMessage();
+                exit();
             }
 
-            if (empty($errors)){
-                $formattedDate =  date('Y-m-d H:i:s');
-                $user = new User();
-                $user->setFirstname($_POST['firstname']);
-                $user->setLastname($_POST['lastname']);
-                $user->setEmail($_POST['email']);
-                $user->setPassword($_POST['password']);
-                $roleModel = new Role();
-                $role = $roleModel->getByName('Administrateur');
-                $user->setRole($role);
-                $user->setCreationDate($formattedDate);
-                $user->setModificationDate($formattedDate);  
-                $user->setStatus(1);
-                $user->setSlug();
-                $setting = new Setting();
-                $setting->setKey('title');
-                $setting->setValue($_POST['site_title']);
-                $setting->setCreationDate($formattedDate);
-                $setting->setModificationDate($formattedDate);  
-                $userId = $user->save();
-                $_SESSION['user_id'] = $userId;
-                $setting->save();
-                header('Location: /dashboard');
-            } else {
-                $errors[] = 'Erreur lors de la création de l\'utilisateur et des paramètres.';
+            $formattedDate = date('Y-m-d H:i:s');
+            $user = new User();
+            $user->setFirstname($_POST['firstname']);
+            $user->setLastname($_POST['lastname']);
+            $user->setEmail($_POST['email']);
+            $user->setPassword($_POST['password']);
+            $roleModel = new Role();
+            $role = $roleModel->getByName('Administrateur');
+            $user->setRole($role);
+            $user->setCreationDate($formattedDate);
+            $user->setModificationDate($formattedDate);  
+            $user->setStatus(1);
+            $user->setSlug();
+            $setting = new Setting();
+            $setting->setKey('title');
+            $setting->setValue($_POST['site_title']);
+            $setting->setCreationDate($formattedDate);
+            $setting->setModificationDate($formattedDate);  
+            $setting->save();
+            $activationToken = bin2hex(random_bytes(16));
+            $user->setActivationToken($activationToken);
+            $emailResult = $security->sendActivationEmail($user->getEmail(), $activationToken);
+            if (isset($emailResult['success'])) {
+                $user->save();
+                $success[] = "Merci pour votre inscription. Avant de pouvoir vous connecter, nous avons besoin que vous activiez votre compte en cliquant sur le lien d'activation dans l'email que nous venons de vous envoyer.";
+            } elseif (isset($emailResult['error'])) {
+                $errors[] = "Une erreur est survenu lors de votre inscription : ". $emailResult['error'] ." Merci de réessayer ultérieurement.";
             }
         }
         $view = new View('Installer/install', 'front');

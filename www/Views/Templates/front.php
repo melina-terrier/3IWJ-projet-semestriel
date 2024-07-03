@@ -3,35 +3,37 @@ use App\Models\Setting;
 use App\Models\Menu;
 use App\Models\itemMenu;
 
-// $setting = new Setting();
-// if ($setting) {
-//     $title = $setting->getOneBy(['key' => "title"]) ?? '';
-//     $description = $setting->getOneBy(['key' => "description"]) ?? '';
-//     $slogan = $setting->getOneBy(['key' => "slogan"]) ?? '';
-//     $logo = $setting->getOneBy(['key' => "logo"]) ?? '';
-//     $lightPrimaryColor = $setting->getOneBy(['key' => "light-primary_color"]) ?? '';
-//     $lightAccentColor = $setting->getOneBy(['key' => "light-accent_color"]) ?? '';
-//     $lightSecondaryColor = $setting->getOneBy(['key' => "light-secondary_color"]) ?? '';
-//     $darkPrimaryColor = $setting->getOneBy(['key' => "dark-primary_color"]) ?? '';
-//     $darkSecondaryColor = $setting->getOneBy(['key' => "dark-secondary_color"]) ?? '';
-//     $darkAccentColor = $setting->getOneBy(['key' => "dark-accent_color"]) ?? '';
-//     $primaryFont = $setting->getOneBy(['key' => "primary_font"]) ?? '';
-//     $secondaryFont = $setting->getOneBy(['key' => "secundary_font"]) ?? '';
-// }
+if (file_exists('../config.php')) {
+    $setting = new Setting();
+    if ($setting) {
+        $title = $setting->getOneBy(['key' => "title"]) ?? '';
+        $description = $setting->getOneBy(['key' => "description"]) ?? '';
+        $slogan = $setting->getOneBy(['key' => "slogan"]) ?? '';
+        $logo = $setting->getOneBy(['key' => "logo"]) ?? '';
+        $lightPrimaryColor = $setting->getOneBy(['key' => "light_primary_color"]) ?? '';
+        $lightAccentColor = $setting->getOneBy(['key' => "light_accent_color"]) ?? '';
+        $lightSecondaryColor = $setting->getOneBy(['key' => "light_secondary_color"]) ?? '';
+        $darkPrimaryColor = $setting->getOneBy(['key' => "dark_primary_color"]) ?? '';
+        $darkSecondaryColor = $setting->getOneBy(['key' => "dark_secondary_color"]) ?? '';
+        $darkAccentColor = $setting->getOneBy(['key' => "dark_accent_color"]) ?? '';
+        $primaryFont = $setting->getOneBy(['key' => "primary_font"]) ?? '';
+        $secondaryFont = $setting->getOneBy(['key' => "secundary_font"]) ?? '';
+    }
 
-// $menu = new Menu();
-// $itemMenu = new itemMenu();
-// if (!empty($menu) && is_object($menu)) {
-//     $header = $menu->getOneBy(['type'=>'menu-principal']);
-//     if ($header) {
-//         $position = $header['position'];
-//         $alignement = $header['alignement'];
-//         $items = $itemMenu->getAllData(['menu_id'=>$header['id']]);
-//         usort($items, function($a, $b) {
-//             return $a['item_position'] - $b['item_position'];
-//         });
-//     } 
-// }
+    $menu = new Menu();
+    $itemMenu = new itemMenu();
+    if (!empty($menu) && is_object($menu)) {
+        $header = $menu->getOneBy(['type'=>'menu-principal']);
+        if ($header) {
+            $position = $header['position'];
+            $alignement = $header['alignement'];
+            $items = $itemMenu->getAllData(['menu_id'=>$header['id']]);
+            usort($items, function($a, $b) {
+                return $a['item_position'] - $b['item_position'];
+            });
+        } 
+    }
+}
 
 ?>
 
@@ -51,13 +53,11 @@ use App\Models\itemMenu;
 </head>
 
 <style>
-
-<style>
-<?php if (isset($lightPrimaryColor) && isset($lightSecondaryColor) && // Check all color variables
+<?php if (isset($lightPrimaryColor) && isset($lightSecondaryColor) &&
               isset($darkPrimaryColor) && isset($darkSecondaryColor) &&
               isset($darkAccentColor) && isset($primaryFont) && isset($secondaryFont)) : ?>
     :root {
-      --light-primary: <?php echo $lightPrimaryColor; ?>; /* Use echo to output the variable value */
+      --light-primary: <?php echo $lightPrimaryColor; ?>; 
       --light-secondary: <?php echo $lightSecondaryColor; ?>;
       --light-accent: <?php echo $lightAccentColor; ?>;
 

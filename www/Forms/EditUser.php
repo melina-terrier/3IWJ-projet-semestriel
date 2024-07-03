@@ -50,11 +50,6 @@ class EditUser
                     'label' => 'Profession',
                     'error'=>'Ce champ doit faire maximum 255 caractères.',
                 ],
-                'birthday'=>[
-                    'type'=>'date',
-                    'label'=>'Date de naissance',
-                    'error'=>'Le format de la date n\'est pas correct.'
-                ],
                 'country'=>[
                     'type'=>'select',
                     'label'=>'Zone géographique',

@@ -72,16 +72,12 @@ class UserController
         $userSecurity = new UserSecurity();
         $errors = [];
         $success = [];
-        $formattedDate = date('Y-m-d H:i:s');
 
         if (isset($_GET['id']) && $_GET['id']) {
             $userId = $_GET['id'];
-            $selectedUser = $user->populate($userId);
+            $selectedUser = $user->populate($userId, 'array');
             if ($selectedUser) {
-                $form->setField('firstname', $selectedUser->getFirstname());
-                $form->setField('lastname', $selectedUser->getLastname());
-                $form->setField('email', $selectedUser->getEmail());
-                $form->setField('role', $selectedUser->getRole());
+                $form->setField($selectedUser);
             } else {
                 $errors[] = 'Utilisateur introuvable.';
             }
@@ -92,44 +88,28 @@ class UserController
             if ($user->isUnique(['email'=>$_POST['email']]) && !isset($_GET['id'])) {
                 $errors[] = 'L\'adresse email est déjà utilisé par un autre compte.';
             } else {
-                $resetToken = bin2hex(random_bytes(50));
-                $expires = new \DateTime('+1 hour');
-                $expiresTimestamp = $expires->getTimestamp();
-                $expiresDateTime = $expires->format('Y-m-d H:i:s');
+                $email = $_POST['email'];
                 $activationToken = bin2hex(random_bytes(16));
-                $userData = [
-                    'firstname' => $_POST['firstname'],
-                    'lastname' => $_POST['lastname'],
-                    'email' => $email,
-                    'role' => $_POST['role'],
-                    'status' => 0,
-                    'modification_date' => $formattedDate,
-                    'activation_token' => $activationToken,
-                    'reset_token' => $resetToken,
-                    'reset_expires' => $expiresDateTime,
-                ];
-
+                $user->setFirstName($_POST['firstname']);
+                $user->setLastName($_POST['lastname']);
+                $user->setRole($_POST['id_role']);
+                $user->setStatus(0);
+                $user->setEmail($email);
+                $user->setActivationToken($activationToken);
+                $user->setSlug();
+                print_r($user);
                 if(isset($_GET['id']) && $_GET['id']){
-                    $userData['id'] = $selectedUser->getId();
-                    $userData['creation_date'] = $selectedUser->getCreationDate();
-                } else {
-                    $userData['creation_date'] = $formattedDate;
+                    $user->setId($selectedUser['id']);
                 }
-
-                if ($user->save()) {
-                    $emailResult = $userSecurity->sendCreateAccount($user->getEmail(), $resetToken);
-    
-                    if (isset($emailResult['success'])) {
-                        $success[] = $emailResult['success'];
-                    } elseif (isset($emailResult['error'])) {
-                        $errors[] = $emailResult['error'];
-                    }
-                    header('Location: /dashboard/users?message=success');
-                    exit; 
-                } else {
-                    $errors[] = 'Une erreur est survenue lors de la création de l\'utilisateur.';
+                $user->save();
+                $emailResult = $userSecurity->sendCreateAccount($user->getEmail(), $activationToken);
+                if (isset($emailResult['success'])) {
+                    $success[] = $emailResult['success'];
+                } elseif (isset($emailResult['error'])) {
+                    $errors[] = $emailResult['error'];
                 }
-
+                header('Location: /dashboard/users?message=success');
+                exit; 
             }
         }
         $view = new View('User/add-user', 'back');
@@ -151,7 +131,6 @@ class UserController
         if( $form->isSubmitted() && $form->isValid())
         {
             $user->setDataFromArray($userModel);
-            $formattedDate = date('Y-m-d H:i:s');
             $user->setLastname($_POST['lastname']);
             $user->setFirstname($_POST['firstname']);
             $user->setEmail($_POST['email']);
@@ -173,13 +152,10 @@ class UserController
                 }
                 $media->setTitle($fileName);
                 $media->setDescription('Photo de profil de l\'utilisateur');
-                $media->setCreationDate($formattedDate);
-                $media->setModificationDate($formattedDate);
                 $media->setUser($userId);
                 $user->setPhoto('/Assets/Uploads/users/'. $fileName);
                 $media->save();
             }
-
             $user->setSkill($_POST['skill']);
             $user->setFormation($_POST['formation']);
             $user->setExperience($_POST['experience']);
@@ -190,7 +166,6 @@ class UserController
             $user->setWebsite($_POST['website']);
             $user->setDescription($_POST['description']);
             $user->setInterest($_POST['interest']);
-            $user->setModificationDate($formattedDate);
             $user->save();
             header('Location: /profiles/'.$user->getSlug().'?message=update-success');
             exit; 
@@ -210,8 +185,8 @@ class UserController
         $view = new View('User/edit-user', 'front');
         $view->assign('form', $form->build());
         $view->assign('userId', $userId);
-        $view->assign('errorsForm', $errors);
-        $view->assign('successForm', $success);
+        $view->assign('errors', $errors);
+        $view->assign('successes', $success);
         $view->render();
     }
 
@@ -226,14 +201,14 @@ class UserController
         } else {
 
             $user = new UserModel();
-            $userData = $user->populate($userId);
+            $userData = $user->populate($userId, 'array');
             if (!$userData) {
                 $errors[] = 'Utilisateur non trouvé.';
             }
     
             $form = new Form('EditPassword');
             if ($form->isSubmitted() && $form->isValid()) {
-                if (password_verify($_POST['old-password'], $user->getPassword())) {
+                if (password_verify($_POST['old-password'], $userData['password'])) {
                     $user->setDataFromArray($userData);
                     $user->setPassword($_POST['password']);
                     if ($user->save()) {
@@ -256,7 +231,7 @@ class UserController
 
     public function deleteAssociatedData($userId, $errors){
         $media = new Media();
-        $medias = $media->getAllData(['user_id'=>$userId], 'object');
+        $medias = $media->getAllData(['user_id'=>$userId], null, 'object');
         foreach ($medias as $media){
             $media->setUser(null);
             if (!$media->save()) {
@@ -265,7 +240,7 @@ class UserController
         }
 
         $page = new Page();
-        $pages = $page->getAllData(['user_id'=>$userId], 'object');            
+        $pages = $page->getAllData(['user_id'=>$userId], null, 'object');            
         foreach ($pages as $page){
             $page->setUser(null);
             if (!$media->save()) {
@@ -274,7 +249,7 @@ class UserController
         }
 
         $comment = new Comment();
-        $comments = $comment->getAllData(['user_id'=>$userId], 'object');
+        $comments = $comment->getAllData(['user_id'=>$userId], null, 'object');
         foreach ($comments as $comment){
             $comment->setUserId(null);
             if (!$media->save()) {
@@ -283,7 +258,7 @@ class UserController
         }
 
         $tag = new Tag();
-        $tags = $tag->getAllData(['user_id'=>$userId], 'object');
+        $tags = $tag->getAllData(['user_id'=>$userId], null, 'object');
         foreach ($tags as $tag){
             $tag->setUserId(null);
             if (!$tag->save()) {

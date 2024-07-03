@@ -9,7 +9,7 @@ class User extends SQL
     protected string $firstname;
     protected string $lastname;
     protected string $email;
-    protected ?string $password = null;
+    protected string $password;
     protected int $id_role;
     protected string $slug;
     protected int $status;
@@ -18,7 +18,6 @@ class User extends SQL
     protected ?string $activation_token = null;
     protected ?string $photo = null;
     protected ?string $occupation;
-    protected ?string $birthday = '';
     protected ?string $country = null;
     protected ?string $city = null;
     protected ?string $website = null;
@@ -28,15 +27,12 @@ class User extends SQL
     protected ?string $formation = null;
     protected ?string $skill = null;
     protected ?string $interest = null;
-    protected $creation_date;
-    protected $modification_date;
 
     public function getUserName(): string
     {
         return $this->getFirstname() . " " . $this->getLastname();
     }
 
-    // Getter et Setter pour les propriétés
     public function getId(): ?int
     {
         return $this->id;
@@ -77,12 +73,12 @@ class User extends SQL
         $this->email = strtolower(trim($email));
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function setPassword(?string $password): void
+    public function setPassword(string $password): void
     {
         if ($password) {
             $this->password = password_hash($password, PASSWORD_DEFAULT);
@@ -149,26 +145,6 @@ class User extends SQL
         $this->photo = $photo;
     }
 
-    public function getCreationDate()
-    {
-        return $this->creation_date;
-    }
-
-    public function setCreationDate($creation_date): void
-    {
-        $this->creation_date = $creation_date;
-    }
-
-    public function getModificationDate()
-    {
-        return $this->modification_date;
-    }
-
-    public function setModificationDate($modification_date): void
-    {
-        $this->modification_date = $modification_date;
-    }
-
     public function setSlug(string $slug = null)
     {
         $fullName = $this->getUserName();
@@ -196,16 +172,6 @@ class User extends SQL
     {
         $occupation = strip_tags(ucwords(trim(strtolower($occupation))));
         $this->occupation = $occupation;
-    }
-
-    public function getBirthday(): string
-    {
-        return $this->birthday;
-    }
-
-    public function setBirthday(?string $birthday): void
-    {
-        $this->birthday = $birthday;
     }
 
     public function getCountry(): ?string
@@ -280,7 +246,7 @@ class User extends SQL
 
     public function setFormation(?string $formation): void
     {
-        $formation = strip_tags(strtolower(trim($study)));
+        $formation = strip_tags(strtolower(trim($formation)));
         $this->formation = $formation;
     }
 
