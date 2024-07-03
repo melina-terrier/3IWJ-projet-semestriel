@@ -32,7 +32,7 @@ $userSlug = $userId->getSlug();
         <header class="bo-header">
             <nav>
                 <ul>
-                    <li><a href="<?php echo $userSlug ?>">Mon profil</a></li>
+                    <li><a href="/profiles/<?php echo $userSlug ?>">Mon profil</a></li>
                     <li><a href="/logout" title="Se déconnecter"><i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
                 </ul>
             </nav>

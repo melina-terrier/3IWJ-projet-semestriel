@@ -96,20 +96,19 @@
                         <td>$userName</td>
                         <td>$status</td>
                         <td>".$page['seo_status']."</td>"; 
-
-                        switch ($status) {
-                            case "Publié":
+                        switch ($page['status_id']) {
+                            case 1:
                                 echo "<td>$publicationDate</td>
                                 <td><a href='/".$page['slug']."'>Voir</a>
                                 <a href='/dashboard/page?id=$pageId'>Modifier</a>
                                 <a href='/dashboard/pages?action=delete&id=$pageId'>Supprimer</a></td>";
                                 break;
-                            case "Supprimé":
+                            case 2:
                                 echo "<td>$modificationDate</td>
                                 <td><a href='/dashboard/pages?action=restore&id=$pageId'>Restaurer</a>
                                 <a href='/dashboard/pages?action=permanent-delete&id=$pageId'>Supprimer définitivement</a></td>";
                                 break;
-                            case "Brouillon":
+                            case 3:
                                 echo "<td>$modificationDate</td>
                                 <td><a href='/".$page['slug']."?preview=true'>Prévisualiser</a>
                                 <a href='/dashboard/page?id=$pageId'>Modifier</a>

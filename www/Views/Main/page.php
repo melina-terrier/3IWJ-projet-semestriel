@@ -1,13 +1,8 @@
 <?php
 
-    usort($projects, function($a, $b) {
-        return strtotime($a['publication_date']) - strtotime($b['publication_date']);
-    });
-    $projects = array_reverse($projects);
-
     if (!empty($projects)){
         usort($projects, function($a, $b) {
-            return strtotime($a['publication_date']) - strtotime($b['publication_date']);
+            return strtotime($a['modification_date']) - strtotime($b['publication_date']);
         });
         $projects = array_reverse($projects);
     }
@@ -16,8 +11,14 @@
 
 <section>
 
+        <?php
 
+        if (isset($pageTitle) || isset($pageContent)){
+            echo "<h1>".$pageTitle."</h1>";
+            echo $pageContent;
+        } else {
 
+        ?>
         <h1>Bienvenue sur la page d'accueil<h1> 
         
         <div class="grid-container">
@@ -44,6 +45,7 @@
             }
         echo '</div>
         </div>';
+        }
 
 ?>
 </section>

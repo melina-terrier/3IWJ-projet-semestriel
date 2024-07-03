@@ -147,8 +147,8 @@ class Security{
                 $userModel->setDataFromArray($userarray);
                 $userModel->setResetToken($resetToken);
                 $userModel->setResetExpires($expiresDateTime);
-                if ($user->save()) {
-                    $emailResult = $this->sendResetEmail($email, $resetToken);
+                if ($userModel->save()) {
+                    $emailResult = $this->sendResetEmail($_POST['email'], $resetToken);
                     if (isset($emailResult['success'])) {
                         $success[] = $emailResult['success'];
                     } elseif (isset($emailResult['error'])) {
