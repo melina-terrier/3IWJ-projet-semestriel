@@ -7,14 +7,12 @@
 
 <section class="cards-section">
 
-    <header>
-        <?php
-
+    <header class="header">
+    <?php
         if (isset($title) && isset($description)) {
             echo '<h1>' . $title . '</h1>
                   <p>' . $description . '</p>';
-
-        }else {
+        } else {
             echo '<h1 class="welcome-message">Les projets</h1>';
         }
         ?>
