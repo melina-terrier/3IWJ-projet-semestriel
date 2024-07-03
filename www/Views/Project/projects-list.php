@@ -21,7 +21,7 @@
         <h1>Projets</h1>
 
         <?php
-        if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
+        if (isset($_GET['message']) && $_GET['message'] === 'success'){
             echo "<p class='success'>Le projet a été publié.</p>";
         } else if (isset($_GET['message']) && $_GET['message'] === 'delete-success'){
             echo "<p class='success'>Le projet a été supprimé.</p>";
@@ -101,28 +101,28 @@
             echo "<td>$status</td>"; 
             echo "<td>".$project['seo_status']."</td>";
 
-            switch ($status) {
-                case "Publié":
+            switch ($project['status_id']) {
+                case 1:
                     echo "<td>$publicationDate</td>
                         <td>
                             <a href='/projects/".$project['slug']."'>Voir</a>
                             <a href='/dashboard/project?id=$projectId'>Modifier</a>
-                            <a href='/dashboard/projects?action=delete&id=$projectId' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce projet ?\");'></a>
+                            <a href='/dashboard/projects?action=delete&id=$projectId'>Supprimer</a>
                         </td>";
                     break;
-                case "Supprimé":
+                case 2:
                     echo "<td>$modificationDate</td>
                         <td>
                             <a href='/dashboard/projects?action=restore&id=$projectId'>Restaurer</a>
-                            <a href='/dashboard/projects?action=permanent-delete&id=$projectId' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer définitivement ce projet ?\");'></a>
+                            <a href='/dashboard/projects?action=permanent-delete&id=$projectId'>Supprimer</a>
                         </td>";
                     break;
-                case "Brouillon":
+                case 3:
                     echo "<td>$modificationDate</td>
                         <td>
                             <a href='/projects/".$project['slug']."?preview=true'>Prévisualiser</a>
                             <a href='/dashboard/project?id=$projectId'>Modifier</a>
-                            <a href='/dashboard/projects?action=delete&id=$projectId' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer ce projet ?\");'></a>
+                            <a href='/dashboard/projects?action=delete&id=$projectId'>Supprimer</a>
                         </td>";
                     break;
             }

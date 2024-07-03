@@ -1,13 +1,5 @@
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style/src/css/main.css">
 
-</head>
-
-<body >
-  
 
 <div id="usersProjects">
     <h2>Utilisateurs et nombre de projets réalisés</h2>
@@ -258,5 +250,3 @@
 <script>
     displayData('projectsByUser', <?php echo json_encode($elementsCount['projectByUser']); ?>);
 </script>
-
-  </body>

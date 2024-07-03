@@ -37,11 +37,11 @@ class Project{
             if (isset($_GET['id']) && $_GET['id']) {
                 $projectId = $_GET['id'];
                 $selectedProject = $project->populate($projectId, 'array');
-
+                $objectProject = $project->populate($projectId, 'object');
                 if ($selectedProject) {
                     $form->setField($selectedProject);
-                    $seoAnalysis = $selectedProject->getSeoAnalysis();
-                    $seoStatus = $selectedProject->getSeoStatus();
+                    $seoAnalysis = $objectProject->getSeoAnalysis();
+                    $seoStatus = $objectProject->getSeoStatus();
                     $seoAdvices = $this->getSeoAdvices($seoAnalysis);
 
                     $view->assign("seoAnalysis", $seoAnalysis);
@@ -57,7 +57,7 @@ class Project{
                 if(isset($_GET['id']) && $_GET['id']){
                     $project->setId($selectedProject['id']);
 
-                    if ($_POST['slug'] !== $selectedProject->getSlug()) {
+                    if ($_POST['slug'] !== $objectProject->getSlug()) {
                         $slug = $_POST['slug'];
                         $slug = trim(strtolower($slug));
                         $slug = str_replace(' ', '-', $slug);
@@ -191,20 +191,20 @@ class Project{
             $currentProject = $projects->populate($_GET['id']);
             if ($currentProject){
                 if ($_GET['action'] === "delete") {
-                    $status = $statusModel->getByName("deleted");
+                    $status = $statusModel->getByName("Supprimé");
                     $currentProject->setStatus($status);
                     if ($currentProject->save()){
-                        $success[] = "Projet supprimé avec succès.";
+                        header('Location: /dashboard/projects?message=delete-success');
                     }
                 } else if ($_GET['action'] === "permanent-delete") {
                     if($projects->delete(['id' => (int)$_GET['id']])) {
-                        $success[] = "Projet définitivement supprimée.";
+                        header('Location: /dashboard/projects?message=permanent-delete-success');
                     }
                 } else if ($_GET['action'] === "restore") {
-                    $status = $statusModel->getByName("draft");
+                    $status = $statusModel->getByName("Brouillon");
                     $currentProject->setStatus($status);
                     if ($currentProject->save()) {
-                        $success[] = "Page restaurée avec succès.";
+                        header('Location: /dashboard/projects?message=restore-success');
                     }
                 } else {
                     $errors[] = "Action invalide.";

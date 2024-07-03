@@ -12,54 +12,6 @@ DROP TABLE IF EXISTS {prefix}_pagehistory CASCADE;
 DROP TABLE IF EXISTS {prefix}_menu CASCADE;
 DROP TABLE IF EXISTS {prefix}_itemMenu CASCADE;
 
--- Function to update modification date
-CREATE OR REPLACE FUNCTION update_modification_date()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.modification_date := CURRENT_TIMESTAMP;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-
--- Triggers for each table
-
-CREATE TRIGGER update_esgi_user_trigger
-BEFORE UPDATE ON esgi_user
-FOR EACH ROW
-EXECUTE PROCEDURE update_modification_date();
-
-CREATE TRIGGER update_esgi_page_trigger
-BEFORE UPDATE ON esgi_page
-FOR EACH ROW
-EXECUTE PROCEDURE update_modification_date();
-
-CREATE TRIGGER update_esgi_project_trigger
-BEFORE UPDATE ON esgi_project
-FOR EACH ROW
-EXECUTE PROCEDURE update_modification_date();
-
-CREATE TRIGGER update_esgi_tag_trigger
-BEFORE UPDATE ON esgi_tag
-FOR EACH ROW
-EXECUTE PROCEDURE update_modification_date();
-
-CREATE TRIGGER update_esgi_setting_trigger
-BEFORE UPDATE ON esgi_setting
-FOR EACH ROW
-EXECUTE PROCEDURE update_modification_date();
-
-CREATE TRIGGER update_esgi_menu_trigger
-BEFORE UPDATE ON esgi_menu
-FOR EACH ROW
-EXECUTE PROCEDURE update_modification_date();
-
-CREATE TRIGGER update_esgi_media_trigger
-BEFORE UPDATE ON esgi_media
-FOR EACH ROW
-EXECUTE PROCEDURE update_modification_date();
-
-
 CREATE TABLE {prefix}_status (
 	id 		SERIAL PRIMARY KEY,
   	status 	VARCHAR(255) NOT NULL
