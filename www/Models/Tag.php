@@ -8,8 +8,6 @@ class Tag extends SQL
     protected string $name;
     protected string $slug;
     protected string $description;
-    protected ?string $creation_date = null;
-    protected string $modification_date ;
     protected ?int $user_id = null;
 
     public function getId(): ?int
@@ -60,26 +58,6 @@ class Tag extends SQL
     {
         $description = strip_tags(trim($description));
         $this->description = $description;
-    }
-
-    public function getCreationDate(): ?string
-    {
-        return $this->creation_date;
-    }
-
-    public function setCreationDate(?string $creation_date): void
-    {
-        $this->creation_date = $creation_date;
-    }
-
-    public function getModificationDate(): ?string
-    {
-        return $this->modification_date;
-    }
-
-    public function setModificationDate(?string $modification_date): void
-    {
-        $this->modification_date = $modification_date;
     }
 
     public function getUserId(): ?int

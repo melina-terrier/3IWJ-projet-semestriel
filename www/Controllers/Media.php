@@ -13,7 +13,6 @@ class Media{
     {
         $form = new Form('AddMedia');
         $errors = [];  
-        $formattedDate = date('Y-m-d H:i:s');
         if (!empty($_SESSION['user_id'])){
             $userId = $_SESSION['user_id'];
         } else {
@@ -53,8 +52,6 @@ class Media{
             }
             $media->setTitle($_POST['title']);
             $media->setDescription($_POST['description']);
-            $media->setCreationDate($formattedDate);
-            $media->setModificationDate($formattedDate);
             $media->setUser($userId);
             if (empty($errors)) {
                 $media->save();
@@ -114,7 +111,6 @@ class Media{
             if ($selectedMedia) {
                 $form = new Form('EditMedia');
                 $form->setField($selectedMedia);
-                $formattedDate = date('Y-m-d H:i:s');
 
                 if( $form->isSubmitted() && $form->isValid() )
                 {
@@ -123,11 +119,9 @@ class Media{
                     $media->setTitle($_POST['title']);
                     $media->setUrl($selectedMedia['url']);
                     $media->setDescription($_POST['description']);
-                    $media->setCreationDate($selectedMedia['creation_date']);
                     $media->setName($selectedMedia['name']);
                     $media->setSize($selectedMedia['size']);
                     $media->setType($selectedMedia['type']);
-                    $media->setModificationDate($formattedDate);
                     $media->setUser($userId);
                     if ($media->save()) {
                         header('Location: /dashboard/medias?message=update-success');

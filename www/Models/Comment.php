@@ -11,7 +11,6 @@ class Comment extends SQL
     protected string $name;
     protected int $status;
     protected int $project_id;
-    protected $creation_date;
 
     public function getId(): ?int
     {
@@ -83,16 +82,6 @@ class Comment extends SQL
     public function setProject(int $project_id): void
     {
         $this->project_id = $project_id;
-    }
-
-    public function getCreationDate()
-    {
-        return $this->creation_date;
-    }
-
-    public function setCreationDate($creation_date): void
-    {
-        $this->creation_date = $creation_date;
     }
     
     public function getNbElements() {

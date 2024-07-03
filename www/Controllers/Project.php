@@ -31,7 +31,6 @@ class Project{
         $form = new Form("AddProject");
         $errors = [];
         $success = [];
-        $formattedDate = date('Y-m-d H:i:s');
         if ($_SESSION['user_id']){
             $userId = $_SESSION['user_id'];
         
@@ -57,47 +56,69 @@ class Project{
             {
                 if(isset($_GET['id']) && $_GET['id']){
                     $project->setId($selectedProject['id']);
-                    $project->setModificationDate($formattedDate);
-                    $project->setCreationDate($selectedProject['creation_date']);
 
                     if ($_POST['slug'] !== $selectedProject->getSlug()) {
                         $slug = $_POST['slug'];
-                        if (!empty($slug) && !$project->isUnique(["slug"=>$_POST['slug']])) {
+                        $slug = trim(strtolower($slug));
+                        $slug = str_replace(' ', '-', $slug);
+                        $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                        $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                        $slug = str_replace($search, $replace, $slug);
+                        $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                        $slug = preg_replace('[' . $pattern . ']', '', $slug);
+                        if (!empty($slug) && !$project->isUnique(["slug"=>$slug])>0) {
                             $errors[] = "Le slug existe déjà pour un autre projet";
-                        } else {
-                            if (empty($slug)){
-                                if (!$project->isUnique(["title"=>$_POST['title']])){
-                                    $existingProjcts = $project->getAllData(["title"=>$_POST['title']]);
-                                    $count = count($existingProjcts);
-                                    $project->setSlug($_POST['title'] . '-' . ($count + 1));    
-                                } else {
-                                    $project->setSlug($_POST['title']);
-                                }
-                            } else {
-                                $project->setSlug($_POST['slug']);
-                            }
-                        }
-                    } else {
-                        $project->setSlug($selectedProject['slug']);
-                    }
-                } else {
-                    $project->setCreationDate($formattedDate);
-                    $project->setModificationDate($formattedDate);
-                    $slug = $_POST['slug'];
-                    if (!empty($slug) && $project->isUnique(["slug"=>$_POST['slug']])>0) {
-                        $errors[] = "Le slug existe déjà pour un autre projet";
-                    } else {
-                        if (empty($slug)){
-                            if ($project->isUnique(["title"=>$_POST['title']])>0){
-                                $existingProjcts = $project->getAllData(["title"=>$_POST['title']]);
-                                $count = count($existingProjcts);
-                                $project->setSlug($_POST['title'] . '-' . ($count + 1));    
-                            } else {
-                                $project->setSlug($_POST['title']);
-                            }
                         } else {
                             $project->setSlug($_POST['slug']);
                         }
+                    } else {
+                        $name = trim(strtolower($_POST['title']));
+                        $name = str_replace(' ', '-', $name);
+                        $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                        $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                        $name = str_replace($search, $replace, $name);
+                        $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                        $name = preg_replace('[' . $pattern . ']', '', $name);
+                        if (!$project->isUnique(['slug'=>$name.'-%'], 'ILIKE')>0){
+                            $existingProjcts = $project->getAllData(['slug'=>$name.'-%'], null, 'array', 'ILIKE');
+                            $count = count($existingProjcts);
+                            $project->setSlug($_POST['title'] . '-' . ($count + 1));    
+                        } else {
+                            $project->setSlug($_POST['title']);
+                        }     
+                    }
+                } else {
+                    if (!empty($slug)){
+                        $slug = $_POST['slug'];
+                        $slug = $_POST['slug'];
+                        $slug = $_POST['slug'];
+                        $slug = trim(strtolower($slug));
+                        $slug = str_replace(' ', '-', $slug);
+                        $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                        $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                        $slug = str_replace($search, $replace, $slug);
+                        $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                        $slug = preg_replace('[' . $pattern . ']', '', $slug);
+                        if($project->isUnique(["slug"=>$_POST['slug']])>0) {
+                            $errors[] = "Le slug existe déjà pour un autre projet";
+                        } else {
+                            $project->setSlug($_POST['slug']);
+                        }
+                    } else {
+                        $name = trim(strtolower($_POST['title']));
+                        $name = str_replace(' ', '-', $name);
+                        $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                        $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                        $name = str_replace($search, $replace, $name);
+                        $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                        $name = preg_replace('[' . $pattern . ']', '', $name);
+                        if ($project->isUnique(['slug'=>$name.'-%'], 'ILIKE')>0){
+                            $existingProjcts = $project->getAllData(['slug'=>$name.'-%'], null, 'array', 'ILIKE');
+                            $count = count($existingProjcts);
+                            $project->setSlug($_POST['title'] . '-' . ($count + 1));    
+                        } else {
+                            $project->setSlug($_POST['title']);
+                        }        
                     }
                 }
                 $project->setTitle($_POST['title']);
@@ -132,7 +153,6 @@ class Project{
                     }
                 } else {
                     $statusId = $statusModel->getByName("Publié");
-                    $project->setPublicationDate($formattedDate);
                     $project->setStatus($statusId);
                     $projectId = $project->save();
                     if (!empty($projectId)){

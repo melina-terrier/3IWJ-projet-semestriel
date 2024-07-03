@@ -40,7 +40,6 @@ class AddPage
                     'type'=>'textarea',
                     'min'=>2,
                     'label'=>'Contenu',
-                    'required'=>true,
                     'error'=>'Le contenu doit avoir au minimum 2 caractères.',
                     'id'=>'content',
                 ],

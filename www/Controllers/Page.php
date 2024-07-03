@@ -95,7 +95,6 @@ class Page {
         $errors = [];
         $success = [];
         
-        $formattedDate = date('Y-m-d H:i:s', time());
         if (isset($_SESSION['user_id'])){
             $userId = $_SESSION['user_id'];
         } else {
@@ -130,29 +129,40 @@ class Page {
                     $historyEntry->setTitle($selectedPage->getTitle());
                     $historyEntry->setContent($selectedPage->getContent());
                     $historyEntry->setSlug($selectedPage->getSlug());
-                    $historyEntry->setCreationDate($formattedDate);
                     $historyEntry->save();
                 }
                   
                 $page->setId($selectedPage->getId());
-                $page->setModificationDate($formattedDate);
-                $page->setCreationDate($selectedPage->getCreationDate());
 
                 if ($_POST['slug'] !== $selectedPage->getSlug()) {
                     $slug = $_POST['slug'];
-                    if (!empty($slug) && !$page->isUnique(['slug'=>$_POST['slug']])) {
-                        $errors[] = 'Le slug existe déjà pour un autre projet';
-                    } else {
-                        if (empty($slug)){
-                            if (!$page->isUnique(['title'=>$_POST['title']])){
-                                $existingPages = $page->getAllData(['title'=>$_POST['title']]);
-                                $count = count($existingPages);
-                                $page->setSlug($_POST['title'] . '-' . ($count + 1));    
-                            } else {
-                                $page->setSlug($_POST['title']);
-                            }
+                    $slug = trim(strtolower($slug));
+                    $slug = str_replace(' ', '-', $slug);
+                    $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                    $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                    $slug = str_replace($search, $replace, $slug);
+                    $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                    $slug = preg_replace('[' . $pattern . ']', '', $slug);
+                    if (!empty($slug)){
+                        if($page->isUnique(['slug'=>$slug])>0) {
+                            $errors[] = 'Le slug existe déjà pour un autre projet';
                         } else {
                             $page->setSlug($_POST['slug']);
+                        }
+                    } else {
+                        $name = trim(strtolower($_POST['title']));
+                        $name = str_replace(' ', '-', $name);
+                        $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                        $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                        $name = str_replace($search, $replace, $name);
+                        $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                        $name = preg_replace('[' . $pattern . ']', '', $name);
+                        if ($page->isUnique(['slug'=>$name.'-%'], 'ILIKE')>0){
+                            $existingPages = $page->getAllData(['slug'=>$name.'-%'], null, 'array', 'ILIKE');
+                            $count = count($existingPages);
+                            $page->setSlug($_POST['title'] . '-' . ($count + 1));    
+                        } else {
+                            $page->setSlug($_POST['title']);
                         }
                     }
                 } else {
@@ -167,8 +177,6 @@ class Page {
                         $page->setTitle($selectedHistoryEntry->getTitle());
                         $page->setContent($selectedHistoryEntry->getContent());
                         $page->setSlug($selectedHistoryEntry->getSlug());
-                        $page->setCreationDate($selectedHistoryEntry->getCreationDate());
-                        $page->setModificationDate(date('Y-m-d H:i:s')); 
                         $page->setUser($userId);
                         $success[] = 'La page a été restaurée avec succès';
                     } else {
@@ -176,22 +184,35 @@ class Page {
                     }
                 } 
             } else {
-                $page->setCreationDate($formattedDate);
-                $page->setModificationDate($formattedDate);
-                $slug = $_POST['slug'];
-                if (!empty($slug) && !$page->isUnique(['slug'=>$_POST['slug']])) {
-                    $errors[] = 'Le slug existe déjà pour un autre projet';
-                } else {
-                    if (empty($slug)){
-                        if (!$page->isUnique(['title'=>$_POST['title']])){
-                            $existingPages = $page->getAllData(['title'=>$_POST['title']]);
-                            $count = count($existingPages);
-                            $page->setSlug($_POST['title'] . '-' . ($count + 1));    
-                        } else {
-                            $page->setSlug($_POST['title']);
-                        }
+                if (!empty($slug)){
+                    $slug = $_POST['slug'];
+                    $slug = $_POST['slug'];
+                    $slug = trim(strtolower($slug));
+                    $slug = str_replace(' ', '-', $slug);
+                    $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                    $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                    $slug = str_replace($search, $replace, $slug);
+                    $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                    $slug = preg_replace('[' . $pattern . ']', '', $slug);
+                    if($page->isUnique(['slug'=>$slug])>0) {
+                        $errors[] = 'Le slug existe déjà pour un autre projet';
                     } else {
                         $page->setSlug($_POST['slug']);
+                    }
+                } else {
+                    $name = trim(strtolower($_POST['title']));
+                    $name = str_replace(' ', '-', $name);
+                    $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+                    $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+                    $name = str_replace($search, $replace, $name);
+                    $pattern = '/[^a-zA-Z0-9\/-]/'; 
+                    $name = preg_replace('[' . $pattern . ']', '', $name);
+                    if ($page->isUnique(['slug'=>$name.'-%'], 'ILIKE')>0){
+                        $existingPages = $page->getAllData(['slug'=>$name.'-%'], null, 'array', 'ILIKE');
+                        $count = count($existingPages);
+                        $page->setSlug($_POST['title'] . '-' . ($count + 1));    
+                    } else {
+                        $page->setSlug($_POST['title']);
                     }
                 }
             }
@@ -212,10 +233,9 @@ class Page {
                 }
             } else {
                 $statusId = $statusModel->getByName('Publié');
-                $page->setPublicationDate($formattedDate);
                 $page->setStatus($statusId);
                 if ($page->save()){
-                    header('Location: /dashboard/page?message=success');
+                    header('Location: /dashboard/pages?message=success');
                     exit;
                 } else {
                     $errors[] = 'Une erreur est survenue lors de l\'enregistrement de la page.';
