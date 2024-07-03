@@ -24,7 +24,7 @@ if (file_exists('../config.php')) {
     $itemMenu = new itemMenu();
     if (!empty($menu) && is_object($menu)) {
         $header = $menu->getOneBy(['type'=>'menu-principal']);
-        if ($header) {
+        if (!empty($header) && isset($header)) {
             $position = $header['position'];
             $alignement = $header['alignement'];
             $items = $itemMenu->getAllData(['menu_id'=>$header['id']]);
@@ -44,8 +44,8 @@ if (file_exists('../config.php')) {
     <meta charset="UTF-8">
     <title><?php echo $title['value']; ?></title>
     <meta name="description" content="">
-    <link rel="stylesheet" href="/Assets/Style/dist/css/main.css">
-    <script type="text/javascript" src="/Assets/Style/dist/js/main.js"></script>
+    <link rel="stylesheet" href="/Style/dist/css/main.css">
+    <script type="text/javascript" src="/Style/dist/js/main.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.tiny.cloud/1/stqcjxqqgksnn9nkz2g0l1zda7dcsz9o5smv1jpbkbydtlis/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
@@ -76,15 +76,15 @@ if (file_exists('../config.php')) {
 
 
     <header id="header" class="back-office-header">
-        <nav id="site-menu" class="menu-align-<?php echo $alignement; ?> menu-position-<?php echo $position; ?>">
         <?php if (isset($header) && isset($items)) : ?>
+        <nav id="site-menu" class="menu-align-<?php echo $alignement; ?> menu-position-<?php echo $position; ?>">
             <?php foreach ($items as $item) : ?>
             <li>
                 <a href="<?php echo $item['url']; ?>"><?php echo $item['title']; ?></a>
             </li>
             <?php endforeach; ?>
-        <?php endif; ?>
         </nav>
+        <?php endif; ?>
 
         <form action="/search" method="post">
         <label for="search-bar">Rechercher : </label>

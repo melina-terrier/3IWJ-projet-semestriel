@@ -4,7 +4,6 @@ $header-height: 60px;
     border-right: 1px solid $gray-dark;
     padding: 1rem;
     width: 250px;
-    height: calc(100vh - #{$header-height});
     position: fixed;
     top: $header-height;
     left: 0;
