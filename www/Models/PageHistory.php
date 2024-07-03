@@ -9,7 +9,6 @@ class PageHistory extends SQL
     protected string $title;
     protected string $content;
     protected string $slug;
-    protected string $creation_date;
 
     public function getId(): ?int
     {
@@ -64,13 +63,4 @@ class PageHistory extends SQL
         $slug->slug = $slug;
     }
 
-    public function getCreationDate(): string
-    {
-        return $this->creation_date;
-    }
-
-    public function setCreationDate(string $creation_date): void
-    {
-        $this->creation_date = $creation_date;
-    }
 }

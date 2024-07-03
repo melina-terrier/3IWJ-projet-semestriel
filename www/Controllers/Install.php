@@ -64,7 +64,6 @@ class Install
                 exit();
             }
 
-            $formattedDate = date('Y-m-d H:i:s');
             $user = new User();
             $user->setFirstname($_POST['firstname']);
             $user->setLastname($_POST['lastname']);
@@ -73,15 +72,11 @@ class Install
             $roleModel = new Role();
             $role = $roleModel->getByName('Administrateur');
             $user->setRole($role);
-            $user->setCreationDate($formattedDate);
-            $user->setModificationDate($formattedDate);  
             $user->setStatus(1);
             $user->setSlug();
             $setting = new Setting();
             $setting->setKey('title');
             $setting->setValue($_POST['site_title']);
-            $setting->setCreationDate($formattedDate);
-            $setting->setModificationDate($formattedDate);  
             $setting->save();
             $activationToken = bin2hex(random_bytes(16));
             $user->setActivationToken($activationToken);

@@ -130,7 +130,7 @@
 <script>
 $(document).ready( function () {
   $('table').DataTable({
-    order: [[ 3, 'desc' ], [ 0, 'asc' ]],
+    order: [[ 1, 'asc' ]],
     pagingType: 'simple_numbers'
   });
 });

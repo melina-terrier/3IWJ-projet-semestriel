@@ -6,8 +6,6 @@ class Setting extends SQL{
     protected ?int $id = null;
     protected string $key; 
     protected string $value;
-    protected string $creation_date;
-    protected string $modification_date;
 
     public function setId($id)
     {
@@ -39,26 +37,6 @@ class Setting extends SQL{
     public function getValue()
     {
         return $this->value;
-    }
-
-    public function getCreationDate()
-    {
-        return $this->creation_date;
-    }
-
-    public function setCreationDate($creation_date): void
-    {
-        $this->creation_date = $creation_date;
-    }
-
-    public function getModificationDate()
-    {
-        return $this->modification_date;
-    }
-
-    public function setModificationDate($modification_date): void
-    {
-        $this->modification_date = $modification_date;
     }
 
     public function getNbElements() {

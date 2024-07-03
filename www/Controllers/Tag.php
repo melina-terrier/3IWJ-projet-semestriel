@@ -67,10 +67,8 @@ class Tag{
 
         if( $form->isSubmitted() && $form->isValid() )
         {
-            $formattedDate = date('Y-m-d H:i:s');
             if (isset($_GET['id']) && $_GET['id']) {
                 $tag->setId($currentTag['id']);
-                $tag->setCreationDate($currentTag['creation_date']);
 
                 if ($_POST['slug'] !== $currentTag['slug']) {
                     $slug = $_POST['slug'];
@@ -108,7 +106,6 @@ class Tag{
                 }
             } else {
                 $slug = $_POST['slug'];
-                $tag->setCreationDate($formattedDate);
                 if (!empty($slug)){
                     $slug = $_POST['slug'];
                     $slug = trim(strtolower($slug));
@@ -140,7 +137,6 @@ class Tag{
                     }
                 }
             }
-            $tag->setModificationDate($formattedDate);
             $tag->setName($_POST['name']);
             $tag->setDescription($_POST['description']);
             $tag->setUserId($_SESSION['user_id']);

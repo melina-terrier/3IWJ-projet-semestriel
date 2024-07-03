@@ -10,9 +10,6 @@ class Project extends SQL
     protected string $content;
     protected string $slug;
     protected int $status_id;
-    protected string $creation_date;
-    protected string $modification_date;
-    protected string $publication_date;
     protected int $user_id;
     protected ?string $featured_image = null;
     protected string $seo_title;
@@ -80,36 +77,6 @@ class Project extends SQL
         $allowedChars = 'abcdefghijklmnopqrstuvwxyz0123456789-';
         $slug = preg_replace('/[^' . $allowedChars . ']/', '', $slug);
         $this->slug = $slug;
-    }
-
-    public function getCreationDate(): string
-    {
-        return $this->creation_date;
-    }
-
-    public function setCreationDate(string $creation_date): void
-    {
-        $this->creation_date = $creation_date;
-    }
-
-    public function getModificationDate(): string
-    {
-        return $this->modification_date;
-    }
-
-    public function setModificationDate(string $modification_date): void
-    {
-        $this->modification_date = $modification_date;
-    }
-
-    public function getPublicationDate(): string
-    {
-        return $this->publication_date;
-    }
-
-    public function setPublicationDate(string $publication_date): void
-    {
-        $this->publication_date = $publication_date;
     }
 
     public function getUser(): int

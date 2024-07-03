@@ -115,7 +115,7 @@ class Form
                 </div>';  
 
             } else if ($input['type'] === 'textarea') {
-                $html .= '<textarea name="'.$name.'"'.(isset($input['required']) ? 'required' : '').'>'. htmlentities($value).'</textarea>';
+                $html .= '<textarea id="'.$name.'" name="'.$name.'"'.(isset($input['required']) ? 'required' : '').'>'. htmlentities($value).'</textarea>';
             } else if ($input['type'] === 'submit') {
                 $html .= '<input type="'.$input['type'].'" name="'.$name.'" value="'.$input['value'].'">';
             } else if ($input['type'] === 'button') {

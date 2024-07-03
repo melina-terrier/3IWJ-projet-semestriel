@@ -6,7 +6,7 @@ export default defineConfig({
         outDir: 'Public/Style/dist',
         emptyOutDir: true,  // Ajoutez cette ligne pour vider le répertoire de sortie avant de construire
         rollupOptions: {
-            input: path.resolve(__dirname, "./Public/Assets/Style/js/main.js"),
+            input: path.resolve(__dirname, "./Public/Assets/Style/src/js/main.js"),
             output: {
                 entryFileNames: "js/[name].js",
                 assetFileNames: ({ name }) => {

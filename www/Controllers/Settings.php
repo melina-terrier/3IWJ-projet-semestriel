@@ -17,7 +17,6 @@ class Settings{
 
         if( $form->isSubmitted() && $form->isValid() )
         {
-            $formattedDate = date('Y-m-d H:i:s');
 
             $settingKeys = [
                 'title',
@@ -38,9 +37,7 @@ class Settings{
                     $setting = new SettingModel();
                     $setting->setKey($key);
                     $setting->setValue($_POST[$key]);
-                    $setting->setCreationDate($formattedDate);
                 }
-                $setting->setModificationDate($formattedDate);
                 $setting->save();
                 if ($setting->save()) {
                     $success[] = "Les paramètres du site ont été mis à jour.";
@@ -140,9 +137,7 @@ class Settings{
                     $setting = new SettingModel();
                     $setting->setKey($key);
                     $setting->setValue($_POST[$key]);
-                    $setting->setCreationDate($formattedDate);
                 }
-                $setting->setModificationDate($formattedDate);
                 $setting->save();
                 if ($setting->save()) {
                     $success[] = "Les paramètres du site ont été mis à jour.";
