@@ -8,15 +8,15 @@ class AddPage
     {
         $history = new PageHistory();
         if (isset($_GET['id'])){
-            $histories = $history->getAllDataWithWhere(['page_id'=>$_GET['id']], 'object');
+            $histories = $history->getAllData(['page_id'=>$_GET['id']], null, 'array');
         }
         $historyPage = [];
         $historyPage[] = ['id'=>'', 'name'=>'Sélectionnez une version', 'disabled'=>true, 'selected'=>true];
         if (!empty($histories)) {
             foreach ($histories as $page) {
               $historyPage[] = [
-                'id' => $page->getId(),
-                'name' => $page->getCreationDate(),
+                'id' => $page['id'],
+                'name' => $page['creation_date'],
               ];
             }
         }

@@ -1,0 +1,37 @@
+version: '3'
+services:
+  web:
+    build: site
+    ports :
+      - "80:80"
+    volumes:
+      - ./www:/var/www/html/
+      - ./server/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./server/apache2.conf:/etc/apache2/apache2.conf
+      - ./server/php.ini:/usr/local/etc/php/php.ini
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: esgi
+      POSTGRES_USER: esgi
+      POSTGRES_PASSWORD: esgipwd
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "melina.terrier@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "test"
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

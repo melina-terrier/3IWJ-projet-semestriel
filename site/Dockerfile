@@ -10,9 +10,7 @@ RUN apt-get install -y libpq-dev \
 # Install MySQL PDO
 RUN apt-get install -y libpq-dev \
     && docker-php-ext-install pdo pdo_mysql
-    
-ENV SMTP_USERNAME="azermami8@gmail.com"
-ENV SMTP_PASSWORD="azer"
+
 
 RUN apt-get update -y && apt-get install -y libpng-dev libfreetype6-dev libyaml-dev
 

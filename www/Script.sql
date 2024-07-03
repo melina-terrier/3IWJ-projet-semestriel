@@ -12,6 +12,54 @@ DROP TABLE IF EXISTS {prefix}_pagehistory CASCADE;
 DROP TABLE IF EXISTS {prefix}_menu CASCADE;
 DROP TABLE IF EXISTS {prefix}_itemMenu CASCADE;
 
+-- Function to update modification date
+CREATE OR REPLACE FUNCTION update_modification_date()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.modification_date := CURRENT_TIMESTAMP;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Triggers for each table
+
+CREATE TRIGGER update_esgi_user_trigger
+BEFORE UPDATE ON esgi_user
+FOR EACH ROW
+EXECUTE PROCEDURE update_modification_date();
+
+CREATE TRIGGER update_esgi_page_trigger
+BEFORE UPDATE ON esgi_page
+FOR EACH ROW
+EXECUTE PROCEDURE update_modification_date();
+
+CREATE TRIGGER update_esgi_project_trigger
+BEFORE UPDATE ON esgi_project
+FOR EACH ROW
+EXECUTE PROCEDURE update_modification_date();
+
+CREATE TRIGGER update_esgi_tag_trigger
+BEFORE UPDATE ON esgi_tag
+FOR EACH ROW
+EXECUTE PROCEDURE update_modification_date();
+
+CREATE TRIGGER update_esgi_setting_trigger
+BEFORE UPDATE ON esgi_setting
+FOR EACH ROW
+EXECUTE PROCEDURE update_modification_date();
+
+CREATE TRIGGER update_esgi_menu_trigger
+BEFORE UPDATE ON esgi_menu
+FOR EACH ROW
+EXECUTE PROCEDURE update_modification_date();
+
+CREATE TRIGGER update_esgi_media_trigger
+BEFORE UPDATE ON esgi_media
+FOR EACH ROW
+EXECUTE PROCEDURE update_modification_date();
+
+
 CREATE TABLE {prefix}_status (
 	id 		SERIAL PRIMARY KEY,
   	status 	VARCHAR(255) NOT NULL
@@ -36,7 +84,7 @@ CREATE TABLE {prefix}_user (
 	firstname               VARCHAR(50) NOT NULL,
 	lastname                VARCHAR(50) NOT NULL,
 	email                   VARCHAR(320) NOT NULL UNIQUE,
-	password                VARCHAR(255) NOT NULL,
+	password                VARCHAR(255),
 	slug 					VARCHAR(255) NOT NULL UNIQUE,
 	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modification_date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -65,7 +113,7 @@ CREATE TABLE {prefix}_tag (
 	name 				VARCHAR(255) NOT NULL,
 	slug 				VARCHAR(255) NOT NULL UNIQUE,
 	description 		VARCHAR(1000),
-	user_id 			INTEGER NOT NULL,
+	user_id 			INTEGER,
 	creation_date 		TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	modification_date 	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_tag_user FOREIGN KEY (user_id) REFERENCES {prefix}_user(id)
@@ -79,7 +127,7 @@ CREATE TABLE {prefix}_media (
 	type 				VARCHAR(255) NOT NULL,
 	size           		INTEGER NOT NULL,
 	url 				VARCHAR(255) NOT NULL,
-	user_id 			INTEGER NOT NULL,
+	user_id 			INTEGER,
 	creation_date 		TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	modification_date 	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_media_user FOREIGN KEY (user_id) REFERENCES {prefix}_user(id)
@@ -92,9 +140,8 @@ CREATE TABLE {prefix}_project (
 	slug 					VARCHAR(255) NOT NULL UNIQUE,
 	creation_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modification_date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	publication_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	status_id				INTEGER NOT NULL,
-	user_id 				INTEGER NOT NULL,
+	user_id 				INTEGER,
 	seo_title				VARCHAR(255),
 	seo_description			VARCHAR(255),
 	seo_keyword				VARCHAR(100),
@@ -112,7 +159,6 @@ CREATE TABLE {prefix}_comment (
 	name 				VARCHAR(110) NOT NULL,
 	project_id			INTEGER NOT NULL,
 	creation_date     	TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    modification_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES {prefix}_user(id),
 	CONSTRAINT fk_comment_project FOREIGN KEY (project_id) REFERENCES {prefix}_project(id)
 );
@@ -124,9 +170,8 @@ CREATE TABLE {prefix}_page (
 	slug 					VARCHAR(255) NOT NULL UNIQUE,
     creation_date 			TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modification_date		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	publication_date       	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status_id				INTEGER NOT NULL,
-	user_id 				INTEGER NOT NULL,
+	user_id 				INTEGER,
 	seo_title				VARCHAR(255),
 	seo_description			VARCHAR(255),
 	seo_keyword				VARCHAR(100),
@@ -156,7 +201,6 @@ CREATE TABLE {prefix}_pagehistory (
   page_id 		INT NOT NULL,
   title 		VARCHAR(255) NOT NULL,
   content 		text NOT NULL,
-  slug 			VARCHAR(255) NOT NULL UNIQUE,
   creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (page_id) REFERENCES {prefix}_page(id)
 );
@@ -165,7 +209,9 @@ CREATE TABLE {prefix}_menu (
     id    			SERIAL PRIMARY KEY NOT NULL,
     type 			VARCHAR(255),
 	position 		VARCHAR(255),
-	alignement 		VARCHAR(255)
+	alignement 		VARCHAR(255),
+	modification_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 );
 
 CREATE TABLE {prefix}_itemMenu (

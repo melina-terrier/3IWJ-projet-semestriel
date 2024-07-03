@@ -64,9 +64,6 @@ if (file_exists('../config.php')) {
       --dark-primary: <?php echo $darkPrimaryColor; ?>;
       --dark-secondary: <?php echo $darkSecondaryColor; ?>;
       --dark-accent: <?php echo $darkAccentColor; ?>;
-
-      @import url("https://fonts.googleapis.com/css2?family=<?php echo str_replace(' ', '+', $secondaryFont); ?>:wght@100..900&display=swap"); /* URL encode font name */
-      @import url("https://fonts.googleapis.com/css2?family=<?php echo str_replace(' ', '+', $primaryFont); ?>:wght@100..900&display=swap");
     }
     <?php endif; ?>
 </style>
@@ -80,7 +77,7 @@ if (file_exists('../config.php')) {
 
     <header id="header" class="back-office-header">
         <nav id="site-menu" class="menu-align-<?php echo $alignement; ?> menu-position-<?php echo $position; ?>">
-        <?php if ($header && $items) : ?>
+        <?php if (isset($header) && isset($items)) : ?>
             <?php foreach ($items as $item) : ?>
             <li>
                 <a href="<?php echo $item['url']; ?>"><?php echo $item['title']; ?></a>

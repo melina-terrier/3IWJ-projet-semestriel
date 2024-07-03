@@ -270,7 +270,7 @@ class PageBuilder
         $content = $page['content'];
         $pageTitle = $page['title'];
         $view = new View("Main/page", "front");
-        $view->assign("content", $content);
+        $view->assign("pageContent", $content);
         $view->assign("pageTitle", $pageTitle);
         $view->render();
     }

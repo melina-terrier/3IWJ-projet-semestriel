@@ -29,16 +29,17 @@ class Page {
                     $deletedStatus = $statusModel->getByName('Supprimé');
                     $currentPage->setStatus($deletedStatus);
                     if ($currentPage->save()) {
-                        $success[] = 'Page supprimée avec succès.';
+                        header('Location: /dashboard/pages?message=delete-success');
                     }
                 } else if ($_GET['action'] === 'permanent-delete') {
                     if ($pageModel->delete(['id' => (int)$_GET['id']])) {
-                        $success[] = 'Page définitivement supprimée.';
+                        header('Location: /dashboard/pages?message=permanent-delete-success');
                     }
                 } else if ($_GET['action'] === 'restore') {
                     $status = $statusModel->getByName('Brouillon');
                     $currentPage->setStatus($status);
                     if ($currentPage->save()) {
+                        header('Location: /dashboard/pages?message=restore-success');
                         $success[] = 'Page restaurée avec succès.';
                     }
                 } else {
@@ -105,10 +106,11 @@ class Page {
         if (isset($_GET['id']) && $_GET['id']) {
             $pageId = $_GET['id'];
             $selectedPage = $page->populate($pageId, 'array');
+            $objectPage = $page->populate($pageId, 'object');
             if ($selectedPage) {
                 $form->setField($selectedPage);
-                $seoAnalysis = $selectedPage->getSeoAnalysis();
-                $seoStatus = $selectedPage->getSeoStatus();
+                $seoAnalysis = $objectPage->getSeoAnalysis();
+                $seoStatus = $objectPage->getSeoStatus();
                 $seoAdvices = $this->getSeoAdvices($seoAnalysis);
             } else {
                 $errors[] = 'Page introuvable.';
@@ -122,19 +124,18 @@ class Page {
         {  
             if(isset($_GET['id']) && $_GET['id']){
 
-                if ($selectedPage->getTitle() !== $_POST['title'] ||
-                $selectedPage->getContent() !== $_POST['content'] |
-                $selectedPage->getSlug() !== $_POST['slug']) {
+                if ($objectPage->getTitle() !== $_POST['title'] ||
+                $objectPage->getContent() !== $_POST['content'] |
+                $objectPage->getSlug() !== $_POST['slug']) {
                     $historyEntry->setPageId($pageId);
-                    $historyEntry->setTitle($selectedPage->getTitle());
-                    $historyEntry->setContent($selectedPage->getContent());
-                    $historyEntry->setSlug($selectedPage->getSlug());
+                    $historyEntry->setTitle($objectPage->getTitle());
+                    $historyEntry->setContent($objectPage->getContent());
                     $historyEntry->save();
                 }
                   
-                $page->setId($selectedPage->getId());
+                $page->setId($objectPage->getId());
 
-                if ($_POST['slug'] !== $selectedPage->getSlug()) {
+                if ($_POST['slug'] !== $objectPage->getSlug()) {
                     $slug = $_POST['slug'];
                     $slug = trim(strtolower($slug));
                     $slug = str_replace(' ', '-', $slug);
@@ -166,7 +167,7 @@ class Page {
                         }
                     }
                 } else {
-                    $page->setSlug($selectedPage->getSlug());
+                    $page->setSlug($objectPage->getSlug());
                 }
 
                 if (isset($_POST['history'])){

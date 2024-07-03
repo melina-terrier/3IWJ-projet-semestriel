@@ -216,9 +216,9 @@ class Form
         
         $submittedDataCount = 0;
         foreach ($_POST as $key => $value) {
-            if ($key !== 'submit-draft') { 
+            // if ($key !== 'submit-draft') { 
                 $submittedDataCount++;
-            }
+            // }
         }
         foreach ($_FILES as $key => $value) {
             $submittedDataCount++;

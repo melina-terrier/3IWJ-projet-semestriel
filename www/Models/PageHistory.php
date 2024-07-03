@@ -8,7 +8,6 @@ class PageHistory extends SQL
     protected int $page_id;
     protected string $title;
     protected string $content;
-    protected string $slug;
 
     public function getId(): ?int
     {
@@ -50,17 +49,6 @@ class PageHistory extends SQL
     {
         $content = trim($content);
         $this->content = $content;
-    }
-
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): void
-    {
-        $slug = trim(strtolower($slug));
-        $slug->slug = $slug;
     }
 
 }
